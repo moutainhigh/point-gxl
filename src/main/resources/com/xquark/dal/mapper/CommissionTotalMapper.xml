@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xquark.dal.mapper.CommissionTotalMapper">
+  <resultMap id="BaseResultMap" type="com.xquark.dal.model.CommissionTotal">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="usable_comm_hds" jdbcType="DECIMAL" property="usableCommHds"/>
+    <result column="freezed_comm_hds" jdbcType="DECIMAL" property="freezedCommHds"/>
+    <result column="usable_comm_vivilife" jdbcType="DECIMAL" property="usableCommViviLife"/>
+    <result column="freezed_comm_vivilife" jdbcType="DECIMAL" property="freezedCommViviLife"/>
+    <result column="usable_comm_ecomm" jdbcType="DECIMAL" property="usableCommEcomm"/>
+    <result column="freezed_comm_ecomm" jdbcType="DECIMAL" property="freezedCommEcomm"/>
+    <result column="status" jdbcType="VARCHAR" property="status"/>
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cpId, usable_comm_hds, freezed_comm_hds, usable_comm_vivilife, freezed_comm_vivilife,
+    usable_comm_ecomm, freezed_comm_ecomm, status, created_at, updated_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionTotal
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByCpId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionTotal
+    where cpId = #{cpId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from commissionTotal
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xquark.dal.model.CommissionTotal">
+    insert into commissionTotal (id, cpId, usable_comm_hds,
+                                 freezed_comm_hds, usable_comm_vivilife, freezed_comm_vivilife,
+                                 usable_comm_ecomm, freezed_comm_ecomm, status,
+                                 created_at, updated_at)
+    values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{usableCommHds,jdbcType=DECIMAL},
+      #{freezedCommHds,jdbcType=DECIMAL}, #{usableCommViviLife,jdbcType=DECIMAL},
+      #{freezedCommViviLife,jdbcType=DECIMAL},
+      #{usableCommEcomm,jdbcType=DECIMAL}, #{freezedCommEcomm,jdbcType=DECIMAL},
+      #{status,jdbcType=VARCHAR},
+      NOW(), NOW())
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xquark.dal.model.CommissionTotal">
+    update commissionTotal
+    <set>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="usableCommHds != null">
+        usable_comm_hds = #{usableCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommHds != null">
+        freezed_comm_hds = #{freezedCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="usableCommViviLife != null">
+        usable_comm_vivilife = #{usableCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommViviLife != null">
+        freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="usableCommEcomm != null">
+        usable_comm_ecomm = #{usableCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommEcomm != null">
+        freezed_comm_ecomm = #{freezedCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      updated_at = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xquark.dal.model.CommissionTotal">
+    update commissionTotal
+    set cpId                = #{cpId,jdbcType=BIGINT},
+      usable_comm_hds       = #{usableCommHds,jdbcType=DECIMAL},
+      freezed_comm_hds      = #{freezedCommHds,jdbcType=DECIMAL},
+      usable_comm_vivilife  = #{usableCommViviLife,jdbcType=DECIMAL},
+      freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
+      usable_comm_ecomm     = #{usableCommEcomm,jdbcType=DECIMAL},
+      freezed_comm_ecomm    = #{freezedCommEcomm,jdbcType=DECIMAL},
+      status                = #{status,jdbcType=VARCHAR},
+      updated_at            = NOW()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

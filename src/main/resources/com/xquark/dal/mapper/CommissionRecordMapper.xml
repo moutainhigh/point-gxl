@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xquark.dal.mapper.CommissionRecordMapper">
+  <resultMap id="BaseResultMap" type="com.xquark.dal.model.CommissionRecord">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="grade_Id" jdbcType="BIGINT" property="gradeId"/>
+    <result column="codeNumber" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
+    <result column="current_comm" jdbcType="DECIMAL" property="currentComm"/>
+    <result column="current_freezed_comm" jdbcType="DECIMAL" property="currentFreezedComm"/>
+    <result column="comm_type" jdbcType="VARCHAR" property="commType"/>
+    <result column="source" jdbcType="TINYINT" property="source"/>
+    <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
+    <result column="un_freeze_id" jdbcType="BIGINT" property="unFreezeId"/>
+    <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+    <result column="freezed_at" jdbcType="TIMESTAMP" property="freezedAt"/>
+    <result column="freezed_to" jdbcType="TIMESTAMP" property="freezedTo"/>
+  </resultMap>
+  <resultMap id="VOResultMap" type="com.xquark.dal.vo.CommissionRecordVO">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+    <result column="grade_id" jdbcType="BIGINT" property="gradeId"/>
+    <result column="grade_desc" jdbcType="VARCHAR" property="gradeDesc"/>
+    <result column="codeNumber" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
+    <result column="current_comm" jdbcType="BIGINT" property="currentCommission"/>
+    <result column="current_freezed_comm" jdbcType="BIGINT"
+      property="currentFreezedCommission"/>
+    <result column="source" jdbcType="VARCHAR" property="source"/>
+    <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
+    <result column="comm_type" jdbcType="VARCHAR" property="recordType"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cpId, grade_Id, codeNumber, orderid, current_comm, current_freezed_comm, comm_type,
+    source, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
+    freezed_to
+  </sql>
+  <sql id="Join_Column_List">
+    record.id, record.cpId, record.grade_id, record.codeNumber,
+    record.orderid, record.current_comm, record.current_freezed_comm,
+    record.comm_type, record.source, record.rollbacked, record.rollback_id, record.un_freeze_id,
+    record.created_at, record.updated_at, record.freezed_at, record.freezed_to
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionsuspending
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="listVO" resultMap="VOResultMap">
+    select
+    <include refid="Join_Column_List"/>,
+    user.name as user_name,
+    cod.description as grade_desc
+    from commissionsuspending record
+    inner join xquark_user user on record.cpId = user.cpId
+    left join gradeCode cod on cod.id = record.grade_id
+    where user.cpId = #{cpId,jdbcType=BIGINT}
+    and user.archive = false
+    <if test="source != null">
+      and record.source = #{source,jdbcType=INTEGER}
+    </if>
+    <if test="page != null">
+      limit #{page.offset}, #{page.size}
+    </if>
+  </select>
+  <select id="count" resultType="java.lang.Long">
+    select count(*)
+    from commissionsuspending record
+    inner join xquark_user user on record.cpId = user.cpId
+    where user.cpId = #{cpId,jdbcType=BIGINT}
+    and user.archive = false
+    <if test="source != null">
+      and record.source = #{source,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="listUnRollBackedByCpIdWithBizIdAndType"
+    resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionsuspending
+    where cpId = #{cpId,jdbcType=BIGINT}
+    and orderid = #{bizId,jdbcType=VARCHAR}
+    and rollbacked = false
+    and comm_type = #{type,jdbcType=VARCHAR}
+    order by created_at desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from commissionsuspending
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xquark.dal.model.CommissionRecord">
+    insert into commissionsuspending (id, cpId, grade_Id,
+                                      codeNumber, orderid, current_comm,
+                                      current_freezed_comm, comm_type, source,
+                                      rollbacked, un_freeze_id, rollback_id,
+                                      created_at, updated_at, freezed_at,
+                                      freezed_to)
+    values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT},
+                                   #{codeNumber,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR},
+                                   #{currentComm,jdbcType=DECIMAL},
+                                   #{currentFreezedComm,jdbcType=DECIMAL},
+                                   #{commType,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT},
+                                   #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
+            #{rollbackId,jdbcType=BIGINT},
+            NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
+            #{freezedTo,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xquark.dal.model.CommissionRecord">
+    update commissionsuspending
+    <set>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="gradeId != null">
+        grade_Id = #{gradeId,jdbcType=BIGINT},
+      </if>
+      <if test="codeNumber != null">
+        codeNumber = #{codeNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        orderid = #{businessId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentComm != null">
+        current_comm = #{currentComm,jdbcType=DECIMAL},
+      </if>
+      <if test="currentFreezedComm != null">
+        current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
+      </if>
+      <if test="commType != null">
+        comm_type = #{commType,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=TINYINT},
+      </if>
+      <if test="rollbacked != null">
+        rollbacked = #{rollbacked,jdbcType=TINYINT},
+      </if>
+      <if test="unFreezeId != null">
+        un_freeze_id = #{unFreezeId,jdbcType=BIGINT},
+      </if>
+      <if test="rollbackId != null">
+        rollback_id = #{rollbackId,jdbcType=BIGINT},
+      </if>
+      <if test="freezedAt != null">
+        freezed_at = #{freezedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="freezedTo != null">
+        freezed_to = #{freezedTo,jdbcType=TIMESTAMP},
+      </if>
+      updated_at = NOW()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xquark.dal.model.CommissionRecord">
+    update commissionsuspending
+    set cpId               = #{cpId,jdbcType=BIGINT},
+      grade_Id             = #{gradeId,jdbcType=BIGINT},
+      codeNumber           = #{codeNumber,jdbcType=VARCHAR},
+      orderid              = #{businessId,jdbcType=VARCHAR},
+      current_comm         = #{currentComm,jdbcType=DECIMAL},
+      current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
+      comm_type            = #{commType,jdbcType=VARCHAR},
+      source               = #{source,jdbcType=TINYINT},
+      rollbacked           = #{rollbacked,jdbcType=TINYINT},
+      un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},
+      rollback_id          = #{rollbackId,jdbcType=BIGINT},
+      updated_at           = NOW(),
+      freezed_at           = #{freezedAt,jdbcType=TIMESTAMP},
+      freezed_to           = #{freezedTo,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

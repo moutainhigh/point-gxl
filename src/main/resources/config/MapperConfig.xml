@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+  <!-- <plugins>
+      <plugin interceptor="com.xquark.dal.interceptor.MyBatisInterceptor">
+          <property name="someProperty" value="100" />
+      </plugin>
+  </plugins> -->
+
+  <settings>
+    <!--打印查询语句-->
+    <setting name="logImpl" value="STDOUT_LOGGING"/>
+  </settings>
+
+  <mappers>
+    <!--中台相关的mapper-->
+    <mapper resource="com/xquark/dal/mapper/GradeCodeMapper.xml"/>
+    <mapper resource="com/xquark/dal/mapper/PointTotalMapper.xml"/>
+    <mapper resource="com/xquark/dal/mapper/CommissionTotalMapper.xml"/>
+    <mapper resource="com/xquark/dal/mapper/PointRecordMapper.xml"/>
+    <mapper resource="com/xquark/dal/mapper/CommissionRecordMapper.xml"/>
+  </mappers>
+
+</configuration>
