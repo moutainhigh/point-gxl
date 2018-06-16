@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hds.xquark.dal.mapper.GradeCodeMapper">
+  <resultMap id="BaseResultMap" type="com.hds.xquark.dal.model.GradeCode">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="codeType" jdbcType="VARCHAR" property="codeType"/>
+    <result column="codeName" jdbcType="VARCHAR" property="codeName"/>
+    <result column="codeNumber" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="createdDate" jdbcType="TIMESTAMP" property="createdDate"/>
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+    type="com.hds.xquark.dal.model.GradeCode">
+    <result column="description" jdbcType="LONGVARCHAR" property="description"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, codeType, codeName, codeNumber, createdDate
+  </sql>
+  <sql id="Blob_Column_List">
+    description
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>
+    ,
+    <include refid="Blob_Column_List"/>
+    from gradeCode
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByFunctionCode" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    ,
+    <include refid="Blob_Column_List"/>
+    from gradeCode
+    where codeNumber = #{functionCode,jdbcType=VARCHAR}
+  </select>
+  <select id="list" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    ,
+    <include refid="Blob_Column_List"/>
+    from gradeCode
+    <if test="page != null">
+      limit #{page.offset}, #{page.size}
+    </if>
+  </select>
+  <select id="count" resultType="java.lang.Long">
+    select count(*) from gradeCode
+  </select>
+  <select id="selectFunctionCodeExists" resultType="java.lang.Boolean">
+    select exists(
+      select 1
+      from gradeCode
+      where codeNumber = #{functionCode,jdbcType=VARCHAR}
+    )
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from gradeCode
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hds.xquark.dal.model.GradeCode">
+    insert into gradeCode (
+      id, codeType, codeName, codeNumber, createdDate, description)
+    values (#{id,jdbcType=BIGINT},
+            #{codeType,jdbcType=VARCHAR},
+            #{codeName,jdbcType=VARCHAR},
+            #{codeNumber,jdbcType=VARCHAR},
+            NOW(),
+            #{description,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hds.xquark.dal.model.GradeCode">
+    update gradeCode
+    <set>
+      <if test="codeType != null">
+        codeType = #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeName != null">
+        codeName = #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="codeNumber != null">
+        codeNumber = #{codeNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hds.xquark.dal.model.GradeCode">
+    update gradeCode
+    set
+      codeType = #{codeType,jdbcType=VARCHAR},
+      codeName = #{codeName,jdbcType=VARCHAR},
+      codeNumber = #{codeNumber,jdbcType=VARCHAR},
+      description       = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
