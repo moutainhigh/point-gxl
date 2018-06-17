@@ -24,7 +24,8 @@ public enum Trancd {
   VF3("购货权益"),
   CPCM("推荐奖"),
   CBM("购货权益"),
-  EF("推荐奖2");
+  EF("推荐奖2"),
+  DEDUCT("积分扣减");
 
   private final String desc;
 
