@@ -86,14 +86,14 @@ public class CommissionOperationTest {
 
     Trancd trancd = Trancd.ACHA;
 
-    pointCommService.modifyPoint(
+    pointCommService.modifyCommission(
         300028L,
         bizId,
         "2002",
         PlatformType.E,
         modifyPoints, trancd);
 
-    pointCommService.modifyPoint(
+    pointCommService.modifyCommission(
         300028L,
         bizId,
         "2004",
