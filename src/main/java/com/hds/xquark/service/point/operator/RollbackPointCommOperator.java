@@ -10,7 +10,7 @@ import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
@@ -44,8 +44,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
   @Override
   @SuppressWarnings("unchecked")
   public PointCommCalResult calRet(PointCommOperatorContext context) {
-    PointRecordType recordType = context.getRecordType();
-    Preconditions.checkNotNull(recordType, "积分记录类型不能为空");
+    Trancd trancd = context.getTrancd();
+    Preconditions.checkNotNull(trancd, "积分记录类型不能为空");
 
     String businessId = context.getBusinessId();
     Long cpId = context.getCpId();
@@ -53,7 +53,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     BasePointCommTotal infoAfter = BasePointCommTotal.copy(infoBefore);
 
     // 同一业务id只会回退最后一次操作
-    List<? extends BasePointCommRecord> records = findUnRollBackedList(businessId, cpId, recordType,
+    List<? extends BasePointCommRecord> records = findUnRollBackedList(businessId, cpId, trancd,
         context.getOperateType().getRecordClazz());
     if (CollectionUtils.isEmpty(records)) {
       throw new BizException(GlobalErrorCode.POINT_RECORD_NOT_FOUNT);
@@ -88,7 +88,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       Class<? extends BasePointCommRecord> clazz) {
     // 找出回滚了多少积分
     List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId + "-rollback", grade,
-        calRet, PointRecordType.ROLLBACK, clazz);
+        calRet, calRet.getTrancd(), clazz);
     boolean ret = true;
     for (BasePointCommRecord record : rollBackRecords) {
       ret = ret && saveRecord(record);
@@ -115,7 +115,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
 
   @SuppressWarnings("unchecked")
   private <T extends BasePointCommRecord> List<T> findUnRollBackedList(String bizId,
-      Long cpId, PointRecordType recordType,
+      Long cpId, Trancd recordType,
       Class<T> clazz) {
     if (clazz == PointRecord.class) {
       return (List<T>) pointRecordMapper

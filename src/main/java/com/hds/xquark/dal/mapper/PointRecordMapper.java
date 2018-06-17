@@ -1,7 +1,7 @@
 package com.hds.xquark.dal.mapper;
 
 import com.hds.xquark.dal.model.PointRecord;
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.vo.PointRecordVO;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +36,7 @@ public interface PointRecordMapper {
       @Param("cpId") Long cpId);
 
   List<PointRecord> listUnRollBackedByCpIdWithBizIdAndType(@Param("bizId") String bizId,
-      @Param("cpId") Long cpId, @Param("type") PointRecordType type);
+      @Param("cpId") Long cpId, @Param("type") Trancd type);
 
   PointRecord loadUnRollBackedByUserIdWithBizIdAndFCode(@Param("bizId") String bizId,
       @Param("userId") String userId, @Param("functionCode") String functionCode);

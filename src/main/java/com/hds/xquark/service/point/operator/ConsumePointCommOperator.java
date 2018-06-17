@@ -5,7 +5,6 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
-import com.hds.xquark.dal.type.PointRecordType;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
@@ -43,8 +42,7 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
       Class<? extends BasePointCommRecord> clazz) {
     // 扣减需要保存多条积分记录
     List<? extends BasePointCommRecord> records = buildRecords(bizId, grade, calRet,
-        PointRecordType.DEDUCT,
-        clazz);
+        calRet.getTrancd(), clazz);
     boolean ret = true;
     for (BasePointCommRecord record : records) {
       if (record.getCurrent().signum() == 0) {

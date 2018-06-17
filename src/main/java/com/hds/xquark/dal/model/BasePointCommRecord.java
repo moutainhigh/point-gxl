@@ -1,6 +1,6 @@
 package com.hds.xquark.dal.model;
 
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -188,8 +188,8 @@ public abstract class BasePointCommRecord {
    */
   public abstract void setCurrentFreezed(BigDecimal currentFreezed);
 
-  public abstract PointRecordType getType();
+  public abstract Trancd getType();
 
-  public abstract void setType(PointRecordType type);
+  public abstract void setType(Trancd type);
 
 }

@@ -14,7 +14,7 @@ import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import java.lang.reflect.Method;
@@ -266,7 +266,7 @@ public class PointCommCalHelper {
    */
   public static <T extends BasePointCommRecord, S extends BasePointCommTotal> T buildRecord(
       Long cpId, String bizId, GradeCode grade,
-      S infoBefore, S infoAfter, PlatformType platform, PointRecordType recordType,
+      S infoBefore, S infoAfter, PlatformType platform, Trancd recordType,
       Class<T> clazz) {
     Preconditions.checkArgument(infoBefore != null && infoAfter != null,
         "积分计算错误");
@@ -289,7 +289,7 @@ public class PointCommCalHelper {
     record.setCpId(cpId);
     record.setGradeId(grade.getId());
     // TODO 类型需要修改
-    record.setType(PointRecordType.PRBA);
+    record.setType(Trancd.PRBA);
     return record;
   }
 

@@ -52,6 +52,11 @@ public class PointGradeServiceImpl implements PointGradeService {
   }
 
   @Override
+  public GradeCode loadByCategoryAndStatus(Long categoryId, Long status) {
+    return gradeCodeMapper.selectByCategoryIdAndStatus(categoryId, status);
+  }
+
+  @Override
   public List<GradeCode> list(Integer offset, Integer size) {
     return gradeCodeMapper.list(offset, size);
   }

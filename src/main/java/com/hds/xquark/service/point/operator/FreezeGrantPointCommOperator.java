@@ -6,7 +6,6 @@ import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
-import com.hds.xquark.dal.type.PointRecordType;
 import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
@@ -40,7 +39,7 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
       Class<? extends BasePointCommRecord> clazz) {
     // 将积分记录设置为已冻结
     BasePointCommRecord record = buildRecord(bizId, grade, calRet,
-        PointRecordType.FREEZE, clazz);
+        calRet.getTrancd(), clazz);
 
     // 将冻结积分数目保存到本次冻结字段
     // 以免统计时将冻结积分统计到总积分

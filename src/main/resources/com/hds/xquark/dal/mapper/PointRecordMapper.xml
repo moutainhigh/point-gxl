@@ -32,7 +32,7 @@
     <result column="current_freezed_point" jdbcType="BIGINT" property="currentFreezedPoint"/>
     <result column="source" jdbcType="VARCHAR" property="source"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
-    <result column="point_type" jdbcType="VARCHAR" property="recordType"/>
+    <result column="point_type" jdbcType="VARCHAR" property="trancd"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, cpId, grade_id, gradeNumber, orderid, current_point, current_freezed_point, point_type, source,

@@ -4,7 +4,7 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 
 /**
  * @author wangxinhua on 2018/5/21. DESC:
@@ -35,19 +35,20 @@ public class PointCommOperatorContext {
 
   private final PointOperateType operateType;
 
-  private Long points;
+  private final Trancd trancd;
 
-  private PointRecordType recordType;
+  private Long points;
 
   PointCommOperatorContext(Long cpId, BasePointCommTotal total,
       GradeCode gradeCode, String businessId, PlatformType platform,
-      PointOperateType operateType) {
+      PointOperateType operateType, Trancd trancd) {
     this.cpId = cpId;
     this.total = total;
     this.gradeCode = gradeCode;
     this.businessId = businessId;
     this.platform = platform;
     this.operateType = operateType;
+    this.trancd = trancd;
   }
 
   public Long getCpId() {
@@ -82,11 +83,8 @@ public class PointCommOperatorContext {
     this.points = points;
   }
 
-  public PointRecordType getRecordType() {
-    return recordType;
+  public Trancd getTrancd() {
+    return trancd;
   }
 
-  public void setRecordType(PointRecordType recordType) {
-    this.recordType = recordType;
-  }
 }

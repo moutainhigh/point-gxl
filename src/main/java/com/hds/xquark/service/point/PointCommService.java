@@ -4,6 +4,7 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -19,10 +20,12 @@ public interface PointCommService {
    * @param funcCode 规则代码
    * @param platform 所属平台
    * @param points 改动积分数，若规则本身设置了静态积分则不生效
+   * @param trancd
    * @return {@link PointCommOperationResult} 积分处理结果
    */
   PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      String funcCode, PlatformType platform, BigDecimal points);
+      String funcCode, PlatformType platform, BigDecimal points,
+      Trancd trancd);
 
   /**
    * 根据德分规则处理积分

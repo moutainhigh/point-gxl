@@ -13,7 +13,7 @@ import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
@@ -72,11 +72,12 @@ public abstract class BasePointCommOperator {
    * @param businessId 业务id
    * @param grade 规则
    * @param pointComms 动态积分/德分
+   * @param trancd
    * @return 积分计算结果 {@link PointCommOperationResult}
    */
   public PointCommOperationResult doOperation(Long cpId, String businessId, GradeCode grade,
       PlatformType platform, BigDecimal pointComms,
-      PointOperateType operateType) {
+      PointOperateType operateType, Trancd trancd) {
 
     checkArgument(grade.getCodeName() == currType(), "积分规则类型不匹配");
     BasePointCommTotal infoBefore = pointCommService
@@ -90,7 +91,7 @@ public abstract class BasePointCommOperator {
     // 计算修改后的积分
     PointCommOperatorContext context = new PointCommOperatorContext(cpId, infoBefore, grade,
         businessId,
-        platform, operateType);
+        platform, operateType, trancd);
     PointCommCalResult calRet = calRet(context);
 
     BasePointCommTotal infoAfter = calRet.getInfoAfter();
@@ -110,6 +111,7 @@ public abstract class BasePointCommOperator {
     ret.setRollBacked(calRet.getRollBacked());
     ret.setUsingGradeType(currType());
     ret.setDetailMap(calRet.getDetailMap());
+    ret.setTrancd(trancd);
     return ret;
   }
 
@@ -167,7 +169,7 @@ public abstract class BasePointCommOperator {
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 保存积分记录
-    BasePointCommRecord record = buildRecord(bizId, grade, calRet, PointRecordType.PRBA, clazz);
+    BasePointCommRecord record = buildRecord(bizId, grade, calRet, calRet.getTrancd(), clazz);
     record.setRollbacked(false);
     return saveRecord(record);
   }
@@ -183,7 +185,7 @@ public abstract class BasePointCommOperator {
    */
   <T extends BasePointCommRecord> T buildRecord(String bizId, GradeCode grade,
       PointCommOperationResult calRet,
-      PointRecordType recordType,
+      Trancd recordType,
       Class<T> clazz) {
     BasePointCommTotal infoBefore = calRet.getInfoBefore();
     BasePointCommTotal infoAfter = calRet.getInfoAfter();
@@ -198,7 +200,7 @@ public abstract class BasePointCommOperator {
    */
   <T extends BasePointCommRecord> List<T> buildRecords(String bizId, GradeCode grade,
       PointCommOperationResult calRet,
-      PointRecordType recordType,
+      Trancd recordType,
       Class<T> clazz) {
     Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
     if (MapUtils.isEmpty(detailMap)) {

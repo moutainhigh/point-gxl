@@ -1,7 +1,6 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.type.CodeNameType;
-import com.hds.xquark.dal.type.CodeType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,7 +18,7 @@ public class GradeCode implements Serializable {
   /**
    * 功能类型,比如message/point/commission
    */
-  private CodeType codeType;
+  private Long categoryId;
 
   /**
    * 原functionCode
@@ -50,12 +49,12 @@ public class GradeCode implements Serializable {
     this.id = id;
   }
 
-  public CodeType getCodeType() {
-    return codeType;
+  public Long getCategoryId() {
+    return categoryId;
   }
 
-  public void setCodeType(CodeType codeType) {
-    this.codeType = codeType;
+  public void setCategoryId(Long categoryId) {
+    this.categoryId = categoryId;
   }
 
   public CodeNameType getCodeName() {

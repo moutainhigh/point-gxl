@@ -39,7 +39,7 @@ public class PointCommServiceImplTest {
         "12345",
         "1003",
         PlatformType.H,
-        modifyPoints);
+        modifyPoints, null);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
 
@@ -57,7 +57,7 @@ public class PointCommServiceImplTest {
         "1234",
         "1001",
         PlatformType.H,
-        modifyPoints);
+        modifyPoints, null);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert

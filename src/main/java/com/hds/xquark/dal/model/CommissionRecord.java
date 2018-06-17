@@ -1,6 +1,6 @@
 package com.hds.xquark.dal.model;
 
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 
 /**
@@ -20,7 +20,7 @@ public class CommissionRecord extends BasePointCommRecord {
    */
   private BigDecimal currentFreezedComm;
 
-  private PointRecordType commType;
+  private Trancd commType;
 
   public BigDecimal getCurrentComm() {
     return currentComm;
@@ -38,11 +38,11 @@ public class CommissionRecord extends BasePointCommRecord {
     this.currentFreezedComm = currentFreezedComm;
   }
 
-  public PointRecordType getCommType() {
+  public Trancd getCommType() {
     return commType;
   }
 
-  public void setCommType(PointRecordType commType) {
+  public void setCommType(Trancd commType) {
     this.commType = commType;
   }
 
@@ -67,12 +67,12 @@ public class CommissionRecord extends BasePointCommRecord {
   }
 
   @Override
-  public PointRecordType getType() {
+  public Trancd getType() {
     return getCommType();
   }
 
   @Override
-  public void setType(PointRecordType type) {
+  public void setType(Trancd type) {
     setCommType(type);
   }
 }

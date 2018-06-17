@@ -33,7 +33,7 @@
       property="currentFreezedCommission"/>
     <result column="source" jdbcType="VARCHAR" property="source"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
-    <result column="comm_type" jdbcType="VARCHAR" property="recordType"/>
+    <result column="comm_type" jdbcType="VARCHAR" property="trancd"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, cpId, grade_Id, gradeNumber, orderid, current_comm, current_freezed_comm, comm_type,

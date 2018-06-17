@@ -4,6 +4,7 @@ import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class PointCommOperationResult {
   private BasePointCommTotal infoAfter;
 
   private List<BasePointCommRecord> rollBacked;
+
+  private Trancd trancd;
 
   private Map<PlatformType, BigDecimal> detailMap;
 
@@ -114,6 +117,14 @@ public class PointCommOperationResult {
 
   public void setUsingGradeType(CodeNameType usingGradeType) {
     this.usingGradeType = usingGradeType;
+  }
+
+  public Trancd getTrancd() {
+    return trancd;
+  }
+
+  public void setTrancd(Trancd trancd) {
+    this.trancd = trancd;
   }
 
   public Map<PlatformType, BigDecimal> getDetailMap() {

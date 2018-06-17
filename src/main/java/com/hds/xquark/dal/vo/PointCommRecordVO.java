@@ -1,6 +1,6 @@
 package com.hds.xquark.dal.vo;
 
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 
 /**
  * created by
@@ -45,7 +45,7 @@ public class PointCommRecordVO {
 
   private String gradeDesc;
 
-  private PointRecordType recordType;
+  private Trancd recordType;
 
   public String getId() {
     return id;
@@ -111,11 +111,11 @@ public class PointCommRecordVO {
     this.gradeDesc = gradeDesc;
   }
 
-  public PointRecordType getRecordType() {
+  public Trancd getRecordType() {
     return recordType;
   }
 
-  public void setRecordType(PointRecordType recordType) {
+  public void setRecordType(Trancd recordType) {
     this.recordType = recordType;
   }
 

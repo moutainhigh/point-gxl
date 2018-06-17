@@ -1,6 +1,6 @@
 package com.hds.xquark.dal.model;
 
-import com.hds.xquark.dal.type.PointRecordType;
+import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 
 /**
@@ -21,7 +21,7 @@ public class PointRecord extends BasePointCommRecord {
   /**
    * 收入类型
    */
-  private PointRecordType pointType;
+  private Trancd pointType;
 
   public BigDecimal getCurrentPoint() {
     return currentPoint;
@@ -40,11 +40,11 @@ public class PointRecord extends BasePointCommRecord {
   }
 
 
-  public PointRecordType getPointType() {
+  public Trancd getPointType() {
     return pointType;
   }
 
-  public void setPointType(PointRecordType pointType) {
+  public void setPointType(Trancd pointType) {
     this.pointType = pointType;
   }
 
@@ -69,12 +69,12 @@ public class PointRecord extends BasePointCommRecord {
   }
 
   @Override
-  public PointRecordType getType() {
+  public Trancd getType() {
     return getPointType();
   }
 
   @Override
-  public void setType(PointRecordType type) {
+  public void setType(Trancd type) {
     setPointType(type);
   }
 }
