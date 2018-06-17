@@ -23,13 +23,32 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
 public class PointCommServiceImplTest {
 
+  private final Long cpId = 300028L;
+
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(2000);
+
   @Autowired
   PointCommService pointCommService;
 
   @Test
-  public void modifyPoint() {
-    Long cpId = 300028L;
-    BigDecimal modifyPoints = BigDecimal.valueOf(2000);
+  public void testFreezeGrant() {
+    PointTotal totalBefore = pointCommService.loadByCpId(cpId);
+
+    pointCommService.modifyPoint(
+        300028L,
+        "12345",
+        "1003",
+        PlatformType.H,
+        modifyPoints);
+
+    PointTotal totalAfter = pointCommService.loadByCpId(cpId);
+
+    Assert.assertEquals(totalBefore.getFreezedHds(),
+        totalAfter.getFreezedHds().subtract(modifyPoints));
+  }
+
+  @Test
+  public void testConsume() {
 
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
 
@@ -41,7 +60,8 @@ public class PointCommServiceImplTest {
         modifyPoints);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
-    Assert.assertEquals(totalBefore.getUsableHds(), totalAfter.getUsableHds().subtract(modifyPoints));
+    Assert
+        .assertEquals(totalBefore.getUsableHds(), totalAfter.getUsableHds().subtract(modifyPoints));
   }
 
   @Test
