@@ -52,7 +52,7 @@ public class PointGradeServiceImpl implements PointGradeService {
   }
 
   @Override
-  public GradeCode loadByCategoryAndStatus(Long categoryId, Integer status) {
+  public GradeCode loadByCategoryAndStatus(Integer categoryId, Integer status) {
     return gradeCodeMapper.selectByCategoryIdAndStatus(categoryId, status);
   }
 

@@ -41,7 +41,7 @@
     ,
     <include refid="Blob_Column_List"/>
     from gradeCode
-    where categoryId = #{categoryId,jdbcType=BIGINT}
+    where categoryId = #{categoryId,jdbcType=INTEGER}
     AND accountCodeStatus = #{status,jdbcType=INTEGER}
   </select>
   <select id="list" resultMap="BaseResultMap">

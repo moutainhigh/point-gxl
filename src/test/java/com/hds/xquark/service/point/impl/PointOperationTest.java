@@ -68,7 +68,7 @@ public class PointOperationTest {
     pointCommService.modifyPoint(
         300028L,
         bizId,
-        100L,
+        100,
         1,
         PlatformType.H,
         modifyPoints, trancd);

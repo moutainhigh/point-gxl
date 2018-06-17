@@ -89,7 +89,7 @@ public class PointCommServiceImpl implements PointCommService {
    */
   @Override
   public PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      Long categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd) {
+      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd) {
     if (categoryId != PointConstrants.POINT_CATEGORY) {
       throw new BizException(GlobalErrorCode.POINT_WRONG_OPERATION);
     }
@@ -112,7 +112,7 @@ public class PointCommServiceImpl implements PointCommService {
    */
   @Override
   public PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      Long categoryId, Integer status, PlatformType platform, BigDecimal commission,
+      Integer categoryId, Integer status, PlatformType platform, BigDecimal commission,
       Trancd trancd) {
     if (categoryId != PointConstrants.COMMISSION_CATEGORY) {
       throw new BizException(GlobalErrorCode.POINT_WRONG_OPERATION);
@@ -154,7 +154,7 @@ public class PointCommServiceImpl implements PointCommService {
     return ret;
   }
 
-  private PointCommOperationResult modifyPointComm(Long cpId, String bizId, Long categoryId,
+  private PointCommOperationResult modifyPointComm(Long cpId, String bizId, Integer categoryId,
       Integer status, PlatformType platform, BigDecimal points, PointOperateType operateType,
       Trancd trancd) {
     GradeCode grade = pointGradeService.loadByCategoryAndStatus(categoryId, status);

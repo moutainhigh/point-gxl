@@ -14,10 +14,11 @@ import java.util.Map;
 public interface PointCommService {
 
   PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      Long categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd);
+      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd);
 
   PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      Long categoryId, Integer status, PlatformType platform, BigDecimal commission, Trancd trancd);
+      Integer categoryId, Integer status, PlatformType platform, BigDecimal commission,
+      Trancd trancd);
 
   /**
    * 根据积分规则处理积分

@@ -30,7 +30,7 @@ public interface PointGradeService {
 
   GradeCode loadByFunctionCode(String functionCode);
 
-  GradeCode loadByCategoryAndStatus(Long categoryId, Integer status);
+  GradeCode loadByCategoryAndStatus(Integer categoryId, Integer status);
 
   List<GradeCode> list(Integer offset, Integer size);
 
