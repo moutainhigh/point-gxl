@@ -13,6 +13,12 @@ import java.util.Map;
  */
 public interface PointCommService {
 
+  PointCommOperationResult modifyPoint(Long cpId, String bizId,
+      Long categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd);
+
+  PointCommOperationResult modifyCommission(Long cpId, String bizId,
+      Long categoryId, Integer status, PlatformType platform, BigDecimal commission, Trancd trancd);
+
   /**
    * 根据积分规则处理积分
    *
@@ -34,10 +40,12 @@ public interface PointCommService {
    * @param funcCode 规则代码
    * @param platform 所属平台
    * @param commission 改动积分数，若规则本身设置了静态积分则不生效
+   * @param trancd
    * @return {@link PointCommOperationResult} 积分处理结果
    */
   PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      String funcCode, PlatformType platform, BigDecimal commission);
+      String funcCode, PlatformType platform, BigDecimal commission,
+      Trancd trancd);
 
   /**
    * 更新或新增用户积分信息

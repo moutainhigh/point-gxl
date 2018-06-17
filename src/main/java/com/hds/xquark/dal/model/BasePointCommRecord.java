@@ -1,5 +1,6 @@
 package com.hds.xquark.dal.model;
 
+import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -106,6 +107,10 @@ public abstract class BasePointCommRecord {
 
   public Integer getSource() {
     return source;
+  }
+
+  public PlatformType getPlatForm() {
+    return PlatformType.fromCode(source);
   }
 
   public void setSource(Integer source) {

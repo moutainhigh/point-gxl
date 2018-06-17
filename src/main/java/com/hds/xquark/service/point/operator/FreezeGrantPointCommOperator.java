@@ -45,6 +45,7 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
     // 以免统计时将冻结积分统计到总积分
     // 解冻时将该字段取出增加到用户可用积分
     record.setCurrentFreezed(grade.getPoint());
+    record.setRollbacked(false);
     Date now = new Date();
 
     Date freezedTo = DateUtils.addDate(now, null, null, 7);

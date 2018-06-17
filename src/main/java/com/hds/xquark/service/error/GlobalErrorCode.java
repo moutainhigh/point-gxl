@@ -18,6 +18,8 @@ public enum GlobalErrorCode {
 
   COMMISSION_RECORD_NOT_FOUNT(8000005, "找不到德分记录"),
 
+  POINT_WRONG_OPERATION(8000006, "规则不匹配"),
+
   //
   NOT_FOUND(404, "Resource not found"),
   //

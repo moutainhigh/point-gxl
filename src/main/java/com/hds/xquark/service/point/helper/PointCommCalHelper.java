@@ -289,7 +289,7 @@ public class PointCommCalHelper {
     record.setCpId(cpId);
     record.setGradeId(grade.getId());
     // TODO 类型需要修改
-    record.setType(Trancd.PRBA);
+    record.setType(recordType);
     return record;
   }
 

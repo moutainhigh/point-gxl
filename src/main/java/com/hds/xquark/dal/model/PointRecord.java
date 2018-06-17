@@ -21,7 +21,7 @@ public class PointRecord extends BasePointCommRecord {
   /**
    * 收入类型
    */
-  private Trancd pointType;
+  private Trancd trancd;
 
   public BigDecimal getCurrentPoint() {
     return currentPoint;
@@ -40,12 +40,12 @@ public class PointRecord extends BasePointCommRecord {
   }
 
 
-  public Trancd getPointType() {
-    return pointType;
+  public Trancd getTrancd() {
+    return trancd;
   }
 
-  public void setPointType(Trancd pointType) {
-    this.pointType = pointType;
+  public void setTrancd(Trancd trancd) {
+    this.trancd = trancd;
   }
 
   @Override
@@ -70,11 +70,11 @@ public class PointRecord extends BasePointCommRecord {
 
   @Override
   public Trancd getType() {
-    return getPointType();
+    return getTrancd();
   }
 
   @Override
   public void setType(Trancd type) {
-    setPointType(type);
+    setTrancd(type);
   }
 }

@@ -20,7 +20,7 @@ public class CommissionRecord extends BasePointCommRecord {
    */
   private BigDecimal currentFreezedComm;
 
-  private Trancd commType;
+  private Trancd trancd;
 
   public BigDecimal getCurrentComm() {
     return currentComm;
@@ -38,12 +38,12 @@ public class CommissionRecord extends BasePointCommRecord {
     this.currentFreezedComm = currentFreezedComm;
   }
 
-  public Trancd getCommType() {
-    return commType;
+  public Trancd getTrancd() {
+    return trancd;
   }
 
-  public void setCommType(Trancd commType) {
-    this.commType = commType;
+  public void setTrancd(Trancd trancd) {
+    this.trancd = trancd;
   }
 
   @Override
@@ -68,11 +68,11 @@ public class CommissionRecord extends BasePointCommRecord {
 
   @Override
   public Trancd getType() {
-    return getCommType();
+    return getTrancd();
   }
 
   @Override
   public void setType(Trancd type) {
-    setCommType(type);
+    setTrancd(type);
   }
 }

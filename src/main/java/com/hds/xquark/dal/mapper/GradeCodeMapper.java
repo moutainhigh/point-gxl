@@ -17,7 +17,7 @@ public interface GradeCodeMapper {
   GradeCode selectByFunctionCode(String functionCode);
 
   GradeCode selectByCategoryIdAndStatus(@Param("categoryId") Long categoryId,
-      @Param("status") Long status);
+      @Param("status") Integer status);
 
   List<GradeCode> list(@Param("offset") Integer offset, @Param("size") Integer size);
 

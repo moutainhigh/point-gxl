@@ -15,6 +15,7 @@ import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
+import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,13 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     }
     Map<PlatformType, BigDecimal> detailMap = new HashMap<>(records.size());
     for (BasePointCommRecord record : records) {
+      // 修改记录
+      BigDecimal negateUsable = record.getCurrent().negate();
+      BigDecimal negateFreeze = record.getCurrentFreezed().negate();
+      PointCommCalHelper.plus(infoAfter, record.getPlatForm(), negateUsable);
+      PointCommCalHelper
+          .plusFreeze(infoAfter, record.getPlatForm(), negateFreeze);
+      // TODO map中的value没有使用意义
       detailMap.put(PlatformType.fromCode(record.getSource()), record.getCurrent());
     }
     return new PointCommCalResult(infoAfter, (List<BasePointCommRecord>) records, detailMap);
@@ -91,6 +99,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
         calRet, calRet.getTrancd(), clazz);
     boolean ret = true;
     for (BasePointCommRecord record : rollBackRecords) {
+      record.setRollbacked(false);
       ret = ret && saveRecord(record);
     }
 

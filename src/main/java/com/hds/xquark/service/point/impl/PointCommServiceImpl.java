@@ -3,6 +3,7 @@ package com.hds.xquark.service.point.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableMap;
+import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
@@ -86,8 +87,12 @@ public class PointCommServiceImpl implements PointCommService {
    * @param trancd 类型
    * @return 修改结果
    */
+  @Override
   public PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      Long categoryId, Long status, PlatformType platform, BigDecimal points, Trancd trancd) {
+      Long categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd) {
+    if (categoryId != PointConstrants.POINT_CATEGORY) {
+      throw new BizException(GlobalErrorCode.POINT_WRONG_OPERATION);
+    }
     return modifyPointComm(cpId, bizId, categoryId, status, platform, points,
         PointOperateType.POINT,
         trancd);
@@ -105,8 +110,13 @@ public class PointCommServiceImpl implements PointCommService {
    * @param trancd 类型
    * @return 修改结果
    */
+  @Override
   public PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      Long categoryId, Long status, PlatformType platform, BigDecimal commission, Trancd trancd) {
+      Long categoryId, Integer status, PlatformType platform, BigDecimal commission,
+      Trancd trancd) {
+    if (categoryId != PointConstrants.COMMISSION_CATEGORY) {
+      throw new BizException(GlobalErrorCode.POINT_WRONG_OPERATION);
+    }
     return modifyPointComm(cpId, bizId, categoryId, status, platform, commission,
         PointOperateType.COMMISSION, trancd);
   }
@@ -120,9 +130,10 @@ public class PointCommServiceImpl implements PointCommService {
 
   @Override
   public PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      String funcCode, PlatformType platform, BigDecimal commission) {
+      String funcCode, PlatformType platform, BigDecimal commission,
+      Trancd trancd) {
     return modifyPointComm(cpId, bizId, funcCode, platform, commission,
-        PointOperateType.COMMISSION, null);
+        PointOperateType.COMMISSION, trancd);
   }
 
   private PointCommOperationResult modifyPointComm(Long cpId, String bizId, GradeCode grade,
@@ -144,7 +155,7 @@ public class PointCommServiceImpl implements PointCommService {
   }
 
   private PointCommOperationResult modifyPointComm(Long cpId, String bizId, Long categoryId,
-      Long status, PlatformType platform, BigDecimal points, PointOperateType operateType,
+      Integer status, PlatformType platform, BigDecimal points, PointOperateType operateType,
       Trancd trancd) {
     GradeCode grade = pointGradeService.loadByCategoryAndStatus(categoryId, status);
     if (grade == null) {
