@@ -6,8 +6,6 @@ import com.hds.xquark.dal.vo.PointRecordVO;
 import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 
 public interface PointRecordMapper {
 
@@ -22,13 +20,13 @@ public interface PointRecordMapper {
   int updateByPrimaryKey(PointRecord record);
 
   List<PointRecord> listByUserId(@Param("userId") String userId,
-      @Param("direction") Direction direction);
+      @Param("direction") String direction);
 
   List<PointRecord> listByCpId(@Param("cpId") Long cpId,
-      @Param("direction") Direction direction);
+      @Param("direction") String direction);
 
   List<PointRecordVO> listVO(@Param("cpId") Long cpId, @Param("source") Integer source,
-      @Param("page") Pageable pageable);
+      Integer offset, Integer size);
 
   Long count(@Param("cpId") Long cpId, @Param("source") Integer sourceCode);
 

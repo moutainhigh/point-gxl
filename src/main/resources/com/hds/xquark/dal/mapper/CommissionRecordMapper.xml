@@ -6,7 +6,7 @@
     <id column="id" jdbcType="BIGINT" property="id"/>
     <result column="cpId" jdbcType="BIGINT" property="cpId"/>
     <result column="grade_Id" jdbcType="BIGINT" property="gradeId"/>
-    <result column="codeNumber" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="gradeNumber" jdbcType="VARCHAR" property="codeNumber"/>
     <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
     <result column="current_comm" jdbcType="DECIMAL" property="currentComm"/>
     <result column="current_freezed_comm" jdbcType="DECIMAL" property="currentFreezedComm"/>
@@ -26,7 +26,7 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName"/>
     <result column="grade_id" jdbcType="BIGINT" property="gradeId"/>
     <result column="grade_desc" jdbcType="VARCHAR" property="gradeDesc"/>
-    <result column="codeNumber" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="gradeNumber" jdbcType="VARCHAR" property="codeNumber"/>
     <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
     <result column="current_comm" jdbcType="BIGINT" property="currentCommission"/>
     <result column="current_freezed_comm" jdbcType="BIGINT"
@@ -36,12 +36,12 @@
     <result column="comm_type" jdbcType="VARCHAR" property="recordType"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, cpId, grade_Id, codeNumber, orderid, current_comm, current_freezed_comm, comm_type,
+    id, cpId, grade_Id, gradeNumber, orderid, current_comm, current_freezed_comm, comm_type,
     source, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
     freezed_to
   </sql>
   <sql id="Join_Column_List">
-    record.id, record.cpId, record.grade_id, record.codeNumber,
+    record.id, record.cpId, record.grade_id, record.gradeNumber,
     record.orderid, record.current_comm, record.current_freezed_comm,
     record.comm_type, record.source, record.rollbacked, record.rollback_id, record.un_freeze_id,
     record.created_at, record.updated_at, record.freezed_at, record.freezed_to
@@ -66,7 +66,7 @@
       and record.source = #{source,jdbcType=INTEGER}
     </if>
     <if test="page != null">
-      limit #{page.offset}, #{page.size}
+      limit #{offset}, #{size}
     </if>
   </select>
   <select id="count" resultType="java.lang.Long">
@@ -96,13 +96,13 @@
   </delete>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.CommissionRecord">
     insert into commissionsuspending (id, cpId, grade_Id,
-                                      codeNumber, orderid, current_comm,
-                                      current_freezed_comm, comm_type, source,
+                                      gradeNumber, orderid, current_comm,
+                                      current_freezed_comm, trancd, source,
                                       rollbacked, un_freeze_id, rollback_id,
                                       created_at, updated_at, freezed_at,
                                       freezed_to)
     values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT},
-                                   #{codeNumber,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR},
+                                   #{gradeNumber,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR},
                                    #{currentComm,jdbcType=DECIMAL},
                                    #{currentFreezedComm,jdbcType=DECIMAL},
                                    #{commType,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT},
@@ -122,7 +122,7 @@
         grade_Id = #{gradeId,jdbcType=BIGINT},
       </if>
       <if test="codeNumber != null">
-        codeNumber = #{codeNumber,jdbcType=VARCHAR},
+        gradeNumber = #{codeNumber,jdbcType=VARCHAR},
       </if>
       <if test="businessId != null">
         orderid = #{businessId,jdbcType=VARCHAR},
@@ -162,11 +162,11 @@
     update commissionsuspending
     set cpId               = #{cpId,jdbcType=BIGINT},
       grade_Id             = #{gradeId,jdbcType=BIGINT},
-      codeNumber           = #{codeNumber,jdbcType=VARCHAR},
+      gradeNumber          = #{codeNumber,jdbcType=VARCHAR},
       orderid              = #{businessId,jdbcType=VARCHAR},
       current_comm         = #{currentComm,jdbcType=DECIMAL},
       current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
-      comm_type            = #{commType,jdbcType=VARCHAR},
+      trancd               = #{commType,jdbcType=VARCHAR},
       source               = #{source,jdbcType=TINYINT},
       rollbacked           = #{rollbacked,jdbcType=TINYINT},
       un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},

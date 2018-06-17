@@ -3,7 +3,6 @@ package com.hds.xquark.dal.mapper;
 import com.hds.xquark.dal.model.GradeCode;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 public interface GradeCodeMapper {
 
@@ -17,7 +16,7 @@ public interface GradeCodeMapper {
 
   GradeCode selectByFunctionCode(String functionCode);
 
-  List<GradeCode> list(@Param("page") Pageable pageable);
+  List<GradeCode> list(@Param("offset") Integer offset, @Param("size") Integer size);
 
   Long count();
 

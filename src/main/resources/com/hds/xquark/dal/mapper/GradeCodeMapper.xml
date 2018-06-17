@@ -5,8 +5,8 @@
   <resultMap id="BaseResultMap" type="com.hds.xquark.dal.model.GradeCode">
     <id column="id" jdbcType="BIGINT" property="id"/>
     <result column="codeType" jdbcType="VARCHAR" property="codeType"/>
-    <result column="codeName" jdbcType="VARCHAR" property="codeName"/>
-    <result column="codeNumber" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="gradeName" jdbcType="VARCHAR" property="codeName"/>
+    <result column="gradeNumber" jdbcType="VARCHAR" property="codeNumber"/>
     <result column="createdDate" jdbcType="TIMESTAMP" property="createdDate"/>
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
@@ -14,7 +14,7 @@
     <result column="description" jdbcType="LONGVARCHAR" property="description"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, codeType, codeName, codeNumber, createdDate
+    id, gradeType, gradeName, gradeNumber, createdDate
   </sql>
   <sql id="Blob_Column_List">
     description
@@ -33,7 +33,7 @@
     ,
     <include refid="Blob_Column_List"/>
     from gradeCode
-    where codeNumber = #{functionCode,jdbcType=VARCHAR}
+    where gradeNumber = #{functionCode,jdbcType=VARCHAR}
   </select>
   <select id="list" resultMap="BaseResultMap">
     select
@@ -42,7 +42,7 @@
     <include refid="Blob_Column_List"/>
     from gradeCode
     <if test="page != null">
-      limit #{page.offset}, #{page.size}
+      limit #{offset}, #{size}
     </if>
   </select>
   <select id="count" resultType="java.lang.Long">
@@ -52,7 +52,7 @@
     select exists(
       select 1
       from gradeCode
-      where codeNumber = #{functionCode,jdbcType=VARCHAR}
+      where gradeNumber = #{functionCode,jdbcType=VARCHAR}
     )
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -61,7 +61,7 @@
   </delete>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.GradeCode">
     insert into gradeCode (
-      id, codeType, codeName, codeNumber, createdDate, description)
+      id, gradeType, gradeName, gradeNumber, createdDate, description)
     values (#{id,jdbcType=BIGINT},
             #{codeType,jdbcType=VARCHAR},
             #{codeName,jdbcType=VARCHAR},
@@ -73,13 +73,13 @@
     update gradeCode
     <set>
       <if test="codeType != null">
-        codeType = #{codeType,jdbcType=VARCHAR},
+        gradeType = #{codeType,jdbcType=VARCHAR},
       </if>
       <if test="codeName != null">
-        codeName = #{codeName,jdbcType=VARCHAR},
+        gradeName = #{codeName,jdbcType=VARCHAR},
       </if>
       <if test="codeNumber != null">
-        codeNumber = #{codeNumber,jdbcType=VARCHAR},
+        gradeNumber = #{codeNumber,jdbcType=VARCHAR},
       </if>
       <if test="description != null">
         description = #{description,jdbcType=LONGVARCHAR},
@@ -90,10 +90,10 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hds.xquark.dal.model.GradeCode">
     update gradeCode
     set
-      codeType = #{codeType,jdbcType=VARCHAR},
-      codeName = #{codeName,jdbcType=VARCHAR},
-      codeNumber = #{codeNumber,jdbcType=VARCHAR},
-      description       = #{description,jdbcType=LONGVARCHAR}
+      gradeType   = #{codeType,jdbcType=VARCHAR},
+      gradeName   = #{codeName,jdbcType=VARCHAR},
+      gradeNumber = #{codeNumber,jdbcType=VARCHAR},
+      description = #{description,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -6,7 +6,6 @@ import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import java.math.BigDecimal;
 import java.util.Map;
-import org.springframework.data.domain.Pageable;
 
 /**
  * @author wangxinhua on 2018/5/18. DESC: 积分信息service
@@ -59,7 +58,7 @@ public interface PointCommService {
   @SuppressWarnings("unchecked")
   <T extends BasePointCommTotal> T loadOrBuildInfo(Long cpId, Class<T> clazz);
 
-  Map<String, Object> listPointRecords(Long cpId, Integer code, Pageable pageable);
+  Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset, Integer size);
 
-  Map<String, Object> listCommissionRecords(Long cpId, Integer code, Pageable pageable);
+  Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset, Integer size);
 }

@@ -28,7 +28,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -217,8 +216,9 @@ public class PointCommServiceImpl implements PointCommService {
    * 查询德分记录
    */
   @Override
-  public Map<String, Object> listPointRecords(Long cpId, Integer code, Pageable pageable) {
-    List<PointRecordVO> list = pointRecordMapper.listVO(cpId, code, pageable);
+  public Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset,
+      Integer size) {
+    List<PointRecordVO> list = pointRecordMapper.listVO(cpId, code, offset, size);
     Long total = pointRecordMapper.count(cpId, code);
     Map<String, Object> ret = ImmutableMap.of("list", list, "total", total);
     return ret;
@@ -228,8 +228,9 @@ public class PointCommServiceImpl implements PointCommService {
    * 查询积分记录
    */
   @Override
-  public Map<String, Object> listCommissionRecords(Long cpId, Integer code, Pageable pageable) {
-    List<CommissionRecordVO> list = commissionRecordMapper.listVO(cpId, code, pageable);
+  public Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset,
+      Integer size) {
+    List<CommissionRecordVO> list = commissionRecordMapper.listVO(cpId, code, offset, size);
     Long total = commissionRecordMapper.count(cpId, code);
     Map<String, Object> ret = ImmutableMap.of("list", list, "total", total);
     return ret;

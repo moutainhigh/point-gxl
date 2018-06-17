@@ -7,7 +7,6 @@ import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointGradeService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -53,8 +52,8 @@ public class PointGradeServiceImpl implements PointGradeService {
   }
 
   @Override
-  public List<GradeCode> list(Pageable pageable) {
-    return gradeCodeMapper.list(pageable);
+  public List<GradeCode> list(Integer offset, Integer size) {
+    return gradeCodeMapper.list(offset, size);
   }
 
   @Override

@@ -2,7 +2,6 @@ package com.hds.xquark.service.point;
 
 import com.hds.xquark.dal.model.GradeCode;
 import java.util.List;
-import org.springframework.data.domain.Pageable;
 
 /**
  * @author wangxinhua on 2018/5/18. DESC: 积分规则设置service
@@ -31,7 +30,7 @@ public interface PointGradeService {
 
   GradeCode loadByFunctionCode(String functionCode);
 
-  List<GradeCode> list(Pageable pageable);
+  List<GradeCode> list(Integer offset, Integer size);
 
   Long count();
 

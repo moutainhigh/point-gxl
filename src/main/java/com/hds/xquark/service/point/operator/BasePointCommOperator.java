@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.collections4.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
@@ -42,8 +40,6 @@ public abstract class BasePointCommOperator {
   private CommissionRecordMapper commissionRecordMapper;
 
   private PointCommService pointCommService;
-
-  protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   /**
    * 积分状态字段
@@ -237,7 +233,6 @@ public abstract class BasePointCommOperator {
     try {
       method = pointTotal.getClass().getDeclaredMethod(methodName, PointTotal.class);
     } catch (NoSuchMethodException e) {
-      logger.error("pointInfo对象中没有找到方法 {}", methodName);
       throw new BizException(GlobalErrorCode.INTERNAL_ERROR, e);
     }
     return (Long) ReflectionUtils.invokeMethod(method, pointTotal);
@@ -258,7 +253,6 @@ public abstract class BasePointCommOperator {
     try {
       method = pointTotal.getClass().getDeclaredMethod(methodName, PointTotal.class);
     } catch (NoSuchMethodException e) {
-      logger.error("pointInfo对象中没有找到方法 {}", methodName);
       throw new BizException(GlobalErrorCode.INTERNAL_ERROR, e);
     }
     ReflectionUtils.invokeMethod(method, pointTotal, newPoint);

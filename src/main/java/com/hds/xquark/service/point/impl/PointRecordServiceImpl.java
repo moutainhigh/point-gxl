@@ -5,7 +5,6 @@ import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.service.point.PointRecordService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,12 +26,12 @@ public class PointRecordServiceImpl implements PointRecordService {
   }
 
   @Override
-  public List<PointRecord> listByUserId(String userId, Direction direction) {
+  public List<PointRecord> listByUserId(String userId, String direction) {
     return pointRecordMapper.listByUserId(userId, direction);
   }
 
   @Override
-  public List<PointRecord> listByCpId(Long cpId, Direction direction) {
+  public List<PointRecord> listByCpId(Long cpId, String direction) {
     return pointRecordMapper.listByCpId(cpId, direction);
   }
 
