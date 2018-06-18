@@ -265,14 +265,16 @@ public class PointCommServiceImpl implements PointCommService {
       Class<? extends BasePointCommRecord> clazz) {
 
     // 保存积分记录
-    boolean ret = operator.saveBackRecord(bizId, grade, operationResult, clazz);
+    List<? extends BasePointCommRecord> records = operator
+        .saveBackRecord(bizId, grade, operationResult, clazz);
 
     // 更新或保存用户积分信息
     BasePointCommTotal infoAfter = operationResult.getInfoAfter();
-    ret = ret && saveOrUpdate(infoAfter);
+    boolean ret = saveOrUpdate(infoAfter);
     if (!ret) {
       throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
     }
+    operationResult.setCurrRecords(records);
     // 保存积分记录积分记录
   }
 
@@ -313,8 +315,17 @@ public class PointCommServiceImpl implements PointCommService {
       String bizId = record.getBusinessId();
       PlatformType platform = record.getPlatForm();
       // 解冻原记录
-      modifyPointComm(cpId, bizId, GradeCodeConstrants.RELEASE_COMMISSION_CODE, platform, point,
+      PointCommOperationResult ret = modifyPointComm(cpId, bizId,
+          GradeCodeConstrants.RELEASE_COMMISSION_CODE, platform, point,
           PointOperateType.COMMISSION, record.getTrancd());
+      @SuppressWarnings("unchecked")
+      List<CommissionRecord> currRecords = (List<CommissionRecord>) ret.getCurrRecords();
+      if (CollectionUtils.isEmpty(currRecords) || currRecords.size() != 1) {
+        throw new BizException(GlobalErrorCode.UNKNOWN, "积分解除冻结失败");
+      }
+      CommissionRecord record1 = currRecords.get(0);
+      record.setUnFreezeId(record1.getId());
+      commissionRecordMapper.updateByPrimaryKeySelective(record);
     }
     return unfreezedPoints.size();
   }
@@ -334,8 +345,17 @@ public class PointCommServiceImpl implements PointCommService {
       String bizId = record.getBusinessId();
       PlatformType platform = record.getPlatForm();
       // 解冻原记录
-      modifyPointComm(cpId, bizId, GradeCodeConstrants.RELEASE_POINT_CODE, platform, point,
+      PointCommOperationResult ret = modifyPointComm(cpId, bizId,
+          GradeCodeConstrants.RELEASE_POINT_CODE, platform, point,
           PointOperateType.POINT, record.getTrancd());
+      @SuppressWarnings("unchecked")
+      List<PointRecord> currRecords = (List<PointRecord>) ret.getCurrRecords();
+      if (CollectionUtils.isEmpty(currRecords) || currRecords.size() != 1) {
+        throw new BizException(GlobalErrorCode.UNKNOWN, "积分解除冻结失败");
+      }
+      PointRecord record1 = currRecords.get(0);
+      record.setUnFreezeId(record1.getId());
+      pointRecordMapper.updateByPrimaryKeySelective(record);
     }
     return unfreezedPoints.size();
   }

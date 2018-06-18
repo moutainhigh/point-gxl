@@ -23,6 +23,7 @@ import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -165,13 +166,14 @@ public abstract class BasePointCommOperator {
    * @param calRet 计算结果
    * @return 保存结果
    */
-  public boolean saveBackRecord(String bizId, GradeCode grade,
+  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 保存积分记录
     BasePointCommRecord record = buildRecord(bizId, grade, calRet, calRet.getTrancd(), clazz);
     record.setRollbacked(false);
-    return saveRecord(record);
+    saveRecord(record);
+    return Collections.singletonList(record);
   }
 
   /**

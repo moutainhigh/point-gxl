@@ -92,15 +92,15 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
    * @return 保存结果
    */
   @Override
-  public boolean saveBackRecord(String bizId, GradeCode grade, PointCommOperationResult calRet,
+  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
+      PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 找出回滚了多少积分
     List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade,
         calRet, calRet.getTrancd(), clazz);
-    boolean ret = true;
     for (BasePointCommRecord record : rollBackRecords) {
       record.setRollbacked(false);
-      ret = ret && saveRecord(record);
+      saveRecord(record);
     }
 
     // 更新原记录为已回滚
@@ -115,11 +115,10 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
         if (Objects.equals(backedRec.getSource(), record.getSource())) {
           record.setRollbackId(backedRec.getId());
           record.setRollbacked(true);
-          ret = ret && updateRecord(record);
         }
       }
     }
-    return ret;
+    return rollBackRecords;
   }
 
   @SuppressWarnings("unchecked")

@@ -130,7 +130,7 @@ public class PointOperationTest {
 
     pointCommService.modifyPoint(
         300028L,
-        "12345",
+        getBizId(),
         "1003",
         platform,
         modifyPoints, Trancd.ROYA);

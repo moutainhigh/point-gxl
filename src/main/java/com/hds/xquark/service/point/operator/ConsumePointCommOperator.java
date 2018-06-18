@@ -38,20 +38,19 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
   }
 
   @Override
-  public boolean saveBackRecord(String bizId, GradeCode grade, PointCommOperationResult calRet,
+  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
+      PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 扣减需要保存多条积分记录
     List<? extends BasePointCommRecord> records = buildRecords(bizId, grade, calRet,
         calRet.getTrancd(), clazz);
-    boolean ret = true;
     for (BasePointCommRecord record : records) {
       if (record.getCurrent().signum() == 0) {
         continue;
       }
       record.setRollbacked(false);
-      ret = ret && saveRecord(record);
     }
-    return ret;
+    return records;
   }
 
   @Override

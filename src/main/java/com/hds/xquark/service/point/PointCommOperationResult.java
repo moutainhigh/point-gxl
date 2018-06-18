@@ -44,6 +44,8 @@ public class PointCommOperationResult {
    */
   private BasePointCommTotal infoAfter;
 
+  private List<? extends BasePointCommRecord> currRecords;
+
   private List<BasePointCommRecord> rollBacked;
 
   private Trancd trancd;
@@ -135,18 +137,11 @@ public class PointCommOperationResult {
     this.detailMap = detailMap;
   }
 
-  @Override
-  public String toString() {
-    return "PointCommOperationResult{" +
-        "gradeId=" + gradeId +
-        ", cpId=" + cpId +
-        ", currentPoint=" + currentPoint +
-        ", platform=" + platform +
-        ", infoBefore=" + infoBefore +
-        ", infoAfter=" + infoAfter +
-        ", rollBacked=" + rollBacked +
-        ", detailMap=" + detailMap +
-        ", usingGradeType=" + usingGradeType +
-        '}';
+  public List<? extends BasePointCommRecord> getCurrRecords() {
+    return currRecords;
+  }
+
+  public void setCurrRecords(List<? extends BasePointCommRecord> currRecords) {
+    this.currRecords = currRecords;
   }
 }

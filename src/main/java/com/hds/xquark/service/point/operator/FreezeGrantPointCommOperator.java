@@ -10,7 +10,9 @@ import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import com.hds.xquark.utils.DateUtils;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,7 +37,8 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
   }
 
   @Override
-  public boolean saveBackRecord(String bizId, GradeCode grade, PointCommOperationResult calRet,
+  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
+      PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 将积分记录设置为已冻结
     BasePointCommRecord record = buildRecord(bizId, grade, calRet,
@@ -51,7 +54,8 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
     Date freezedTo = DateUtils.addDate(now, null, null, 7);
     record.setFreezedAt(now);
     record.setFreezedTo(freezedTo);
-    return saveRecord(record);
+    saveRecord(record);
+    return Collections.singletonList(record);
   }
 
 }
