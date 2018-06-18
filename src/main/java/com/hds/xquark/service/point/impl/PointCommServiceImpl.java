@@ -3,6 +3,7 @@ package com.hds.xquark.service.point.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableMap;
+import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
@@ -10,8 +11,10 @@ import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
+import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.GradeCode;
+import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
@@ -29,6 +32,7 @@ import com.hds.xquark.service.point.operator.PointOperatorFactory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,10 +151,7 @@ public class PointCommServiceImpl implements PointCommService {
     // 根据不同操作计算积分结果
     PointCommOperationResult ret = operator.doOperation(cpId, bizId, grade,
         platform, points, operateType, trancd);
-    boolean saveRet = saveRet(bizId, grade, ret, operator, operateType.getRecordClazz());
-    if (!saveRet) {
-      throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
-    }
+    saveRet(bizId, grade, ret, operator, operateType.getRecordClazz());
     return ret;
   }
 
@@ -256,10 +257,10 @@ public class PointCommServiceImpl implements PointCommService {
    * @param operationResult 积分计算结果
    * @param operator 规则实现类
    * @param clazz 积分记录class类型
-   * @return 保存结果
    */
+  // TODO 事务问题
   @Transactional(rollbackFor = Exception.class)
-  boolean saveRet(String bizId, GradeCode grade, PointCommOperationResult operationResult,
+  void saveRet(String bizId, GradeCode grade, PointCommOperationResult operationResult,
       BasePointCommOperator operator,
       Class<? extends BasePointCommRecord> clazz) {
 
@@ -269,8 +270,10 @@ public class PointCommServiceImpl implements PointCommService {
     // 更新或保存用户积分信息
     BasePointCommTotal infoAfter = operationResult.getInfoAfter();
     ret = ret && saveOrUpdate(infoAfter);
+    if (!ret) {
+      throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
+    }
     // 保存积分记录积分记录
-    return ret;
   }
 
   /**
@@ -293,6 +296,59 @@ public class PointCommServiceImpl implements PointCommService {
     List<CommissionRecordVO> list = commissionRecordMapper.listVO(cpId, code, offset, size);
     Long total = commissionRecordMapper.count(cpId, code);
     return ImmutableMap.of("list", list, "total", total);
+  }
+
+  /**
+   * 发放佣金
+   */
+  @Override
+  public int releaseCommission() {
+    List<CommissionRecord> unfreezedPoints = listUnFreezedRecord(CommissionRecord.class);
+    if (CollectionUtils.isEmpty(unfreezedPoints)) {
+      return 0;
+    }
+    for (CommissionRecord record : unfreezedPoints) {
+      BigDecimal point = record.getCurrentFreezed();
+      Long cpId = record.getCpId();
+      String bizId = record.getBusinessId();
+      PlatformType platform = record.getPlatForm();
+      // 解冻原记录
+      modifyPointComm(cpId, bizId, GradeCodeConstrants.RELEASE_COMMISSION_CODE, platform, point,
+          PointOperateType.COMMISSION, record.getTrancd());
+    }
+    return unfreezedPoints.size();
+  }
+
+  /**
+   * 发放德分
+   */
+  @Override
+  public int releasePoints() {
+    List<PointRecord> unfreezedPoints = listUnFreezedRecord(PointRecord.class);
+    if (CollectionUtils.isEmpty(unfreezedPoints)) {
+      return 0;
+    }
+    for (PointRecord record : unfreezedPoints) {
+      BigDecimal point = record.getCurrentFreezed();
+      Long cpId = record.getCpId();
+      String bizId = record.getBusinessId();
+      PlatformType platform = record.getPlatForm();
+      // 解冻原记录
+      modifyPointComm(cpId, bizId, GradeCodeConstrants.RELEASE_POINT_CODE, platform, point,
+          PointOperateType.POINT, record.getTrancd());
+    }
+    return unfreezedPoints.size();
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T extends BasePointCommRecord> List<T> listUnFreezedRecord(Class<T> clazz) {
+    if (clazz == PointRecord.class) {
+      return (List<T>) pointRecordMapper.listUnFreezedRecord();
+    } else if (clazz == CommissionRecord.class) {
+      return (List<T>) commissionRecordMapper.listUnFreezedRecord();
+    } else {
+      throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
+    }
   }
 
 }

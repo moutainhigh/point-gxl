@@ -6,9 +6,11 @@ import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommService;
+import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,15 @@ public class PointOperationTest {
 
   @Autowired
   PointCommService pointCommService;
+
+  @Before
+  public void init() {
+    PointTotal total = pointCommService.loadByCpId(cpId);
+    // 初始化数据
+    if (total == null) {
+      this.testGrant();
+    }
+  }
 
   @Test
   public void testConsumeRollBack() {
@@ -115,18 +126,19 @@ public class PointOperationTest {
   @Test
   public void testFreezeGrant() {
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
+    PlatformType platform = PlatformType.E;
 
     pointCommService.modifyPoint(
         300028L,
         "12345",
         "1003",
-        PlatformType.H,
+        platform,
         modifyPoints, Trancd.ROYA);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
 
-    Assert.assertEquals(totalBefore.getFreezedHds(),
-        totalAfter.getFreezedHds().subtract(modifyPoints));
+    Assert.assertEquals(PointCommCalHelper.getFreezed(totalBefore, platform),
+        PointCommCalHelper.getFreezed(totalAfter, platform).subtract(modifyPoints));
   }
 
   @Test
@@ -162,6 +174,11 @@ public class PointOperationTest {
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert
         .assertEquals(totalBefore.getUsableHds(), totalAfter.getUsableHds().subtract(modifyPoints));
+  }
+
+  @Test
+  public void testFreezeRelease() {
+    pointCommService.releasePoints();
   }
 
   @Test

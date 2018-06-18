@@ -73,4 +73,8 @@ public interface PointCommService {
   Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset, Integer size);
 
   Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset, Integer size);
+
+  int releaseCommission();
+
+  int releasePoints();
 }

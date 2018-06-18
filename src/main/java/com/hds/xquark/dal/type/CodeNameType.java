@@ -32,6 +32,11 @@ public enum CodeNameType {
   FREEZE_GRANT(5, null),
 
   /**
+   * 发放冻结的积分
+   */
+  RELEASE(7, null),
+
+  /**
    * 解冻积分
    */
   UNFREEZE(6, LongOperation.PLUS);

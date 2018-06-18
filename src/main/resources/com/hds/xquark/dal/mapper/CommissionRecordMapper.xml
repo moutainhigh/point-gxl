@@ -65,7 +65,7 @@
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
-    <if test="page != null">
+    <if test="offset != null and size != null">
       limit #{offset}, #{size}
     </if>
   </select>
@@ -90,6 +90,21 @@
     and trancd = #{type,jdbcType=VARCHAR}
     order by created_at desc
   </select>
+  <select id="listFreezedRecordAfterDate"
+    resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionsuspending where
+    freezed_at >= #{date,jdbcType=TIMESTAMP}
+  </select>
+  <select id="listUnFreezedRecord" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionsuspending
+    where (current_freezed_comm is not null or current_freezed_comm > 0)
+    and un_freeze_id is null
+    and freezed_to &gt;= NOW()
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from commissionsuspending
     where id = #{id,jdbcType=BIGINT}
@@ -99,20 +114,20 @@
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
     insert into commissionsuspending (id, cpId, grade_Id,
-                                      gradeNumber, orderid, current_comm,
-                                      current_freezed_comm, trancd, source,
-                                      rollbacked, un_freeze_id, rollback_id,
-                                      created_at, updated_at, freezed_at,
-                                      freezed_to)
+    gradeNumber, orderid, current_comm,
+    current_freezed_comm, trancd, source,
+    rollbacked, un_freeze_id, rollback_id,
+    created_at, updated_at, freezed_at,
+    freezed_to)
     values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT},
     #{codeNumber,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR},
-                                   #{currentComm,jdbcType=DECIMAL},
-                                   #{currentFreezedComm,jdbcType=DECIMAL},
+    #{currentComm,jdbcType=DECIMAL},
+    #{currentFreezedComm,jdbcType=DECIMAL},
     #{trancd,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT},
-                                   #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
-            #{rollbackId,jdbcType=BIGINT},
-            NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
-            #{freezedTo,jdbcType=TIMESTAMP})
+    #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
+    #{rollbackId,jdbcType=BIGINT},
+    NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
+    #{freezedTo,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKeySelective"
     parameterType="com.hds.xquark.dal.model.CommissionRecord">

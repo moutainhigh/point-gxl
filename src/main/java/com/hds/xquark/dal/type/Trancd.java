@@ -25,6 +25,7 @@ public enum Trancd {
   CPCM("推荐奖"),
   CBM("购货权益"),
   EF("推荐奖2"),
+  RELEASE("积分发放"),
   DEDUCT_P("德分扣减"),
   DEDUCT_C("积分扣减");
 

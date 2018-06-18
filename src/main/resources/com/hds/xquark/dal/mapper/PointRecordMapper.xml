@@ -101,7 +101,7 @@
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
-    <if test="page != null">
+    <if test="offset != null and size != null">
       limit #{offset}, #{size}
     </if>
   </select>

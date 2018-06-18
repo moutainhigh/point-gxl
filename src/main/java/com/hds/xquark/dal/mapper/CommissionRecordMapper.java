@@ -3,6 +3,7 @@ package com.hds.xquark.dal.mapper;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.vo.CommissionRecordVO;
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,5 +26,9 @@ public interface CommissionRecordMapper {
       @Param("offset") Integer offset, @Param("size") Integer size);
 
   Long count(@Param("cpId") Long cpId, @Param("source") Integer source);
+
+  List<CommissionRecord> listFreezedRecordAfterDate(@Param("date") Date date);
+
+  List<CommissionRecord> listUnFreezedRecord();
 
 }

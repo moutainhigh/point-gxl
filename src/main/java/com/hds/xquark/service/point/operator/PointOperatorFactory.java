@@ -3,6 +3,7 @@ package com.hds.xquark.service.point.operator;
 import static com.hds.xquark.dal.type.CodeNameType.CONSUME;
 import static com.hds.xquark.dal.type.CodeNameType.FREEZE_GRANT;
 import static com.hds.xquark.dal.type.CodeNameType.GRANT;
+import static com.hds.xquark.dal.type.CodeNameType.RELEASE;
 import static com.hds.xquark.dal.type.CodeNameType.ROLLBACK;
 
 import com.google.common.collect.ImmutableMap;
@@ -27,7 +28,8 @@ public class PointOperatorFactory {
         GRANT, GrantPointCommOperator.class,
         CONSUME, ConsumePointCommOperator.class,
         ROLLBACK, RollbackPointCommOperator.class,
-        FREEZE_GRANT, FreezeGrantPointCommOperator.class
+        FREEZE_GRANT, FreezeGrantPointCommOperator.class,
+        RELEASE, FreezeReleasePointCommOperator.class
     );
   }
 
@@ -49,7 +51,8 @@ public class PointOperatorFactory {
    * @throws ClassCastException 如果指定的clazz类型与map中的不匹配
    */
   @SuppressWarnings("unchecked")
-  public static <T extends BasePointCommOperator> T getOperator(CodeNameType type, Class<T> clazz) {
+  private static <T extends BasePointCommOperator> T getOperator(CodeNameType type,
+      Class<T> clazz) {
     Class<? extends BasePointCommOperator> opClazz = TYPE_OPERATOR_MAP.get(type);
     if (opClazz == null) {
       throw new BizException(GlobalErrorCode.INVALID_ARGUMENT,

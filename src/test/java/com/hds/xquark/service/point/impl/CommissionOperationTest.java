@@ -6,6 +6,7 @@ import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommService;
+import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.junit.Assert;
@@ -57,6 +58,24 @@ public class CommissionOperationTest {
   }
 
   @Test
+  public void testFreezeGrant() {
+    CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
+    PlatformType platform = PlatformType.E;
+
+    pointCommService.modifyCommission(
+        300028L,
+        getBizId(),
+        "2003",
+        platform,
+        modifyPoints, Trancd.ROYA);
+
+    CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
+
+    Assert.assertEquals(PointCommCalHelper.getFreezed(totalBefore, platform),
+        PointCommCalHelper.getFreezed(totalAfter, platform).subtract(modifyPoints));
+  }
+
+  @Test
   public void testGrant() {
     CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
     Trancd trancd = Trancd.PRBA;
@@ -102,6 +121,11 @@ public class CommissionOperationTest {
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
+  }
+
+  @Test
+  public void testFreezeRelease() {
+    pointCommService.releaseCommission();
   }
 
   private String getBizId() {
