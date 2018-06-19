@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * created by
@@ -24,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
+@Transactional
 public class PointOperationTest {
 
   private final Long cpId = 900090L;
@@ -168,15 +170,15 @@ public class PointOperationTest {
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
 
     pointCommService.modifyPoint(
-        300028L,
-        "1234",
-        "1001",
+        cpId,
+        getBizId(),
+        "1002",
         PlatformType.H,
         modifyPoints, Trancd.ROYA);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert
-        .assertEquals(totalBefore.getUsableHds(), totalAfter.getUsableHds().subtract(modifyPoints));
+        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test
