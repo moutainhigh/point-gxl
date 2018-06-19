@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * created by
@@ -25,12 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
-@Transactional
 public class PointOperationTest {
 
   private final Long cpId = 300028L;
 
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(50000);
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
   @Autowired
   PointCommService pointCommService;
@@ -40,7 +38,12 @@ public class PointOperationTest {
     PointTotal total = pointCommService.loadByCpId(cpId);
     // 初始化数据
     if (total == null) {
-      this.testGrant();
+      pointCommService.modifyPoint(
+          300028L,
+          getBizId(),
+          "1001",
+          PlatformType.E,
+          modifyPoints, Trancd.ACHA);
     }
   }
 
@@ -151,7 +154,7 @@ public class PointOperationTest {
         getBizId(),
         "1001",
         PlatformType.V,
-        modifyPoints, trancd);
+        BigDecimal.valueOf(10000000), trancd);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert
@@ -179,10 +182,6 @@ public class PointOperationTest {
   @Test
   public void testFreezeRelease() {
     pointCommService.releasePoints();
-  }
-
-  @Test
-  public void modifyCommission() {
   }
 
   private String getBizId() {

@@ -12,6 +12,7 @@ import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -44,11 +45,14 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     // 扣减需要保存多条积分记录
     List<? extends BasePointCommRecord> records = buildRecords(bizId, grade, calRet,
         calRet.getTrancd(), clazz);
-    for (BasePointCommRecord record : records) {
+    Iterator<? extends BasePointCommRecord> iterator = records.iterator();
+    while (iterator.hasNext()) {
+      BasePointCommRecord record = iterator.next();
       if (record.getCurrent().signum() == 0) {
-        continue;
+        iterator.remove();
       }
       record.setRollbacked(false);
+      saveRecord(record);
     }
     return records;
   }

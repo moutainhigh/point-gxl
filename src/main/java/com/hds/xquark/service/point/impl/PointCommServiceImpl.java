@@ -6,20 +6,26 @@ import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
+import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
+import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
+import com.hds.xquark.dal.model.CommissionTotalAudit;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointTotal;
+import com.hds.xquark.dal.model.PointTotalAudit;
+import com.hds.xquark.dal.type.AuditType;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
 import com.hds.xquark.dal.type.Trancd;
+import com.hds.xquark.dal.util.Transformer;
 import com.hds.xquark.dal.vo.CommissionRecordVO;
 import com.hds.xquark.dal.vo.PointRecordVO;
 import com.hds.xquark.service.error.BizException;
@@ -53,6 +59,10 @@ public class PointCommServiceImpl implements PointCommService {
 
   private CommissionRecordMapper commissionRecordMapper;
 
+  private PointTotalAuditMapper pointTotalAuditMapper;
+
+  private CommissionTotalAuditMapper commissionTotalAuditMapper;
+
   @Autowired
   public void setPointGradeService(PointGradeService pointGradeService) {
     this.pointGradeService = pointGradeService;
@@ -71,6 +81,18 @@ public class PointCommServiceImpl implements PointCommService {
   @Autowired
   public void setPointRecordMapper(PointRecordMapper pointRecordMapper) {
     this.pointRecordMapper = pointRecordMapper;
+  }
+
+  @Autowired
+  public void setPointTotalAuditMapper(
+      PointTotalAuditMapper pointTotalAuditMapper) {
+    this.pointTotalAuditMapper = pointTotalAuditMapper;
+  }
+
+  @Autowired
+  public void setCommissionTotalAuditMapper(
+      CommissionTotalAuditMapper commissionTotalAuditMapper) {
+    this.commissionTotalAuditMapper = commissionTotalAuditMapper;
   }
 
   @Autowired
@@ -179,15 +201,17 @@ public class PointCommServiceImpl implements PointCommService {
    * 保存或更新用户积分信息
    *
    * @param info 积分信息VO
+   * @param platform
    * @return 保存结果
    */
   @Override
-  public boolean saveOrUpdate(BasePointCommTotal info) {
+  public boolean saveOrUpdate(BasePointCommTotal info,
+      PlatformType platform) {
     boolean ret;
     if (info.getId() == null) {
-      ret = saveTotal(info);
+      ret = saveTotal(info, platform);
     } else {
-      ret = updateTotal(info);
+      ret = updateTotal(info, platform);
     }
     return ret;
   }
@@ -223,13 +247,19 @@ public class PointCommServiceImpl implements PointCommService {
    * 保存积分或德分 或其他乱七八糟分, 如果还有什么鬼分用抽象类去实现
    *
    * @param total 积分或德分
+   * @param platform
    * @return 保存结果
    */
-  private boolean saveTotal(BasePointCommTotal total) {
+  @Override
+  public boolean saveTotal(BasePointCommTotal total, PlatformType platform) {
     if (total instanceof PointTotal) {
-      return pointTotalMapper.insert((PointTotal) total) > 0;
+      PointTotal pt = (PointTotal) total;
+      insertPointAudit(pt, platform, AuditType.INSERT);
+      return pointTotalMapper.insert(pt) > 0;
     } else if (total instanceof CommissionTotal) {
-      return commissionTotalMapper.insert((CommissionTotal) total) > 0;
+      CommissionTotal ct = (CommissionTotal) total;
+      insertCommissionAudit(ct, platform, AuditType.INSERT);
+      return commissionTotalMapper.insert(ct) > 0;
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
     }
@@ -239,13 +269,19 @@ public class PointCommServiceImpl implements PointCommService {
    * 更新积分或德分 或其他乱七八糟分, 如果还有什么鬼分用抽象类去实现
    *
    * @param total 积分或德分
+   * @param platform
    * @return 更新结果
    */
-  private boolean updateTotal(BasePointCommTotal total) {
+  @Override
+  public boolean updateTotal(BasePointCommTotal total, PlatformType platform) {
     if (total instanceof PointTotal) {
-      return pointTotalMapper.updateByPrimaryKeySelective((PointTotal) total) > 0;
+      PointTotal pt = (PointTotal) total;
+      insertPointAudit(pt, platform, AuditType.UPDATE);
+      return pointTotalMapper.updateByPrimaryKeySelective(pt) > 0;
     } else if (total instanceof CommissionTotal) {
-      return commissionTotalMapper.updateByPrimaryKeySelective((CommissionTotal) total) > 0;
+      CommissionTotal ct = (CommissionTotal) total;
+      insertCommissionAudit(ct, platform, AuditType.UPDATE);
+      return commissionTotalMapper.updateByPrimaryKeySelective(ct) > 0;
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
     }
@@ -270,7 +306,7 @@ public class PointCommServiceImpl implements PointCommService {
 
     // 更新或保存用户积分信息
     BasePointCommTotal infoAfter = operationResult.getInfoAfter();
-    boolean ret = saveOrUpdate(infoAfter);
+    boolean ret = saveOrUpdate(infoAfter, operationResult.getPlatform());
     if (!ret) {
       throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
     }
@@ -369,6 +405,31 @@ public class PointCommServiceImpl implements PointCommService {
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
     }
+  }
+
+  /**
+   * 插入德分audit表
+   */
+  private boolean insertPointAudit(PointTotal pointTotal,
+      PlatformType platform, AuditType auditType) {
+    PointTotalAudit audit = Transformer.fromBean(pointTotal, PointTotalAudit.class);
+    audit.setId(pointTotal.getId());
+    audit.setAuditType(auditType.getCode());
+    audit.setAuditUser(platform.name());
+    return pointTotalAuditMapper.insert(audit) > 0;
+  }
+
+  /**
+   * 插入积分audit表
+   */
+  private boolean insertCommissionAudit(CommissionTotal commissionTotal,
+      PlatformType platform, AuditType auditType) {
+    CommissionTotalAudit audit = Transformer.fromBean(commissionTotal,
+        CommissionTotalAudit.class);
+    audit.setId(commissionTotal.getId());
+    audit.setAuditType(auditType.getCode());
+    audit.setAuditUser(platform.name());
+    return commissionTotalAuditMapper.insert(audit) > 0;
   }
 
 }

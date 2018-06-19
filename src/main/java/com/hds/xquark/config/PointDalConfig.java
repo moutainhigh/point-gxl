@@ -1,9 +1,11 @@
 package com.hds.xquark.config;
 
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
+import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
 import com.hds.xquark.dal.mapper.GradeCodeMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
+import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
 import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -50,6 +52,16 @@ public class PointDalConfig {
   @Bean
   public CommissionTotalMapper commissionTotalMapper() throws Exception {
     return newMapperFactoryBean(CommissionTotalMapper.class).getObject();
+  }
+
+  @Bean
+  public PointTotalAuditMapper pointTotalAuditMapper() throws Exception {
+    return newMapperFactoryBean(PointTotalAuditMapper.class).getObject();
+  }
+
+  @Bean
+  public CommissionTotalAuditMapper commissionTotalAuditMapper() throws Exception {
+    return newMapperFactoryBean(CommissionTotalAuditMapper.class).getObject();
   }
 
   // @Autowired

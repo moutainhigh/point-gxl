@@ -27,7 +27,11 @@ public enum Trancd {
   EF("推荐奖2"),
   RELEASE("积分发放"),
   DEDUCT_P("德分扣减"),
-  DEDUCT_C("积分扣减");
+  DEDUCT_C("积分扣减"),
+  CANCEL_P("德分取消"),
+  CANCEL_C("积分取消"),
+  RETURN_P("积分退货"),
+  RETURN_C("德分退货");
 
   private final String desc;
 

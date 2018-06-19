@@ -54,7 +54,7 @@ public interface PointCommService {
    * @param info 积分对象
    * @return true or false
    */
-  boolean saveOrUpdate(BasePointCommTotal info);
+  boolean saveOrUpdate(BasePointCommTotal info, PlatformType platform);
 
   PointTotal loadByCpId(Long cpId);
 
@@ -69,6 +69,10 @@ public interface PointCommService {
    */
   @SuppressWarnings("unchecked")
   <T extends BasePointCommTotal> T loadOrBuildInfo(Long cpId, Class<T> clazz);
+
+  boolean saveTotal(BasePointCommTotal total, PlatformType platform);
+
+  boolean updateTotal(BasePointCommTotal total, PlatformType platform);
 
   Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset, Integer size);
 
