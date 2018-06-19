@@ -26,7 +26,7 @@ public interface PointRecordMapper {
       @Param("direction") String direction);
 
   List<PointRecordVO> listVO(@Param("cpId") Long cpId, @Param("source") Integer source,
-      Integer offset, Integer size);
+      @Param("offset") Integer offset, @Param("size") Integer size);
 
   Long count(@Param("cpId") Long cpId, @Param("source") Integer sourceCode);
 
