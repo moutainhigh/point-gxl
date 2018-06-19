@@ -20,6 +20,8 @@ public enum GlobalErrorCode {
 
   POINT_WRONG_OPERATION(8000006, "规则不匹配"),
 
+  POINT_BACKED(8000007, "该记录已回滚"),
+
   //
   NOT_FOUND(404, "Resource not found"),
   //

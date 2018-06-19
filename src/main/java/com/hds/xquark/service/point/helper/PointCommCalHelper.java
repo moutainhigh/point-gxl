@@ -140,7 +140,9 @@ public class PointCommCalHelper {
     if (afterMinusVal.signum() < 0 && !chain.hasNext()) {
       return false;
     }
-    detailMap.put(platform, target);
+    if (currPlatformVal.signum() != 0) {
+      detailMap.put(platform, target);
+    }
     if (afterMinusVal.signum() < 0) {
       setUsable(pointComm, platform, BigDecimal.ZERO);
       // 只是当前平台不够减, 再由下一个平台继续扣减

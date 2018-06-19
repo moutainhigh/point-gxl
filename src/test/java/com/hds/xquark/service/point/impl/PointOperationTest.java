@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
 public class PointOperationTest {
 
-  private final Long cpId = 300028L;
+  private final Long cpId = 900090L;
 
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
@@ -132,7 +132,7 @@ public class PointOperationTest {
     PlatformType platform = PlatformType.E;
 
     pointCommService.modifyPoint(
-        300028L,
+        cpId,
         getBizId(),
         "1003",
         platform,
@@ -150,11 +150,11 @@ public class PointOperationTest {
     Trancd trancd = Trancd.PRBA;
 
     pointCommService.modifyPoint(
-        300028L,
+        cpId,
         getBizId(),
         "1001",
         PlatformType.V,
-        BigDecimal.valueOf(10000000), trancd);
+        modifyPoints, trancd);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert

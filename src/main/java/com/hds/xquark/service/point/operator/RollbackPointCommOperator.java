@@ -1,6 +1,7 @@
 package com.hds.xquark.service.point.operator;
 
 import com.google.common.base.Preconditions;
+import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.model.BasePointCommRecord;
@@ -61,6 +62,9 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     }
     Map<PlatformType, BigDecimal> detailMap = new HashMap<>(records.size());
     for (BasePointCommRecord record : records) {
+      if (isRecordRollbacked(record)) {
+        throw new BizException(GlobalErrorCode.POINT_BACKED);
+      }
       // 修改记录
       BigDecimal negateUsable = record.getCurrent().negate();
       BigDecimal negateFreeze = record.getCurrentFreezed().negate();
@@ -115,10 +119,22 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
         if (Objects.equals(backedRec.getSource(), record.getSource())) {
           record.setRollbackId(backedRec.getId());
           record.setRollbacked(true);
+          updateRecord(record);
         }
       }
     }
     return rollBackRecords;
+  }
+
+  /**
+   * 判断记录是否是已回滚记录
+   */
+  private boolean isRecordRollbacked(BasePointCommRecord record) {
+    String codeNumber = record.getCodeNumber();
+    return codeNumber.equals(GradeCodeConstrants.CANCEL_COMMISSION_CODE)
+        || codeNumber.equals(GradeCodeConstrants.CANCEL_POINT_CODE)
+        || codeNumber.equals(GradeCodeConstrants.RETURN_COMMISSION_CODE)
+        || codeNumber.equals(GradeCodeConstrants.RELEASE_POINT_CODE);
   }
 
   @SuppressWarnings("unchecked")
