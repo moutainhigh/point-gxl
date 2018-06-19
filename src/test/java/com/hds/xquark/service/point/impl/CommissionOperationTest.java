@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * created by
@@ -24,11 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
-@Transactional
 public class CommissionOperationTest {
 
-  private final Long cpId = 300028L;
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(50000);
+  private final Long cpId = 900090L;
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(500);
   @Autowired
   private PointCommService pointCommService;
 
@@ -63,7 +61,7 @@ public class CommissionOperationTest {
     PlatformType platform = PlatformType.E;
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         getBizId(),
         "2003",
         platform,
@@ -81,20 +79,20 @@ public class CommissionOperationTest {
     Trancd trancd = Trancd.PRBA;
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         getBizId(),
         "2001",
-        PlatformType.V,
+        PlatformType.E,
         modifyPoints, trancd);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
     // 未初始化
     if (totalBefore == null) {
-      Assert.assertEquals(totalAfter.getUsableViviLife(), modifyPoints);
+      Assert.assertEquals(totalAfter.getUsableEcomm(), modifyPoints);
     } else {
       Assert
-          .assertEquals(totalBefore.getUsableViviLife(),
-              totalAfter.getUsableViviLife().subtract(modifyPoints));
+          .assertEquals(totalBefore.getUsableEcomm(),
+              totalAfter.getUsableEcomm().subtract(modifyPoints));
     }
   }
 

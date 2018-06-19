@@ -1,5 +1,6 @@
 package com.hds.xquark.dal.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.Trancd;
 
 /**
@@ -19,11 +20,13 @@ public class PointCommRecordVO {
   /**
    * 用户名
    */
+  @JsonIgnore
   private String userName;
 
   /**
    * 规则id
    */
+  @JsonIgnore
   private String gradeId;
 
   /**
@@ -43,6 +46,7 @@ public class PointCommRecordVO {
 
   private Boolean rollbacked;
 
+  @JsonIgnore
   private String gradeDesc;
 
   private Trancd recordType;

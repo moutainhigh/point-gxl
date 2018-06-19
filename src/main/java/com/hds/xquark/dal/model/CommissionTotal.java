@@ -1,5 +1,6 @@
 package com.hds.xquark.dal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 
 /**
@@ -27,6 +28,7 @@ public class CommissionTotal extends BasePointCommTotal {
 
   private BigDecimal freezedCommEcomm;
 
+  @JsonIgnore
   public BigDecimal getUsableCommHds() {
     return usableCommHds;
   }
@@ -35,6 +37,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.usableCommHds = usableCommHds;
   }
 
+  @JsonIgnore
   public BigDecimal getFreezedCommHds() {
     return freezedCommHds;
   }
@@ -43,6 +46,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.freezedCommHds = freezedCommHds;
   }
 
+  @JsonIgnore
   public BigDecimal getUsableCommViviLife() {
     return usableCommViviLife;
   }
@@ -51,6 +55,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.usableCommViviLife = usableCommViviLife;
   }
 
+  @JsonIgnore
   public BigDecimal getFreezedCommViviLife() {
     return freezedCommViviLife;
   }
@@ -59,6 +64,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.freezedCommViviLife = freezedCommViviLife;
   }
 
+  @JsonIgnore
   public BigDecimal getUsableCommEcomm() {
     return usableCommEcomm;
   }
@@ -67,6 +73,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.usableCommEcomm = usableCommEcomm;
   }
 
+  @JsonIgnore
   public BigDecimal getFreezedCommEcomm() {
     return freezedCommEcomm;
   }
