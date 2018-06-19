@@ -124,7 +124,15 @@ public abstract class BasePointCommTotal {
    * @return 三网总积分
    */
   public BigDecimal getTotal() {
+    return getTotalUsable().add(getTotalFreeze());
+  }
+
+  public BigDecimal getTotalUsable() {
     return getUsableHds().add(getUsableViviLife()).add(getUsableEcomm());
+  }
+
+  public BigDecimal getTotalFreeze() {
+    return getFreezedHds().add(getFreezedViviLife()).add(getUsableEcomm());
   }
 
   /**
