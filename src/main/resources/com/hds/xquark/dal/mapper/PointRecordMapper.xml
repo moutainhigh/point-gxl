@@ -8,7 +8,7 @@
     <result column="grade_id" jdbcType="BIGINT" property="gradeId"/>
     <result column="gradeNumber" jdbcType="VARCHAR" property="codeNumber"/>
     <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
-    <result column="current_point" jdbcType="BIGINT" property="currentModified"/>
+    <result column="current_point" jdbcType="BIGINT" property="currentPoint"/>
     <result column="current_freezed_point" jdbcType="BIGINT" property="currentFreezedPoint"/>
     <result column="trancd" jdbcType="VARCHAR" property="trancd"/>
     <result column="source" jdbcType="INTEGER" property="source"/>
@@ -28,7 +28,7 @@
     <result column="grade_desc" jdbcType="VARCHAR" property="gradeDesc"/>
     <result column="gradeNumber" jdbcType="VARCHAR" property="codeNumber"/>
     <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
-    <result column="current_point" jdbcType="BIGINT" property="currentModified"/>
+    <result column="current_point" jdbcType="BIGINT" property="currentPoint"/>
     <result column="current_freezed_point" jdbcType="BIGINT" property="currentFreezedPoint"/>
     <result column="source" jdbcType="VARCHAR" property="source"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
