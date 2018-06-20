@@ -168,7 +168,7 @@
                               #{gradeId,jdbcType=BIGINT},
                               #{codeNumber,jdbcType=VARCHAR},
                               #{businessId,jdbcType=VARCHAR},
-    #{currentModified,jdbcType=BIGINT},
+    #{currentPoint,jdbcType=BIGINT},
                               #{currentFreezedPoint,jdbcType=BIGINT},
     #{trancd,jdbcType=VARCHAR},
                               #{source,jdbcType=BIGINT}, false,
@@ -192,8 +192,8 @@
       <if test="businessId != null">
         orderid = #{businessId,jdbcType=VARCHAR},
       </if>
-      <if test="currentModified != null">
-        current_point = #{currentModified,jdbcType=BIGINT},
+      <if test="currentPoint != null">
+        current_point = #{currentPoint,jdbcType=BIGINT},
       </if>
       <if test="currentFreezedPoint != null">
         current_freezed_point = #{currentFreezedPoint,jdbcType=BIGINT},
@@ -229,7 +229,7 @@
       grade_id              = #{gradeId,jdbcType=BIGINT},
       gradeNumber           = #{codeNumber,jdbcType=VARCHAR},
       orderid               = #{businessId,jdbcType=VARCHAR},
-      current_point         = #{currentModified,jdbcType=BIGINT},
+      current_point         = #{currentPoint,jdbcType=BIGINT},
       current_freezed_point = #{currentFreezedPoint,jdbcType=BIGINT},
       trancd                = #{trancd,jdbcType=VARCHAR},
       source                = #{source,jdbcType=BIGINT},
