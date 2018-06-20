@@ -102,7 +102,12 @@ public abstract class BasePointCommRecord {
     this.codeNumber = codeNumber;
   }
 
+  @JsonIgnore
   public String getBusinessId() {
+    return businessId;
+  }
+
+  public String getOrderId() {
     return businessId;
   }
 

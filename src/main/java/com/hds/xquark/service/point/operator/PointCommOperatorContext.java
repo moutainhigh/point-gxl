@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point.operator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.type.PlatformType;
@@ -63,7 +64,12 @@ public class PointCommOperatorContext {
     return gradeCode;
   }
 
+  @JsonIgnore
   public String getBusinessId() {
+    return businessId;
+  }
+
+  public String getOrderId() {
     return businessId;
   }
 

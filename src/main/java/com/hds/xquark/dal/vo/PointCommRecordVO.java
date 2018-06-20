@@ -91,7 +91,12 @@ public class PointCommRecordVO {
     this.codeNumber = codeNumber;
   }
 
+  @JsonIgnore
   public String getBusinessId() {
+    return businessId;
+  }
+
+  public String getOrderId() {
     return businessId;
   }
 
