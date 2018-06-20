@@ -25,8 +25,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
 public class CommissionOperationTest {
 
-  private final Long cpId = 900090L;
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(500);
+  private final Long cpId = 300030L;
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
   @Autowired
   private PointCommService pointCommService;
 
@@ -94,6 +94,23 @@ public class CommissionOperationTest {
           .assertEquals(totalBefore.getUsableEcomm(),
               totalAfter.getUsableEcomm().subtract(modifyPoints));
     }
+  }
+
+  @Test
+  public void testConsume() {
+
+    CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
+
+    pointCommService.modifyPoint(
+        cpId,
+        getBizId(),
+        "2002",
+        PlatformType.H,
+        modifyPoints, Trancd.ROYA);
+
+    CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
+    Assert
+        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test

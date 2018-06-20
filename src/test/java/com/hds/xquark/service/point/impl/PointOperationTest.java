@@ -5,6 +5,7 @@ import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
+import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.PointCommService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PointOperationTest {
 
-  private final Long cpId = 900090L;
+  private final Long cpId = 300028L;
 
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
@@ -169,7 +170,7 @@ public class PointOperationTest {
 
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
 
-    pointCommService.modifyPoint(
+    PointCommOperationResult pointCommOperationResult = pointCommService.modifyPoint(
         cpId,
         getBizId(),
         "1002",
@@ -183,7 +184,21 @@ public class PointOperationTest {
 
   @Test
   public void testFreezeRelease() {
+    PointTotal totalBefore = pointCommService.loadByCpId(cpId);
+    PlatformType platform = PlatformType.E;
+
+    pointCommService.modifyPoint(
+        cpId,
+        getBizId(),
+        "1003",
+        platform,
+        modifyPoints, Trancd.ROYA);
+
     pointCommService.releasePoints();
+    PointTotal totalAfter = pointCommService.loadByCpId(cpId);
+    Assert
+        .assertEquals(totalBefore.getUsableEcomm(),
+            totalAfter.getUsableEcomm().subtract(modifyPoints));
   }
 
   private String getBizId() {

@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.type.CodeNameType;
@@ -44,12 +45,16 @@ public class PointCommOperationResult {
    */
   private BasePointCommTotal infoAfter;
 
+  @JsonIgnore
   private List<? extends BasePointCommRecord> currRecords;
 
+  @JsonIgnore
   private List<BasePointCommRecord> rollBacked;
 
+  @JsonIgnore
   private Trancd trancd;
 
+  @JsonIgnore
   private Map<PlatformType, BigDecimal> detailMap;
 
   /**

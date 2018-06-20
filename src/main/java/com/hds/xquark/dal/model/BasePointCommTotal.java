@@ -132,7 +132,7 @@ public abstract class BasePointCommTotal {
   }
 
   public BigDecimal getTotalFreeze() {
-    return getFreezedHds().add(getFreezedViviLife()).add(getUsableEcomm());
+    return getFreezedHds().add(getFreezedViviLife()).add(getFreezedEcomm());
   }
 
   /**
