@@ -1,5 +1,6 @@
 package com.hds.xquark.dal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
@@ -54,15 +55,19 @@ public abstract class BasePointCommRecord {
   /**
    * 冻结时间开始时间
    */
+  @JsonIgnore
   private Date freezedAt;
 
   /**
    * 冻结结束时间
    */
+  @JsonIgnore
   private Date freezedTo;
 
+  @JsonIgnore
   private Date createdAt;
 
+  @JsonIgnore
   private Date updatedAt;
 
   public Long getId() {

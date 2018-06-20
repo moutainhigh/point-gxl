@@ -45,7 +45,6 @@ public class PointCommOperationResult {
    */
   private BasePointCommTotal infoAfter;
 
-  @JsonIgnore
   private List<? extends BasePointCommRecord> currRecords;
 
   @JsonIgnore
