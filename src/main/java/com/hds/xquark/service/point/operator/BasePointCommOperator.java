@@ -104,7 +104,7 @@ public abstract class BasePointCommOperator {
     // 返回封装结果
     PointCommOperationResult ret = new PointCommOperationResult();
     ret.setCpId(cpId);
-    ret.setCurrentPoint(modified);
+    ret.setCurrentModified(modified);
     ret.setGradeId(grade.getId());
     ret.setPlatform(platform);
     ret.setInfoBefore(infoBefore);

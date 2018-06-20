@@ -28,7 +28,7 @@ public class PointCommOperationResult {
   /**
    * 当此修改积分数量
    */
-  private BigDecimal currentPoint;
+  private BigDecimal currentModified;
 
   /**
    * 积分修改平台信息
@@ -77,12 +77,12 @@ public class PointCommOperationResult {
     this.cpId = cpId;
   }
 
-  public BigDecimal getCurrentPoint() {
-    return currentPoint;
+  public BigDecimal getCurrentModified() {
+    return currentModified;
   }
 
-  public void setCurrentPoint(BigDecimal currentPoint) {
-    this.currentPoint = currentPoint;
+  public void setCurrentModified(BigDecimal currentModified) {
+    this.currentModified = currentModified;
   }
 
   public PlatformType getPlatform() {
