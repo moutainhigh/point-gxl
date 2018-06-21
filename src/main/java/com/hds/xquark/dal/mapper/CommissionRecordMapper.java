@@ -22,6 +22,9 @@ public interface CommissionRecordMapper {
   List<CommissionRecord> listUnRollBackedByCpIdWithBizIdAndType(@Param("bizId") String bizId,
       @Param("cpId") Long cpId, @Param("type") Trancd type);
 
+  boolean selectRecordExists(
+      @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
+
   List<CommissionRecordVO> listVO(@Param("cpId") Long cpId, @Param("source") Integer source,
       @Param("offset") Integer offset, @Param("size") Integer size);
 

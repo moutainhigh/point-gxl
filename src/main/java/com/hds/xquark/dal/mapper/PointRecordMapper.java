@@ -38,6 +38,9 @@ public interface PointRecordMapper {
   List<PointRecord> listUnRollBackedByCpIdWithBizIdAndType(@Param("bizId") String bizId,
       @Param("cpId") Long cpId, @Param("type") Trancd type);
 
+  boolean selectRecordExists(
+      @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
+
   PointRecord loadUnRollBackedByUserIdWithBizIdAndFCode(@Param("bizId") String bizId,
       @Param("userId") String userId, @Param("functionCode") String functionCode);
 

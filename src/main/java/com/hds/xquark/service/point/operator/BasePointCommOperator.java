@@ -36,9 +36,9 @@ import org.springframework.util.ReflectionUtils;
  */
 public abstract class BasePointCommOperator {
 
-  private PointRecordMapper pointRecordMapper;
+  protected PointRecordMapper pointRecordMapper;
 
-  private CommissionRecordMapper commissionRecordMapper;
+  protected CommissionRecordMapper commissionRecordMapper;
 
   private PointCommService pointCommService;
 
@@ -87,12 +87,12 @@ public abstract class BasePointCommOperator {
     // 根据公式动态计算积分
     // modified at 2018-06-14 公式功能已被取消, 积分全都动态计算
     dynamicPoints(grade, pointComms);
-    // 参数校验
-    preCheck(grade);
     // 计算修改后的积分
     PointCommOperatorContext context = new PointCommOperatorContext(cpId, infoBefore, grade,
         businessId,
         platform, operateType, trancd);
+    // 参数校验
+    preCheck(context, operateType);
     PointCommCalResult calRet = calRet(context);
 
     BasePointCommTotal infoAfter = calRet.getInfoAfter();
@@ -144,15 +144,17 @@ public abstract class BasePointCommOperator {
   /**
    * 校验积分规则与历史积分信息
    *
-   * @param grade 积分规则
-   * @throws BizException 校验有问题排除业务异常
+   *
+   * @param context @throws BizException 校验有问题排除业务异常
+   * @param operateType
    */
-  protected void preCheck(GradeCode grade) {
+  protected void preCheck(PointCommOperatorContext context,
+      PointOperateType operateType) {
     // 静态规则积分数量已定
     // 动态规则积分数量在此方法之前已经设置
     // 到这一步如果积分数还没有设置完则抛出异常
     // 部分业务不需要设置积分, 如回退则覆盖此方法
-    BigDecimal targetPoints = grade.getPoint();
+    BigDecimal targetPoints = context.getGradeCode().getPoint();
     if (targetPoints == null || targetPoints.signum() == 0) {
       throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "请指定修改积分数量");
     }

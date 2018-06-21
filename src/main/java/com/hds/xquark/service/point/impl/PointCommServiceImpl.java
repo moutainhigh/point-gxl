@@ -167,9 +167,9 @@ public class PointCommServiceImpl implements PointCommService {
   private PointCommOperationResult modifyPointComm(Long cpId, String bizId, GradeCode grade,
       PlatformType platform, BigDecimal points, PointOperateType operateType,
       Trancd trancd, TotalAuditType auditType) {
-    checkNotNull(grade, "德分规则不能为空");
+    checkNotNull(grade, "规则不能为空");
     CodeNameType gradeType = grade.getCodeName();
-    checkNotNull(gradeType, "德分规则类型未指定");
+    checkNotNull(gradeType, "规则类型未指定");
 
     BasePointCommOperator operator = PointOperatorFactory.getOperator(gradeType);
     // 根据不同操作计算积分结果

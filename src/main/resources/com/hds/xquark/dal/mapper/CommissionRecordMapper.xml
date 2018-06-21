@@ -105,6 +105,15 @@
     and un_freeze_id is null
     and freezed_to &gt;= NOW()
   </select>
+  <select id="selectRecordExists" resultType="java.lang.Boolean">
+    select exists(
+      select 1
+      from commissionsuspending
+      where cpId = #{cpId,jdbcType=BIGINT}
+            and orderid = #{bizId,jdbcType=VARCHAR}
+            and trancd = #{type,jdbcType=VARCHAR}
+    )
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from commissionsuspending
     where id = #{id,jdbcType=BIGINT}

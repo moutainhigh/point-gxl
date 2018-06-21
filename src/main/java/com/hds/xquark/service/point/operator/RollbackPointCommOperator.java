@@ -11,6 +11,7 @@ import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.PointOperateType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
@@ -83,7 +84,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
   }
 
   @Override
-  protected void preCheck(GradeCode grade) {
+  protected void preCheck(PointCommOperatorContext context,
+      PointOperateType operateType) {
     // do nothing
   }
 

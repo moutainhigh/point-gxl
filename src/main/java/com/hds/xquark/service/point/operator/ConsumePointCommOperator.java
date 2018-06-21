@@ -5,6 +5,8 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.PointOperateType;
+import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
@@ -60,5 +62,31 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
   @Override
   public CodeNameType currType() {
     return CodeNameType.CONSUME;
+  }
+
+  @Override
+  protected void preCheck(PointCommOperatorContext context,
+      PointOperateType operateType) {
+    super.preCheck(context, operateType);
+
+    BigDecimal currPoint = context.getGradeCode().getPoint();
+    if (currPoint == null || currPoint.signum() <= 0) {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "扣减值无效");
+    }
+
+    Long cpId = context.getCpId();
+    String bizId = context.getBusinessId();
+    Trancd trancd = context.getTrancd();
+    boolean hasRecord;
+    if (operateType == PointOperateType.POINT) {
+      hasRecord = pointRecordMapper.selectRecordExists(bizId, cpId, trancd);
+    } else if (operateType == PointOperateType.COMMISSION) {
+      hasRecord = commissionRecordMapper.selectRecordExists(bizId, cpId, trancd);
+    } else {
+      throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
+    }
+    if (hasRecord) {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "该订单已扣减过, 请不要重复操作");
+    }
   }
 }

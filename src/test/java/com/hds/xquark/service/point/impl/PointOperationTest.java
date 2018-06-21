@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author wangxinhua at 18-6-16 上午11:57
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
 @Transactional
+@ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
 public class PointOperationTest {
 
   private final Long cpId = 300028L;
@@ -51,6 +51,31 @@ public class PointOperationTest {
           PlatformType.E,
           modifyPoints, Trancd.ACHA, auditType);
     }
+  }
+
+  @Test
+  public void testRepeatConsume() {
+    // TODO assertException
+//    PointTotal totalBefore = pointCommService.loadByCpId(cpId);
+//    String bizId = getBizId();
+//
+//    pointCommService.modifyPoint(
+//        cpId,
+//        bizId,
+//        "1002",
+//        PlatformType.H,
+//        modifyPoints, Trancd.ROYA, auditType);
+//
+//    pointCommService.modifyPoint(
+//        cpId,
+//        bizId,
+//        "1002",
+//        PlatformType.H,
+//        modifyPoints, Trancd.ROYA, auditType);
+//
+//    PointTotal totalAfter = pointCommService.loadByCpId(cpId);
+//    Assert
+//        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test

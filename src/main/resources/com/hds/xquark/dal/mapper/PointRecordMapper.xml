@@ -151,6 +151,15 @@
     and trancd = #{type,jdbcType=VARCHAR}
     order by created_at desc
   </select>
+  <select id="selectRecordExists" resultType="java.lang.Boolean">
+    select exists(
+      select 1
+      from pointsuspending
+      where cpId = #{cpId,jdbcType=BIGINT}
+            and orderid = #{bizId,jdbcType=VARCHAR}
+            and trancd = #{type,jdbcType=VARCHAR}
+    )
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="String">
     delete from pointsuspending
     where id = #{id,jdbcType=BIGINT}
@@ -160,22 +169,23 @@
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
     insert into pointsuspending (
-      id, cpId, grade_id, gradeNumber, orderid, current_point, current_freezed_point,
-      trancd, source, rollbacked, rollback_id, un_freeze_id, created_at, updated_at, freezed_at, freezed_to
+    id, cpId, grade_id, gradeNumber, orderid, current_point, current_freezed_point,
+    trancd, source, rollbacked, rollback_id, un_freeze_id, created_at, updated_at, freezed_at,
+    freezed_to
     )
     values
-      (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT},
-                              #{gradeId,jdbcType=BIGINT},
-                              #{codeNumber,jdbcType=VARCHAR},
-                              #{businessId,jdbcType=VARCHAR},
+    (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT},
+    #{gradeId,jdbcType=BIGINT},
+    #{codeNumber,jdbcType=VARCHAR},
+    #{businessId,jdbcType=VARCHAR},
     #{currentPoint,jdbcType=BIGINT},
-                              #{currentFreezedPoint,jdbcType=BIGINT},
+    #{currentFreezedPoint,jdbcType=BIGINT},
     #{trancd,jdbcType=VARCHAR},
-                              #{source,jdbcType=BIGINT}, false,
-                              #{rollbackId,jdbcType=BIGINT},
-       #{unFreezeId,jdbcType=BIGINT},
-       NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
-       #{freezedTo,jdbcType=TIMESTAMP})
+    #{source,jdbcType=BIGINT}, false,
+    #{rollbackId,jdbcType=BIGINT},
+    #{unFreezeId,jdbcType=BIGINT},
+    NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
+    #{freezedTo,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.hds.xquark.dal.model.PointRecord">
     update pointsuspending
