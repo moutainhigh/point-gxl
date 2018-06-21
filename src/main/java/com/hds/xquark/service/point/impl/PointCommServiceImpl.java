@@ -24,6 +24,7 @@ import com.hds.xquark.dal.type.AuditType;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
+import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.util.Transformer;
 import com.hds.xquark.dal.vo.CommissionRecordVO;
@@ -115,13 +116,13 @@ public class PointCommServiceImpl implements PointCommService {
    */
   @Override
   public PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd) {
+      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd,
+      TotalAuditType auditType) {
     if (categoryId != PointConstrants.POINT_CATEGORY) {
       throw new BizException(GlobalErrorCode.POINT_WRONG_OPERATION);
     }
     return modifyPointComm(cpId, bizId, categoryId, status, platform, points,
-        PointOperateType.POINT,
-        trancd);
+        PointOperateType.POINT, trancd, auditType);
   }
 
   /**
@@ -139,32 +140,33 @@ public class PointCommServiceImpl implements PointCommService {
   @Override
   public PointCommOperationResult modifyCommission(Long cpId, String bizId,
       Integer categoryId, Integer status, PlatformType platform, BigDecimal commission,
-      Trancd trancd) {
+      Trancd trancd, TotalAuditType auditType) {
     if (categoryId != PointConstrants.COMMISSION_CATEGORY) {
       throw new BizException(GlobalErrorCode.POINT_WRONG_OPERATION);
     }
     return modifyPointComm(cpId, bizId, categoryId, status, platform, commission,
-        PointOperateType.COMMISSION, trancd);
+        PointOperateType.COMMISSION, trancd, auditType);
   }
 
   @Override
   public PointCommOperationResult modifyPoint(Long cpId, String bizId,
       String funcCode, PlatformType platform, BigDecimal points,
-      Trancd trancd) {
-    return modifyPointComm(cpId, bizId, funcCode, platform, points, PointOperateType.POINT, trancd);
+      Trancd trancd, TotalAuditType auditType) {
+    return modifyPointComm(cpId, bizId, funcCode, platform, points,
+        PointOperateType.POINT, trancd, auditType);
   }
 
   @Override
   public PointCommOperationResult modifyCommission(Long cpId, String bizId,
       String funcCode, PlatformType platform, BigDecimal commission,
-      Trancd trancd) {
+      Trancd trancd, TotalAuditType auditType) {
     return modifyPointComm(cpId, bizId, funcCode, platform, commission,
-        PointOperateType.COMMISSION, trancd);
+        PointOperateType.COMMISSION, trancd, auditType);
   }
 
   private PointCommOperationResult modifyPointComm(Long cpId, String bizId, GradeCode grade,
       PlatformType platform, BigDecimal points, PointOperateType operateType,
-      Trancd trancd) {
+      Trancd trancd, TotalAuditType auditType) {
     checkNotNull(grade, "德分规则不能为空");
     CodeNameType gradeType = grade.getCodeName();
     checkNotNull(gradeType, "德分规则类型未指定");
@@ -173,45 +175,46 @@ public class PointCommServiceImpl implements PointCommService {
     // 根据不同操作计算积分结果
     PointCommOperationResult ret = operator.doOperation(cpId, bizId, grade,
         platform, points, operateType, trancd);
-    saveRet(bizId, grade, ret, operator, operateType.getRecordClazz());
+    saveRet(bizId, grade, ret, operator, operateType.getRecordClazz(), auditType);
     return ret;
   }
 
   private PointCommOperationResult modifyPointComm(Long cpId, String bizId, Integer categoryId,
       Integer status, PlatformType platform, BigDecimal points, PointOperateType operateType,
-      Trancd trancd) {
+      Trancd trancd, TotalAuditType auditType) {
     GradeCode grade = pointGradeService.loadByCategoryAndStatus(categoryId, status);
     if (grade == null) {
       throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "规则代码无效");
     }
-    return modifyPointComm(cpId, bizId, grade, platform, points, operateType, trancd);
+    return modifyPointComm(cpId, bizId, grade, platform, points, operateType,
+        trancd, auditType);
   }
 
   private PointCommOperationResult modifyPointComm(Long cpId, String bizId,
       String functionCode, PlatformType platform, BigDecimal points,
-      PointOperateType operateType, Trancd trancd) {
+      PointOperateType operateType, Trancd trancd, TotalAuditType auditType) {
     GradeCode grade = pointGradeService.loadByFunctionCode(functionCode);
     if (grade == null) {
       throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "规则代码无效");
     }
-    return modifyPointComm(cpId, bizId, grade, platform, points, operateType, trancd);
+    return modifyPointComm(cpId, bizId, grade, platform, points,
+        operateType, trancd, auditType);
   }
 
   /**
    * 保存或更新用户积分信息
    *
    * @param info 积分信息VO
-   * @param platform
    * @return 保存结果
    */
   @Override
   public boolean saveOrUpdate(BasePointCommTotal info,
-      PlatformType platform) {
+      TotalAuditType auditType) {
     boolean ret;
     if (info.getId() == null) {
-      ret = saveTotal(info, platform);
+      ret = saveTotal(info, auditType);
     } else {
-      ret = updateTotal(info, platform);
+      ret = updateTotal(info, auditType);
     }
     return ret;
   }
@@ -247,18 +250,18 @@ public class PointCommServiceImpl implements PointCommService {
    * 保存积分或德分 或其他乱七八糟分, 如果还有什么鬼分用抽象类去实现
    *
    * @param total 积分或德分
-   * @param platform
    * @return 保存结果
    */
   @Override
-  public boolean saveTotal(BasePointCommTotal total, PlatformType platform) {
+  public boolean saveTotal(BasePointCommTotal total,
+      TotalAuditType auditType) {
     if (total instanceof PointTotal) {
       PointTotal pt = (PointTotal) total;
-      insertPointAudit(pt, platform, AuditType.INSERT);
+      insertPointAudit(pt, auditType, AuditType.INSERT);
       return pointTotalMapper.insert(pt) > 0;
     } else if (total instanceof CommissionTotal) {
       CommissionTotal ct = (CommissionTotal) total;
-      insertCommissionAudit(ct, platform, AuditType.INSERT);
+      insertCommissionAudit(ct, auditType, AuditType.INSERT);
       return commissionTotalMapper.insert(ct) > 0;
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
@@ -269,18 +272,18 @@ public class PointCommServiceImpl implements PointCommService {
    * 更新积分或德分 或其他乱七八糟分, 如果还有什么鬼分用抽象类去实现
    *
    * @param total 积分或德分
-   * @param platform
    * @return 更新结果
    */
   @Override
-  public boolean updateTotal(BasePointCommTotal total, PlatformType platform) {
+  public boolean updateTotal(BasePointCommTotal total,
+      TotalAuditType auditType) {
     if (total instanceof PointTotal) {
       PointTotal pt = (PointTotal) total;
-      insertPointAudit(pt, platform, AuditType.UPDATE);
+      insertPointAudit(pt, auditType, AuditType.UPDATE);
       return pointTotalMapper.updateByPrimaryKeySelective(pt) > 0;
     } else if (total instanceof CommissionTotal) {
       CommissionTotal ct = (CommissionTotal) total;
-      insertCommissionAudit(ct, platform, AuditType.UPDATE);
+      insertCommissionAudit(ct, auditType, AuditType.UPDATE);
       return commissionTotalMapper.updateByPrimaryKeySelective(ct) > 0;
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
@@ -298,7 +301,7 @@ public class PointCommServiceImpl implements PointCommService {
   @Transactional(rollbackFor = Exception.class)
   void saveRet(String bizId, GradeCode grade, PointCommOperationResult operationResult,
       BasePointCommOperator operator,
-      Class<? extends BasePointCommRecord> clazz) {
+      Class<? extends BasePointCommRecord> clazz, TotalAuditType auditType) {
 
     // 保存积分记录
     List<? extends BasePointCommRecord> records = operator
@@ -306,7 +309,7 @@ public class PointCommServiceImpl implements PointCommService {
 
     // 更新或保存用户积分信息
     BasePointCommTotal infoAfter = operationResult.getInfoAfter();
-    boolean ret = saveOrUpdate(infoAfter, operationResult.getPlatform());
+    boolean ret = saveOrUpdate(infoAfter, auditType);
     if (!ret) {
       throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
     }
@@ -340,7 +343,7 @@ public class PointCommServiceImpl implements PointCommService {
    * 发放佣金
    */
   @Override
-  public int releaseCommission() {
+  public int releaseCommission(TotalAuditType auditType) {
     List<CommissionRecord> unfreezedPoints = listUnFreezedRecord(CommissionRecord.class);
     if (CollectionUtils.isEmpty(unfreezedPoints)) {
       return 0;
@@ -353,7 +356,7 @@ public class PointCommServiceImpl implements PointCommService {
       // 解冻原记录
       PointCommOperationResult ret = modifyPointComm(cpId, bizId,
           GradeCodeConstrants.RELEASE_COMMISSION_CODE, platform, point,
-          PointOperateType.COMMISSION, record.getTrancd());
+          PointOperateType.COMMISSION, record.getTrancd(), auditType);
       @SuppressWarnings("unchecked")
       List<CommissionRecord> currRecords = (List<CommissionRecord>) ret.getCurrRecords();
       if (CollectionUtils.isEmpty(currRecords) || currRecords.size() != 1) {
@@ -368,9 +371,10 @@ public class PointCommServiceImpl implements PointCommService {
 
   /**
    * 发放德分
+   * @param auditType
    */
   @Override
-  public int releasePoints() {
+  public int releasePoints(TotalAuditType auditType) {
     List<PointRecord> unfreezedPoints = listUnFreezedRecord(PointRecord.class);
     if (CollectionUtils.isEmpty(unfreezedPoints)) {
       return 0;
@@ -383,7 +387,7 @@ public class PointCommServiceImpl implements PointCommService {
       // 解冻原记录
       PointCommOperationResult ret = modifyPointComm(cpId, bizId,
           GradeCodeConstrants.RELEASE_POINT_CODE, platform, point,
-          PointOperateType.POINT, record.getTrancd());
+          PointOperateType.POINT, record.getTrancd(), auditType);
       @SuppressWarnings("unchecked")
       List<PointRecord> currRecords = (List<PointRecord>) ret.getCurrRecords();
       if (CollectionUtils.isEmpty(currRecords) || currRecords.size() != 1) {
@@ -411,11 +415,11 @@ public class PointCommServiceImpl implements PointCommService {
    * 插入德分audit表
    */
   private boolean insertPointAudit(PointTotal pointTotal,
-      PlatformType platform, AuditType auditType) {
+      TotalAuditType totalAuditType, AuditType auditType) {
     PointTotalAudit audit = Transformer.fromBean(pointTotal, PointTotalAudit.class);
     audit.setId(pointTotal.getId());
     audit.setAuditType(auditType.getCode());
-    audit.setAuditUser(platform.name());
+    audit.setAuditUser(totalAuditType.name());
     return pointTotalAuditMapper.insert(audit) > 0;
   }
 
@@ -423,12 +427,12 @@ public class PointCommServiceImpl implements PointCommService {
    * 插入积分audit表
    */
   private boolean insertCommissionAudit(CommissionTotal commissionTotal,
-      PlatformType platform, AuditType auditType) {
+      TotalAuditType totalAuditType, AuditType auditType) {
     CommissionTotalAudit audit = Transformer.fromBean(commissionTotal,
         CommissionTotalAudit.class);
     audit.setId(commissionTotal.getId());
     audit.setAuditType(auditType.getCode());
-    audit.setAuditUser(platform.name());
+    audit.setAuditUser(totalAuditType.name());
     return commissionTotalAuditMapper.insert(audit) > 0;
   }
 

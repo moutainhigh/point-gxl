@@ -4,6 +4,7 @@ import com.hds.xquark.config.PointDalConfig;
 import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.PointCommService;
@@ -33,6 +34,8 @@ public class PointOperationTest {
 
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
+  private final TotalAuditType auditType = TotalAuditType.DTS;
+
   @Autowired
   PointCommService pointCommService;
 
@@ -46,7 +49,7 @@ public class PointOperationTest {
           getBizId(),
           "1001",
           PlatformType.E,
-          modifyPoints, Trancd.ACHA);
+          modifyPoints, Trancd.ACHA, auditType);
     }
   }
 
@@ -62,14 +65,14 @@ public class PointOperationTest {
         bizId,
         "1002",
         PlatformType.E,
-        modifyPoints, trancd);
+        modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
         300028L,
         bizId,
         "1004",
         PlatformType.H,
-        modifyPoints, trancd);
+        modifyPoints, trancd, auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
@@ -88,14 +91,14 @@ public class PointOperationTest {
         100,
         1,
         PlatformType.H,
-        modifyPoints, trancd);
+        modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
         300028L,
         bizId,
         "1004",
         PlatformType.H,
-        modifyPoints, trancd);
+        modifyPoints, trancd, auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
     Assert.assertEquals(totalBefore.getFreezedHds(), rollbackAfter.getFreezedHds());
@@ -112,7 +115,7 @@ public class PointOperationTest {
         bizId,
         "1001",
         PlatformType.H,
-        modifyPoints, Trancd.PRBA);
+        modifyPoints, Trancd.PRBA, auditType);
 
 //    Assert.assertEquals(totalBefore.getFreezedHds(),
 //        totalAfter.getFreezedHds().subtract(modifyPoints));
@@ -122,7 +125,7 @@ public class PointOperationTest {
         bizId,
         "1004",
         PlatformType.H,
-        modifyPoints, Trancd.PRBA);
+        modifyPoints, Trancd.PRBA, auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
     Assert.assertEquals(totalBefore.getUsableHds(), rollbackAfter.getUsableHds());
@@ -139,7 +142,7 @@ public class PointOperationTest {
         getBizId(),
         "1003",
         platform,
-        modifyPoints, Trancd.ROYA);
+        modifyPoints, Trancd.ROYA, auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
 
@@ -157,7 +160,7 @@ public class PointOperationTest {
         getBizId(),
         "1001",
         PlatformType.V,
-        modifyPoints, trancd);
+        modifyPoints, trancd, auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert
@@ -175,7 +178,7 @@ public class PointOperationTest {
         getBizId(),
         "1002",
         PlatformType.H,
-        modifyPoints, Trancd.ROYA);
+        modifyPoints, Trancd.ROYA, auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert
@@ -192,9 +195,9 @@ public class PointOperationTest {
         getBizId(),
         "1003",
         platform,
-        modifyPoints, Trancd.ROYA);
+        modifyPoints, Trancd.ROYA, auditType);
 
-    pointCommService.releasePoints();
+    pointCommService.releasePoints(auditType);
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert
         .assertEquals(totalBefore.getUsableEcomm(),

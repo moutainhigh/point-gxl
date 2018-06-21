@@ -4,6 +4,7 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -14,11 +15,12 @@ import java.util.Map;
 public interface PointCommService {
 
   PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd);
+      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd,
+      TotalAuditType auditType);
 
   PointCommOperationResult modifyCommission(Long cpId, String bizId,
       Integer categoryId, Integer status, PlatformType platform, BigDecimal commission,
-      Trancd trancd);
+      Trancd trancd, TotalAuditType auditType);
 
   /**
    * 根据积分规则处理积分
@@ -28,11 +30,12 @@ public interface PointCommService {
    * @param platform 所属平台
    * @param points 改动积分数，若规则本身设置了静态积分则不生效
    * @param trancd
+   * @param auditType
    * @return {@link PointCommOperationResult} 积分处理结果
    */
   PointCommOperationResult modifyPoint(Long cpId, String bizId,
       String funcCode, PlatformType platform, BigDecimal points,
-      Trancd trancd);
+      Trancd trancd, TotalAuditType auditType);
 
   /**
    * 根据德分规则处理积分
@@ -42,19 +45,22 @@ public interface PointCommService {
    * @param platform 所属平台
    * @param commission 改动积分数，若规则本身设置了静态积分则不生效
    * @param trancd
+   * @param auditType
    * @return {@link PointCommOperationResult} 积分处理结果
    */
   PointCommOperationResult modifyCommission(Long cpId, String bizId,
       String funcCode, PlatformType platform, BigDecimal commission,
-      Trancd trancd);
+      Trancd trancd, TotalAuditType auditType);
 
   /**
    * 更新或新增用户积分信息
    *
    * @param info 积分对象
+   * @param auditType
    * @return true or false
    */
-  boolean saveOrUpdate(BasePointCommTotal info, PlatformType platform);
+  boolean saveOrUpdate(BasePointCommTotal info,
+      TotalAuditType auditType);
 
   PointTotal loadByCpId(Long cpId);
 
@@ -70,15 +76,17 @@ public interface PointCommService {
   @SuppressWarnings("unchecked")
   <T extends BasePointCommTotal> T loadOrBuildInfo(Long cpId, Class<T> clazz);
 
-  boolean saveTotal(BasePointCommTotal total, PlatformType platform);
+  boolean saveTotal(BasePointCommTotal total,
+      TotalAuditType auditType);
 
-  boolean updateTotal(BasePointCommTotal total, PlatformType platform);
+  boolean updateTotal(BasePointCommTotal total,
+      TotalAuditType auditType);
 
   Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset, Integer size);
 
   Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset, Integer size);
 
-  int releaseCommission();
+  int releaseCommission(TotalAuditType auditType);
 
-  int releasePoints();
+  int releasePoints(TotalAuditType auditType);
 }

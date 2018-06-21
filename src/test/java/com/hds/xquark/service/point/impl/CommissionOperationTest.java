@@ -42,14 +42,14 @@ public class CommissionOperationTest {
         bizId,
         "1003",
         PlatformType.H,
-        modifyPoints, trancd);
+        modifyPoints, trancd, null);
 
     pointCommService.modifyCommission(
         300028L,
         bizId,
         "1004",
         PlatformType.H,
-        modifyPoints, trancd);
+        modifyPoints, trancd, null);
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getFreezedHds(), rollbackAfter.getFreezedHds());
@@ -65,7 +65,7 @@ public class CommissionOperationTest {
         getBizId(),
         "2003",
         platform,
-        modifyPoints, Trancd.ROYA);
+        modifyPoints, Trancd.ROYA, null);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
 
@@ -83,7 +83,7 @@ public class CommissionOperationTest {
         getBizId(),
         "2001",
         PlatformType.E,
-        modifyPoints, trancd);
+        modifyPoints, trancd, null);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
     // 未初始化
@@ -106,7 +106,7 @@ public class CommissionOperationTest {
         getBizId(),
         "2002",
         PlatformType.H,
-        modifyPoints, Trancd.ROYA);
+        modifyPoints, Trancd.ROYA, null);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
     Assert
@@ -125,14 +125,14 @@ public class CommissionOperationTest {
         bizId,
         "2002",
         PlatformType.E,
-        modifyPoints, trancd);
+        modifyPoints, trancd, null);
 
     pointCommService.modifyCommission(
         300028L,
         bizId,
         "2004",
         PlatformType.H,
-        modifyPoints, trancd);
+        modifyPoints, trancd, null);
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
@@ -140,7 +140,7 @@ public class CommissionOperationTest {
 
   @Test
   public void testFreezeRelease() {
-    pointCommService.releaseCommission();
+    pointCommService.releaseCommission(null);
   }
 
   private String getBizId() {
