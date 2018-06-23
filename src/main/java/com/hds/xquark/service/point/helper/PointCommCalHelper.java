@@ -41,10 +41,10 @@ public class PointCommCalHelper {
     HV_CHAIN.setNext(new PointCommMinusChain(H))
         .setNext(new PointCommMinusChain(V));
 
-    // VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HDS -> HV_MALL
+    // VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HV_MALL -> HDS
     PointCommMinusChain VIVI_CHAIN = new PointCommMinusChain(V);
-    VIVI_CHAIN.setNext(new PointCommMinusChain(H))
-        .setNext(new PointCommMinusChain(E));
+    VIVI_CHAIN.setNext(new PointCommMinusChain(E))
+        .setNext(new PointCommMinusChain(H));
 
     // 配置扣减顺序map
     PLATFORM_CHAIN_MAP = ImmutableMap.of(
