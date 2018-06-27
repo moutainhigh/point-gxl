@@ -31,7 +31,9 @@ public enum Trancd {
   CANCEL_P("德分取消"),
   CANCEL_C("积分取消"),
   REVERT_P("积分退货"),
-  REVERT_C("德分退货");
+  REVERT_C("德分退货"),
+  REWARD_P("德分奖励"),
+  REWARD_C("积分奖励");
 
   private final String desc;
 

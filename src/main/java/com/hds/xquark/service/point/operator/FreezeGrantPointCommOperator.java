@@ -51,7 +51,9 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
     record.setRollbacked(false);
     Date now = new Date();
 
-    Date freezedTo = DateUtils.addDate(now, null, null, 7);
+    // 汉薇14天其他平台7天
+    int freezeDays = calRet.getPlatform() == PlatformType.E ? 14 : 7;
+    Date freezedTo = DateUtils.addDate(now, null, null, freezeDays);
     record.setFreezedAt(now);
     record.setFreezedTo(freezedTo);
     saveRecord(record);
