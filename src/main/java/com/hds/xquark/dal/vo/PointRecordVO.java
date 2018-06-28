@@ -1,5 +1,9 @@
 package com.hds.xquark.dal.vo;
 
+import com.hds.xquark.dal.constrant.GradeCodeConstrants;
+import java.math.BigDecimal;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author wangxinhua on 2018/5/21. DESC:
  */
@@ -8,27 +12,34 @@ public class PointRecordVO extends PointCommRecordVO {
   /**
    * 本次积分
    */
-  private Long currentPoint;
+  private BigDecimal currentPoint;
 
   /**
    * 本次冻结积分
    */
-  private Long currentFreezedPoint;
+  private BigDecimal currentFreezedPoint;
 
-  public Long getCurrentPoint() {
+  public BigDecimal getCurrentPoint() {
     return currentPoint;
   }
 
-  public void setCurrentPoint(Long currentPoint) {
+  public void setCurrentPoint(BigDecimal currentPoint) {
     this.currentPoint = currentPoint;
   }
 
-  public Long getCurrentFreezedPoint() {
+  public BigDecimal getCurrentFreezedPoint() {
     return currentFreezedPoint;
   }
 
-  public void setCurrentFreezedPoint(Long currentFreezedPoint) {
+  public void setCurrentFreezedPoint(BigDecimal currentFreezedPoint) {
     this.currentFreezedPoint = currentFreezedPoint;
+  }
+
+  public BigDecimal getCurrentStr() {
+    if (StringUtils.equals(getCodeNumber(), GradeCodeConstrants.FREEZE_GRANT_POINT_CODE)) {
+      return getCurrentFreezedPoint();
+    }
+    return getCurrentPoint();
   }
 
 }

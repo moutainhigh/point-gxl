@@ -77,4 +77,5 @@ public class PointRecord extends BasePointCommRecord {
   public void setType(Trancd type) {
     setTrancd(type);
   }
+
 }

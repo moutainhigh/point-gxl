@@ -64,7 +64,6 @@ public abstract class BasePointCommRecord {
   @JsonIgnore
   private Date freezedTo;
 
-  @JsonIgnore
   private Date createdAt;
 
   @JsonIgnore

@@ -2,6 +2,7 @@ package com.hds.xquark.dal.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.Trancd;
+import java.sql.Date;
 
 /**
  * created by
@@ -50,6 +51,8 @@ public class PointCommRecordVO {
   private String gradeDesc;
 
   private Trancd recordType;
+
+  private Date createdAt;
 
   public String getId() {
     return id;
@@ -138,5 +141,13 @@ public class PointCommRecordVO {
 
   public void setSource(Integer source) {
     this.source = source;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 }

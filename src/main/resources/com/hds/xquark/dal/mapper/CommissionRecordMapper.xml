@@ -28,12 +28,13 @@
     <result column="grade_desc" jdbcType="VARCHAR" property="gradeDesc"/>
     <result column="gradeNumber" jdbcType="VARCHAR" property="codeNumber"/>
     <result column="orderid" jdbcType="VARCHAR" property="businessId"/>
-    <result column="current_comm" jdbcType="BIGINT" property="currentCommission"/>
-    <result column="current_freezed_comm" jdbcType="BIGINT"
+    <result column="current_comm" jdbcType="DECIMAL" property="currentCommission"/>
+    <result column="current_freezed_comm" jdbcType="DECIMAL"
       property="currentFreezedCommission"/>
     <result column="source" jdbcType="VARCHAR" property="source"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
     <result column="trancd" jdbcType="VARCHAR" property="recordType"/>
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, cpId, grade_Id, gradeNumber, orderid, current_comm, current_freezed_comm, trancd,
