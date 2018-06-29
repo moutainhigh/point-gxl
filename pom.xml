@@ -7,7 +7,7 @@
 
   <groupId>com.hds.xquark</groupId>
   <artifactId>xquark-point-core</artifactId>
-  <version>2.1.47-o</version>
+  <version>2.1.58-i</version>
 
   <name>xquark-point-core</name>
   <!-- FIXME change it to the project's website -->
@@ -22,6 +22,9 @@
     <org.springframework.security-version>3.2.3.RELEASE</org.springframework.security-version>
     <jackson.version>2.3.3</jackson.version>
     <libScope>compile</libScope>
+    <ch.qos.logback-version>1.0.13</ch.qos.logback-version>
+    <log4j.version>1.2.16</log4j.version>
+    <org.slf4j-version>1.7.5</org.slf4j-version>
   </properties>
 
   <distributionManagement>
@@ -128,6 +131,24 @@
       <artifactId>jackson-annotations</artifactId>
       <scope>${libScope}</scope>
       <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <version>${org.slf4j-version}</version>
+      <scope>${libScope}</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${ch.qos.logback-version}</version>
+      <scope>${libScope}</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${ch.qos.logback-version}</version>
+      <scope>${libScope}</scope>
     </dependency>
   </dependencies>
   <build>

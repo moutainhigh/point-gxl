@@ -15,6 +15,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -35,6 +37,8 @@ public class PointOperationTest {
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
   private final TotalAuditType auditType = TotalAuditType.DTS;
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(PointOperationTest.class);
 
   @Autowired
   PointCommService pointCommService;
@@ -227,6 +231,11 @@ public class PointOperationTest {
     Assert
         .assertEquals(totalBefore.getUsableEcomm(),
             totalAfter.getUsableEcomm().subtract(modifyPoints));
+  }
+
+  @Test
+  public void testLog() {
+    LOGGER.info("---- test log ---");
   }
 
   private String getBizId() {

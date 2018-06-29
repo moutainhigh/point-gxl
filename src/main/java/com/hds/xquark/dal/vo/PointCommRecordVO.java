@@ -2,7 +2,7 @@ package com.hds.xquark.dal.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.Trancd;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * created by
