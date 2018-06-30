@@ -92,17 +92,17 @@
   <select id="listVO" resultMap="VOResultMap">
     select
     <include refid="Join_Column_List"/>,
-    user.name as user_name,
+    user.namecn as user_name,
     cod.description as grade_desc
     from pointsuspending record
-    inner join xquark_user user on record.cpId = user.cpId
+    inner join customerProfile user on record.cpId = user.cpId
     left join gradeCode cod on cod.id = record.grade_id
     where user.cpId = #{cpId,jdbcType=BIGINT}
-    and user.archive = false
+    and user.isdeleted = false
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
-    order by record.createdDate desc
+    order by record.created_at desc
     <if test="offset != null and size != null">
       limit #{offset}, #{size}
     </if>
@@ -110,9 +110,9 @@
   <select id="count" resultType="java.lang.Long">
     select count(*)
     from pointsuspending record
-    inner join xquark_user user on record.cpId = user.cpId
+    inner join customerprofile user on record.cpId = user.cpId
     where user.cpId = #{cpId,jdbcType=BIGINT}
-    and user.archive = false
+    and user.isdeleted = false
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
