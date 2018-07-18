@@ -36,7 +36,9 @@ public class PointRecordVO extends PointCommRecordVO {
   }
 
   public BigDecimal getCurrentStr() {
-    if (StringUtils.equals(getCodeNumber(), GradeCodeConstrants.FREEZE_GRANT_POINT_CODE)) {
+    if (StringUtils.equals(getCodeNumber(), GradeCodeConstrants.FREEZE_GRANT_POINT_CODE)
+        || StringUtils.equals(getCodeNumber(), GradeCodeConstrants.CANCEL_POINT_CODE)
+        || StringUtils.equals(getCodeNumber(), GradeCodeConstrants.RETURN_POINT_CODE)) {
       return getCurrentFreezedPoint();
     }
     return getCurrentPoint();
