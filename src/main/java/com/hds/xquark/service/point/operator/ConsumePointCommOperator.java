@@ -17,7 +17,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wangxinhua on 2018/5/21. DESC:
@@ -76,17 +78,20 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
 
     Long cpId = context.getCpId();
     String bizId = context.getBusinessId();
+    // 只针对订单类型才做校验
     Trancd trancd = context.getTrancd();
-    boolean hasRecord;
-    if (operateType == PointOperateType.POINT) {
-      hasRecord = pointRecordMapper.selectRecordExists(bizId, cpId, trancd);
-    } else if (operateType == PointOperateType.COMMISSION) {
-      hasRecord = commissionRecordMapper.selectRecordExists(bizId, cpId, trancd);
-    } else {
-      throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
-    }
-    if (hasRecord) {
-      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "该订单已扣减过, 请不要重复操作");
+    if (Objects.equals(trancd, Trancd.DEDUCT_C) || Objects.equals(trancd, Trancd.DEDUCT_P)) {
+      boolean hasRecord;
+      if (operateType == PointOperateType.POINT) {
+        hasRecord = pointRecordMapper.selectRecordExists(bizId, cpId, trancd);
+      } else if (operateType == PointOperateType.COMMISSION) {
+        hasRecord = commissionRecordMapper.selectRecordExists(bizId, cpId, trancd);
+      } else {
+        throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
+      }
+      if (hasRecord) {
+        throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "该订单已扣减过, 请不要重复操作");
+      }
     }
   }
 }

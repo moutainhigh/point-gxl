@@ -22,6 +22,10 @@ public enum GlobalErrorCode {
 
   POINT_BACKED(8000007, "该记录已回滚"),
 
+  WITH_DRAW_NOT_ENOUGH(8000008, "可提现积分不足"),
+
+  WITH_DRAW_NOT_ENOUGH_PLATFORM(8000009, "当前平台可提现积分不足"),
+
   //
   NOT_FOUND(404, "Resource not found"),
   //

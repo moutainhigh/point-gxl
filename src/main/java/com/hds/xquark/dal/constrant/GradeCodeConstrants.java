@@ -31,4 +31,9 @@ public class GradeCodeConstrants {
 
   public static final String RELEASE_COMMISSION_CODE = "2006";
 
+  /**
+   * 提现积分
+   */
+  public static final String WITH_DRAW_COMMISSION_CODE = "2007";
+
 }

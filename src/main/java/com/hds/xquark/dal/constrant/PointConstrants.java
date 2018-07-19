@@ -1,5 +1,7 @@
 package com.hds.xquark.dal.constrant;
 
+import java.math.BigDecimal;
+
 /**
  * created by
  *
@@ -10,5 +12,10 @@ public class PointConstrants {
   public static final int POINT_CATEGORY = 100;
 
   public static final int COMMISSION_CATEGORY = 200;
+
+  /**
+   * 积分提现下限
+   */
+  public static final BigDecimal WITH_DRAW_LIMIT = BigDecimal.valueOf(200);
 
 }
