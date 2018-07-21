@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point.impl;
 
+import com.hds.xquark.PointContextInitialize;
 import com.hds.xquark.config.PointDalConfig;
 import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.dal.model.PointTotal;
@@ -9,29 +10,28 @@ import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.PointCommService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.sql.DataSource;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * created by
  *
  * @author wangxinhua at 18-6-16 上午11:57
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-//@Transactional
-@ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
 public class PointOperationTest {
 
-  private final Long cpId = 300028L;
+  private final Long cpId = 3000000L;
 
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
@@ -39,21 +39,24 @@ public class PointOperationTest {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(PointOperationTest.class);
 
-  @Autowired
-  PointCommService pointCommService;
+  private PointCommService pointCommService;
 
   @Before
   public void init() {
-    PointTotal total = pointCommService.loadByCpId(cpId);
-    // 初始化数据
-    if (total == null) {
-      pointCommService.modifyPoint(
-          300028L,
-          getBizId(),
-          "1001",
-          PlatformType.E,
-          modifyPoints, Trancd.ACHA, auditType);
-    }
+    DataSource dataSource = new PooledDataSource(
+        "com.mysql.jdbc.Driver",
+        "jdbc:mysql://106.14.173.153:7001/hvmall?autoCommit=true&useUnicode=true&autoReconnect=true&characterEncoding=UTF-8",
+        "byyroot",
+        "v7&#5efr&777");
+    PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+    PointContextInitialize initialize = new PointContextInitialize(dataSource, transactionManager);
+    pointCommService = initialize.getPointService();
+  }
+
+  @Test
+  public void testBase() {
+    PointTotal pointTotal = pointCommService.loadByCpId(cpId);
+    System.out.println(pointTotal);
   }
 
   @Test
@@ -240,4 +243,5 @@ public class PointOperationTest {
   private String getBizId() {
     return String.valueOf(new Date().getTime());
   }
+
 }

@@ -5,34 +5,6 @@
   xmlns="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
-  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="location" value="classpath:/META-INF/c3p0.properties"/>
-  </bean>
-
-  <!-- Transaction manager for a single JDBC DataSource -->
-  <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-    id="transactionManager"/>
-
-  <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" id="dataSource">
-    <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
-    <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
-    <property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
-    <property name="idleConnectionTestPeriod" value="18000"/>
-    <property name="maxIdleTime" value="2500"/>
-    <property name="maxStatementsPerConnection" value="10"/>
-    <property name="maxStatements" value="400"/>
-    <property name="numHelperThreads" value="5"/>
-    <property name="preferredTestQuery" value="SELECT @@SQL_MODE"/>
-    <property name="testConnectionOnCheckin" value="true"/>
-    <property name="testConnectionOnCheckout" value="false"/>
-    <property name="driverClass" value="${jdbc.driverClassName}"/>
-    <property name="jdbcUrl" value="${jdbc.url}"/>
-    <property name="user" value="${jdbc.username}"/>
-    <property name="password">
-      <value><![CDATA[${jdbc.password}]]></value>
-    </property>
-  </bean>
-
   <bean class="com.hds.xquark.dal.util.SpringContextUtil" id="springContextUtil"
     lazy-init="false">
   </bean>

@@ -368,7 +368,7 @@ public class PointCommServiceImpl implements PointCommService {
             GradeCodeConstrants.RELEASE_COMMISSION_CODE, platform, point,
             PointOperateType.COMMISSION, record.getTrancd(), auditType);
       } catch (Exception e) {
-        LOGGER.error("cpId: {} 积分记录 id: {} 解冻失败", e);
+        LOGGER.error("cpId: {} 积分记录 id: {} 解冻失败", cpId, record.getId(), e);
         failed++;
         continue;
       }
@@ -413,7 +413,7 @@ public class PointCommServiceImpl implements PointCommService {
             GradeCodeConstrants.RELEASE_POINT_CODE, platform, point,
             PointOperateType.POINT, record.getTrancd(), auditType);
       } catch (Exception e) {
-        LOGGER.error("cpId: {} 德分记录 id: {} 解冻失败", e);
+        LOGGER.error("cpId: {} 德分记录 id: {} 解冻失败", cpId, record.getId(), e);
         failed++;
         continue;
       }
