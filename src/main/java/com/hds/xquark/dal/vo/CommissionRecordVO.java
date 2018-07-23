@@ -39,10 +39,11 @@ public class CommissionRecordVO extends PointCommRecordVO {
   }
 
   public BigDecimal getCurrentStr() {
-    if (StringUtils.equals(getCodeNumber(), GradeCodeConstrants.FREEZE_GRANT_COMMISSION_CODE)
-        || StringUtils.equals(getCodeNumber(), GradeCodeConstrants.RETURN_COMMISSION_CODE)
-        || StringUtils.equals(getCodeNumber(), GradeCodeConstrants.CANCEL_COMMISSION_CODE)) {
+    if (getCurrentCommission().signum() == 0) {
       return getCurrentFreezedCommission();
+    }
+    if (getCurrentFreezedCommission().signum() == 0) {
+      return getCurrentCommission();
     }
     return getCurrentCommission();
   }
