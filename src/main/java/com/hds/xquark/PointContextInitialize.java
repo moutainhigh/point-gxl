@@ -3,10 +3,10 @@ package com.hds.xquark;
 import com.hds.xquark.config.PointDalConfig;
 import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.service.point.PointCommService;
+import com.hds.xquark.service.point.impl.PointCommServiceImpl;
 import javax.sql.DataSource;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
@@ -14,12 +14,12 @@ import org.springframework.transaction.PlatformTransactionManager;
  */
 public class PointContextInitialize {
 
-  private final ApplicationContext context;
+  private final PointCommService pointCommService;
 
   public PointContextInitialize(DataSource dataSource,
       PlatformTransactionManager transactionManager) {
     // 将外部数据源初始化到父容器
-    ClassPathXmlApplicationContext dsContext = new ClassPathXmlApplicationContext();
+    StaticApplicationContext dsContext = new StaticApplicationContext();
     dsContext.refresh();
     dsContext.getBeanFactory().registerSingleton("dataSource", dataSource);
     dsContext.getBeanFactory().registerSingleton("transactionManager", transactionManager);
@@ -31,11 +31,11 @@ public class PointContextInitialize {
     context.register(PointServiceConfig.class);
     context.refresh();
 
-    this.context = context;
+    this.pointCommService = context.getBean(PointCommServiceImpl.class);
   }
 
   public PointCommService getPointService() {
-    return context.getBean(PointCommService.class);
+    return this.pointCommService;
   }
 
 }
