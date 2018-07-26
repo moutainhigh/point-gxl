@@ -99,4 +99,7 @@ public interface PointCommService {
    * @param trancd tranCode 合法值 REWROD_C, DEPOSIT_C, MIGRATE_C
    */
   void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
+
+  void grantCommissionWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
+      Trancd trancd);
 }

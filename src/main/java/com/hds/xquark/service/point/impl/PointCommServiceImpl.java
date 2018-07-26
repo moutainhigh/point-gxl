@@ -1,6 +1,11 @@
 package com.hds.xquark.service.point.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.hds.xquark.dal.type.Trancd.DEPOSIT_C;
+import static com.hds.xquark.dal.type.Trancd.MIGRATE_C;
+import static com.hds.xquark.dal.type.Trancd.REWARD_C;
+import static com.hds.xquark.dal.type.Trancd.REWARD_P;
 
 import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
@@ -436,7 +441,17 @@ public class PointCommServiceImpl implements PointCommService {
   @Override
   public void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
       Trancd trancd) {
-    pointTotalMapper.grantPointWithProcedure(cpId, platform.getCode(), val, trancd.name(),
+    checkArgument(trancd == REWARD_P, "新增德分Trancd错误");
+    pointTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
+        trancd.name().toLowerCase());
+  }
+
+  @Override
+  public void grantCommissionWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
+      Trancd trancd) {
+    checkArgument(trancd == REWARD_C || trancd == DEPOSIT_C || trancd == MIGRATE_C,
+        "新增积分Trancd错误");
+    commissionTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
         trancd.name().toLowerCase());
   }
 

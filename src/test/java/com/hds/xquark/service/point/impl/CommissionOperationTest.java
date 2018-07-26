@@ -1,34 +1,25 @@
 package com.hds.xquark.service.point.impl;
 
-import com.hds.xquark.config.PointDalConfig;
-import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
-import com.hds.xquark.service.point.PointCommService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * created by
  *
  * @author wangxinhua at 18-6-17 下午2:49
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {PointServiceConfig.class, PointDalConfig.class})
-public class CommissionOperationTest {
+@Transactional
+public class CommissionOperationTest extends BaseOperationTest {
 
   private final Long cpId = 300030L;
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
-  @Autowired
-  private PointCommService pointCommService;
 
   @Test
   public void testFreezeGrantRollBack() {
@@ -145,6 +136,12 @@ public class CommissionOperationTest {
 
   private String getBizId() {
     return String.valueOf(new Date().getTime());
+  }
+
+  @Test
+  public void grantByProcedure() {
+    pointCommService.grantCommissionWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200),
+        Trancd.MIGRATE_C);
   }
 
 }

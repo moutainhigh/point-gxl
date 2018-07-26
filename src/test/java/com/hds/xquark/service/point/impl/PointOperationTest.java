@@ -23,13 +23,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * created by
  *
  * @author wangxinhua at 18-6-16 上午11:57
  */
-public class PointOperationTest {
+@Transactional
+public class PointOperationTest extends BaseOperationTest {
 
   private final Long cpId = 3000000L;
 
@@ -38,20 +40,6 @@ public class PointOperationTest {
   private final TotalAuditType auditType = TotalAuditType.DTS;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(PointOperationTest.class);
-
-  private PointCommService pointCommService;
-
-  @Before
-  public void init() {
-    DataSource dataSource = new PooledDataSource(
-        "com.mysql.jdbc.Driver",
-        "jdbc:mysql://106.14.173.153:7001/hvmall?autoCommit=true&useUnicode=true&autoReconnect=true&characterEncoding=UTF-8",
-        "byyroot",
-        "v7&#5efr&777");
-    PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-    PointContextInitialize initialize = new PointContextInitialize(dataSource, transactionManager);
-    pointCommService = initialize.getPointService();
-  }
 
   @Test
   public void testBase() {
@@ -238,6 +226,12 @@ public class PointOperationTest {
   @Test
   public void testLog() {
     LOGGER.info("---- test log ---");
+  }
+
+  @Test
+  public void grantByProcedure() {
+    pointCommService
+        .grantPointWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200), Trancd.REWARD_P);
   }
 
   private String getBizId() {

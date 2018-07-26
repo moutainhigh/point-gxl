@@ -31,6 +31,11 @@
     from commissionTotal
     where cpId = #{cpId,jdbcType=BIGINT}
   </select>
+  <select id="grantWithProcedure">
+    CALL GrantCommission(#{cpId,jdbcType=BIGINT}, #{source,jdbcType=INTEGER},
+                         #{val,jdbcType=DECIMAL},
+                         #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from commissionTotal
     where id = #{id,jdbcType=BIGINT}
