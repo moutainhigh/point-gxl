@@ -433,6 +433,13 @@ public class PointCommServiceImpl implements PointCommService {
     return total - failed;
   }
 
+  @Override
+  public void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
+      Trancd trancd) {
+    pointTotalMapper.grantPointWithProcedure(cpId, platform.getCode(), val, trancd.name(),
+        trancd.name().toLowerCase());
+  }
+
   @SuppressWarnings("unchecked")
   private <T extends BasePointCommRecord> List<T> listUnFreezedRecord(Class<T> clazz) {
     if (clazz == PointRecord.class) {

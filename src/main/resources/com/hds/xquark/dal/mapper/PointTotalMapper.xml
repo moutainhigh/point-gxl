@@ -28,11 +28,15 @@
     from pointTotal
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByCpId" resultMap="BaseResultMap">
+  <select id="selectByCpId" statementType="CALLABLE">
     select
     <include refid="Base_Column_List"/>
     from pointTotal
     where cpId = #{cpId,jdbcType=BIGINT}
+  </select>
+  <select id="grantPointWithProcedure">
+    CALL GrantPoint(#{cpId,jdbcType=BIGINT}, #{source,jdbcType=INTEGER}, #{val,jdbcType=DECIMAL},
+                    #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

@@ -89,4 +89,14 @@ public interface PointCommService {
   int releaseCommission(TotalAuditType auditType);
 
   int releasePoints(TotalAuditType auditType);
+
+  /**
+   * 调用存储过程增加积分
+   *
+   * @param cpId cpId
+   * @param platform 平台
+   * @param val 发放值
+   * @param trancd tranCode 合法值 REWROD_C, DEPOSIT_C, MIGRATE_C
+   */
+  void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
 }

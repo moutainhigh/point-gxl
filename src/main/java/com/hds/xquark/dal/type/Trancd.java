@@ -34,7 +34,9 @@ public enum Trancd {
   REVERT_C("德分退货"),
   REWARD_P("德分奖励"),
   REWARD_C("积分奖励"),
-  WITHDRAW_C("积分提现");
+  WITHDRAW_C("积分提现"),
+  DEPOSIT_C(""),
+  MIGRATE_C("");
 
   private final String desc;
 
