@@ -136,7 +136,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     return codeNumber.equals(GradeCodeConstrants.CANCEL_COMMISSION_CODE)
         || codeNumber.equals(GradeCodeConstrants.CANCEL_POINT_CODE)
         || codeNumber.equals(GradeCodeConstrants.RETURN_COMMISSION_CODE)
-        || codeNumber.equals(GradeCodeConstrants.RELEASE_POINT_CODE);
+        || codeNumber.equals(GradeCodeConstrants.RETURN_POINT_CODE);
   }
 
   @SuppressWarnings("unchecked")
