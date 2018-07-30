@@ -45,6 +45,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -443,7 +444,7 @@ public class PointCommServiceImpl implements PointCommService {
       Trancd trancd) {
     checkArgument(trancd == REWARD_P, "新增德分Trancd错误");
     pointTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
-        trancd.name().toLowerCase());
+        StringUtils.substringBefore(trancd.name().toLowerCase(), "_"));
   }
 
   @Override
@@ -452,7 +453,7 @@ public class PointCommServiceImpl implements PointCommService {
     checkArgument(trancd == REWARD_C || trancd == DEPOSIT_C || trancd == MIGRATE_C,
         "新增积分Trancd错误");
     commissionTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
-        trancd.name().toLowerCase());
+        StringUtils.substringBefore(trancd.name().toLowerCase(), "_"));
   }
 
   @SuppressWarnings("unchecked")

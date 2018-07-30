@@ -105,6 +105,7 @@
     from commissionsuspending
     where (current_freezed_comm is not null and current_freezed_comm > 0)
     and un_freeze_id is null
+    and rollbacked = false
     and freezed_to &lt;= NOW()
   </select>
   <select id="selectRecordExists" resultType="java.lang.Boolean">
