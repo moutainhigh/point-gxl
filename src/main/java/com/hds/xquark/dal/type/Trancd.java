@@ -35,8 +35,10 @@ public enum Trancd {
   REWARD_P("德分奖励"),
   REWARD_C("积分奖励"),
   WITHDRAW_C("积分提现"),
-  DEPOSIT_C(""),
-  MIGRATE_C("");
+  DEPOSIT_P("德分发放"),
+  DEPOSIT_C("积分发放"),
+  MIGRATE_P("德分迁移"),
+  MIGRATE_C("积分迁移");
 
   private final String desc;
 
