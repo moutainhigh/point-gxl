@@ -80,14 +80,14 @@ public class PointOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.ACHA;
 
     pointCommService.modifyPoint(
-        300028L,
+        cpId,
         bizId,
         "1002",
         PlatformType.E,
         modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
-        300028L,
+        cpId,
         bizId,
         "1004",
         PlatformType.H,
@@ -105,7 +105,7 @@ public class PointOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.VF3;
 
     pointCommService.modifyPoint(
-        300028L,
+        cpId,
         bizId,
         100,
         1,
@@ -113,7 +113,7 @@ public class PointOperationTest extends BaseOperationTest {
         modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
-        300028L,
+        cpId,
         bizId,
         "1004",
         PlatformType.H,
@@ -130,7 +130,7 @@ public class PointOperationTest extends BaseOperationTest {
     String bizId = String.valueOf(new Date().getTime());
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         bizId,
         "1001",
         PlatformType.H,
@@ -140,7 +140,7 @@ public class PointOperationTest extends BaseOperationTest {
 //        totalAfter.getFreezedHds().subtract(modifyPoints));
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         bizId,
         "1004",
         PlatformType.H,
