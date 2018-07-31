@@ -3,7 +3,9 @@ package com.hds.xquark.service.point.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.hds.xquark.dal.type.Trancd.DEPOSIT_C;
+import static com.hds.xquark.dal.type.Trancd.DEPOSIT_P;
 import static com.hds.xquark.dal.type.Trancd.MIGRATE_C;
+import static com.hds.xquark.dal.type.Trancd.MIGRATE_P;
 import static com.hds.xquark.dal.type.Trancd.REWARD_C;
 import static com.hds.xquark.dal.type.Trancd.REWARD_P;
 
@@ -442,7 +444,8 @@ public class PointCommServiceImpl implements PointCommService {
   @Override
   public void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
       Trancd trancd) {
-    checkArgument(trancd == REWARD_P, "新增德分Trancd错误");
+    checkArgument(trancd == REWARD_P || trancd == DEPOSIT_P || trancd == MIGRATE_P,
+        "新增德分Trancd错误");
     pointTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
         StringUtils.substringBefore(trancd.name().toLowerCase(), "_"));
   }
