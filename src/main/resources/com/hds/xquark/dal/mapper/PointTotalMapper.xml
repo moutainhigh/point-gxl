@@ -28,7 +28,7 @@
     from pointTotal
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByCpId" statementType="CALLABLE">
+  <select id="selectByCpId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from pointTotal
