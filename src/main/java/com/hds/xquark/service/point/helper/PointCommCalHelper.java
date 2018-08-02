@@ -28,7 +28,9 @@ import java.util.Map;
  */
 public class PointCommCalHelper {
 
-  private final static Map<PlatformType, PointCommMinusChain> PLATFORM_CHAIN_MAP;
+  private final static Map<PlatformType, PointCommMinusChain> POINT_PLATFORM_CHAIN_MAP;
+
+  private final static Map<PlatformType, PointCommMinusChain> COMM_PLATFORM_CHAIN_MAP;
 
   static {
     // HDS扣减顺序 - HDS -> HV_MALL -> VIVI_LIFE
@@ -41,16 +43,28 @@ public class PointCommCalHelper {
     HV_CHAIN.setNext(new PointCommMinusChain(H))
         .setNext(new PointCommMinusChain(V));
 
-    // VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HV_MALL -> HDS
-    PointCommMinusChain VIVI_CHAIN = new PointCommMinusChain(V);
-    VIVI_CHAIN.setNext(new PointCommMinusChain(E))
+    // 德分 VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HV_MALL -> HDS
+    PointCommMinusChain VIVI_POINT_CHAIN = new PointCommMinusChain(V);
+    VIVI_POINT_CHAIN.setNext(new PointCommMinusChain(E))
         .setNext(new PointCommMinusChain(H));
 
-    // 配置扣减顺序map
-    PLATFORM_CHAIN_MAP = ImmutableMap.of(
+    // 积分 VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HDS -> HV_MALL
+    PointCommMinusChain VIVI_COMM_CHAIN = new PointCommMinusChain(V);
+    VIVI_COMM_CHAIN.setNext(new PointCommMinusChain(H))
+        .setNext(new PointCommMinusChain(E));
+
+    // 配置德分扣减顺序map
+    POINT_PLATFORM_CHAIN_MAP = ImmutableMap.of(
         H, HDS_CHAIN,
         E, HV_CHAIN,
-        V, VIVI_CHAIN);
+        V, VIVI_POINT_CHAIN);
+
+    // 配置积分扣减顺序map
+    COMM_PLATFORM_CHAIN_MAP = ImmutableMap.of(
+        H, HDS_CHAIN,
+        E, HV_CHAIN,
+        V, VIVI_COMM_CHAIN
+    );
   }
 
   /**
@@ -124,7 +138,10 @@ public class PointCommCalHelper {
       BigDecimal target,
       Map<PlatformType, BigDecimal> detailMap) {
     checkNotNull(target);
-    PointCommMinusChain chain = PLATFORM_CHAIN_MAP.get(platform);
+    PointCommMinusChain chain = getPlatFormChainMap(pointComm, platform);
+    if (chain == null) {
+      throw new RuntimeException("积分扣减关系未配置");
+    }
     return minus(pointComm, chain, target, detailMap);
   }
 
@@ -261,6 +278,22 @@ public class PointCommCalHelper {
       throw new RuntimeException("对象: " + pointComm + "中没有方法:" + name, e);
     }
     invokeMethod(setMethod, pointComm, val);
+  }
+
+  /**
+   * 积分、德分返回不同的扣减链
+   */
+  private static PointCommMinusChain getPlatFormChainMap(
+      BasePointCommTotal pointComm, PlatformType platformType) {
+    if (pointComm == null) {
+      return null;
+    }
+    if (pointComm instanceof PointTotal) {
+      return POINT_PLATFORM_CHAIN_MAP.get(platformType);
+    } else if (pointComm instanceof CommissionTotal) {
+      return COMM_PLATFORM_CHAIN_MAP.get(platformType);
+    }
+    return null;
   }
 
   /**

@@ -50,12 +50,14 @@
     <include refid="Base_Column_List"/>
     from pointsuspending
     where id = #{id,jdbcType=BIGINT}
+    and isdeleted = false
   </select>
   <select id="listByUserId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from pointsuspending
     where user_id = #{userId}
+    and isdeleted = false
     order by created_at ${direction}
   </select>
   <select id="listByCpId" resultMap="BaseResultMap">
@@ -66,6 +68,7 @@
     select cpId from xquark_user where union_id = #{unionId,jdbcType=VARCHAR}
     and archive = false
     )
+    and isdeleted = false
     order by created_at ${direction}
   </select>
 
@@ -76,6 +79,7 @@
     where user_id = #{userId}
     and business_id = #{bizId,jdbcType=VARCHAR}
     and rollbacked = false
+    and isdeleted = false
     order by created_at desc
     limit 1
   </select>
@@ -87,6 +91,7 @@
     and business_id = #{bizId,jdbcType=VARCHAR}
     and function_code = #{functionCode,jdbcType=VARCHAR}
     and rollbacked = false
+    and isdeleted = false
     order by created_at desc
   </select>
   <select id="listVO" resultMap="VOResultMap">
@@ -99,6 +104,7 @@
     left join gradeCode cod on cod.id = record.grade_id
     where user.cpId = #{cpId,jdbcType=BIGINT}
     and user.isdeleted = false
+    and record.isdeleted = false
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
@@ -113,6 +119,7 @@
     inner join customerprofile user on record.cpId = user.cpId
     where user.cpId = #{cpId,jdbcType=BIGINT}
     and user.isdeleted = false
+    and record.isdeleted = false
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
@@ -122,6 +129,7 @@
     <include refid="Base_Column_List"/>
     from pointsuspending where
     freezed_at >= #{date,jdbcType=TIMESTAMP}
+    and isdeleted = false
   </select>
   <select id="listUnFreezedRecord" resultMap="BaseResultMap">
     select
@@ -131,6 +139,7 @@
     and un_freeze_id is null
     and rollbacked = false
     and freezed_to &lt;= NOW()
+    and isdeleted = false
   </select>
   <select id="loadUnRollBackedByCpIdWithBizId"
     resultMap="BaseResultMap">
@@ -141,6 +150,7 @@
     and orderid = #{bizId,jdbcType=VARCHAR}
     and rollbacked = false
     order by created_at desc
+    and isdeleted = false
     limit 1
   </select>
   <select id="listUnRollBackedByCpIdWithBizIdAndType"
@@ -152,6 +162,7 @@
     and orderid = #{bizId,jdbcType=VARCHAR}
     and rollbacked = false
     and trancd = #{type,jdbcType=VARCHAR}
+    and isdeleted = false
     order by created_at desc
   </select>
   <select id="selectRecordExists" resultType="java.lang.Boolean">
@@ -159,14 +170,16 @@
       select 1
       from pointsuspending
       where cpId = #{cpId,jdbcType=BIGINT}
-            and orderid = #{bizId,jdbcType=VARCHAR}
-            and trancd = #{type,jdbcType=VARCHAR}
+        and orderid = #{bizId,jdbcType=VARCHAR}
+        and trancd = #{type,jdbcType=VARCHAR}
+        and isdeleted = false
     )
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="String">
-    delete from pointsuspending
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update pointsuspending
+    set isdeleted = true
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.PointRecord">
     <selectKey keyProperty="id" resultType="long">
       SELECT LAST_INSERT_ID() AS id

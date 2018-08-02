@@ -52,6 +52,7 @@
     <include refid="Base_Column_List"/>
     from commissionsuspending
     where id = #{id,jdbcType=BIGINT}
+    and isdeleted = false
   </select>
   <select id="listVO" resultMap="VOResultMap">
     select
@@ -63,6 +64,7 @@
     left join gradeCode cod on cod.id = record.grade_id
     where user.cpId = #{cpId,jdbcType=BIGINT}
     and user.isdeleted = false
+    and record.isdeleted = false
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
@@ -77,6 +79,7 @@
     inner join customerprofile user on record.cpId = user.cpId
     where user.cpId = #{cpId,jdbcType=BIGINT}
     and user.isdeleted = false
+    and record.isdeleted = false
     <if test="source != null">
       and record.source = #{source,jdbcType=INTEGER}
     </if>
@@ -89,6 +92,7 @@
     where cpId = #{cpId,jdbcType=BIGINT}
     and orderid = #{bizId,jdbcType=VARCHAR}
     and rollbacked = false
+    and isdeleted = false
     and trancd = #{type,jdbcType=VARCHAR}
     order by created_at desc
   </select>
@@ -98,6 +102,7 @@
     <include refid="Base_Column_List"/>
     from commissionsuspending where
     freezed_at >= #{date,jdbcType=TIMESTAMP}
+    and isdeleted = false
   </select>
   <select id="listUnFreezedRecord" resultMap="BaseResultMap">
     select
@@ -106,6 +111,7 @@
     where (current_freezed_comm is not null and current_freezed_comm > 0)
     and un_freeze_id is null
     and rollbacked = false
+    and isdeleted = false
     and freezed_to &lt;= NOW()
   </select>
   <select id="selectRecordExists" resultType="java.lang.Boolean">
@@ -113,14 +119,16 @@
       select 1
       from commissionsuspending
       where cpId = #{cpId,jdbcType=BIGINT}
-            and orderid = #{bizId,jdbcType=VARCHAR}
-            and trancd = #{type,jdbcType=VARCHAR}
+        and orderid = #{bizId,jdbcType=VARCHAR}
+        and trancd = #{type,jdbcType=VARCHAR}
+        and isdeleted = false
     )
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from commissionsuspending
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update commissionsuspending
+    set isdeleted = true
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.CommissionRecord">
     <selectKey keyProperty="id" resultType="long">
       SELECT LAST_INSERT_ID() AS id
