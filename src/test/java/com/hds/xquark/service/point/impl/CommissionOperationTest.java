@@ -1,7 +1,10 @@
 package com.hds.xquark.service.point.impl;
 
+import com.hds.xquark.dal.constrant.GradeCodeConstrants;
+import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.type.PlatformType;
+import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
@@ -18,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommissionOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 300030L;
+  private final Long cpId = 3000000L;
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
+
+  private final TotalAuditType auditType = TotalAuditType.API;
 
   @Test
   public void testFreezeGrantRollBack() {
@@ -29,18 +34,18 @@ public class CommissionOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.VF3;
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         bizId,
         "1003",
         PlatformType.H,
-        modifyPoints, trancd, null);
+        modifyPoints, trancd, auditType);
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         bizId,
         "1004",
         PlatformType.H,
-        modifyPoints, trancd, null);
+        modifyPoints, trancd, auditType);
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getFreezedHds(), rollbackAfter.getFreezedHds());
@@ -56,7 +61,7 @@ public class CommissionOperationTest extends BaseOperationTest {
         getBizId(),
         "2003",
         platform,
-        modifyPoints, Trancd.ROYA, null);
+        modifyPoints, Trancd.ROYA, auditType);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
 
@@ -72,9 +77,9 @@ public class CommissionOperationTest extends BaseOperationTest {
     pointCommService.modifyCommission(
         cpId,
         getBizId(),
-        "2001",
+        GradeCodeConstrants.GRANT_COMMISSION_CODE,
         PlatformType.E,
-        modifyPoints, trancd, null);
+        modifyPoints, trancd, auditType);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
     // 未初始化
@@ -92,12 +97,12 @@ public class CommissionOperationTest extends BaseOperationTest {
 
     CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
 
-    pointCommService.modifyPoint(
+    pointCommService.modifyCommission(
         cpId,
         getBizId(),
-        "2002",
+        GradeCodeConstrants.CONSUME_COMMISSION_CODE,
         PlatformType.H,
-        modifyPoints, Trancd.ROYA, null);
+        modifyPoints, Trancd.ROYA, auditType);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
     Assert
@@ -112,18 +117,18 @@ public class CommissionOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.ACHA;
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         bizId,
         "2002",
         PlatformType.E,
-        modifyPoints, trancd, null);
+        modifyPoints, trancd, auditType);
 
     pointCommService.modifyCommission(
-        300028L,
+        cpId,
         bizId,
         "2004",
         PlatformType.H,
-        modifyPoints, trancd, null);
+        modifyPoints, trancd, auditType);
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
@@ -131,7 +136,7 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testFreezeRelease() {
-    pointCommService.releaseCommission(null);
+    pointCommService.releaseCommission(auditType);
   }
 
   private String getBizId() {
@@ -141,7 +146,7 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void grantByProcedure() {
     pointCommService.grantCommissionWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200),
-        Trancd.MIGRATE_C);
+        Trancd.DEPOSIT_C);
   }
 
 }
