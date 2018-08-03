@@ -44,12 +44,12 @@ import com.hds.xquark.service.point.PointGradeService;
 import com.hds.xquark.service.point.operator.BasePointCommOperator;
 import com.hds.xquark.service.point.operator.PointOperatorFactory;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +60,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PointCommServiceImpl implements PointCommService {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(PointCommServiceImpl.class);
+  private final static Logger LOGGER = Logger.getLogger(PointCommServiceImpl.class);
 
   private PointGradeService pointGradeService;
 
@@ -361,14 +361,15 @@ public class PointCommServiceImpl implements PointCommService {
       return 0;
     }
     int total = unfreezedPoints.size();
-    LOGGER.info("=== 开始解冻积分 ===, 共 {} 条", total);
+    LOGGER.info(MessageFormat.format("=== 开始解冻积分 ===, 共 {0} 条", total));
     int failed = 0;
     for (CommissionRecord record : unfreezedPoints) {
       BigDecimal point = record.getCurrentFreezed();
       Long cpId = record.getCpId();
       String bizId = record.getBusinessId();
       PlatformType platform = record.getPlatForm();
-      LOGGER.info("cpId: {} 开始解冻积分记录 {}, 待解冻 {}", cpId, record.getId(), record.getCurrentFreezed());
+      LOGGER.info(MessageFormat.format("cpId: {0} 开始解冻积分记录 {1}, 待解冻 {2}", cpId, record.getId(),
+          record.getCurrentFreezed()));
       // 解冻原记录
       PointCommOperationResult ret;
       try {
@@ -376,23 +377,24 @@ public class PointCommServiceImpl implements PointCommService {
             GradeCodeConstrants.RELEASE_COMMISSION_CODE, platform, point,
             PointOperateType.COMMISSION, record.getTrancd(), auditType);
       } catch (Exception e) {
-        LOGGER.error("cpId: {} 积分记录 id: {} 解冻失败", cpId, record.getId(), e);
+        LOGGER.error(MessageFormat.format("cpId: {0} 积分记录 id: {1} 解冻失败", cpId, record.getId()), e);
         failed++;
         continue;
       }
       @SuppressWarnings("unchecked")
       List<CommissionRecord> currRecords = (List<CommissionRecord>) ret.getCurrRecords();
       if (CollectionUtils.isEmpty(currRecords) || currRecords.size() != 1) {
-        LOGGER.error("cpId: {} 没有找到解冻积分 id: {} 对应的原记录", cpId, record.getId());
+        LOGGER
+            .error(MessageFormat.format("cpId: {0} 没有找到解冻积分 id: {1} 对应的原记录", cpId, record.getId()));
         failed++;
         continue;
       }
       CommissionRecord record1 = currRecords.get(0);
       record.setUnFreezeId(record1.getId());
       commissionRecordMapper.updateByPrimaryKeySelective(record);
-      LOGGER.info("cpId: {} 积分记录 {} 解冻完毕", cpId, record.getId());
+      LOGGER.info(MessageFormat.format("cpId: {0} 积分记录 {1} 解冻完毕", cpId, record.getId()));
     }
-    LOGGER.info("=== 积分解冻完毕, 处理 {} 条, 失败 {} 条 ===", total, failed);
+    LOGGER.info(MessageFormat.format("=== 积分解冻完毕, 处理 {0} 条, 失败 {1} 条 ===", total, failed));
     return total - failed;
   }
 
@@ -403,7 +405,7 @@ public class PointCommServiceImpl implements PointCommService {
   public int releasePoints(TotalAuditType auditType) {
     List<PointRecord> unfreezedPoints = listUnFreezedRecord(PointRecord.class);
     int total = unfreezedPoints.size();
-    LOGGER.info("=== 开始解冻德分 ===, 共 {} 条", total);
+    LOGGER.info(MessageFormat.format("=== 开始解冻德分 ===, 共 {0} 条", total));
     int failed = 0;
     if (CollectionUtils.isEmpty(unfreezedPoints)) {
       return 0;
@@ -415,29 +417,31 @@ public class PointCommServiceImpl implements PointCommService {
       PlatformType platform = record.getPlatForm();
       // 解冻原记录
       PointCommOperationResult ret;
-      LOGGER.info("cpId: {} 开始解冻德分记录 {}, 待解冻 {}", cpId, record.getId(), record.getCurrentFreezed());
+      LOGGER.info(MessageFormat.format("cpId: {0} 开始解冻德分记录 {1}, 待解冻 {2}", cpId, record.getId(),
+          record.getCurrentFreezed()));
       try {
         ret = modifyPointComm(cpId, bizId,
             GradeCodeConstrants.RELEASE_POINT_CODE, platform, point,
             PointOperateType.POINT, record.getTrancd(), auditType);
       } catch (Exception e) {
-        LOGGER.error("cpId: {} 德分记录 id: {} 解冻失败", cpId, record.getId(), e);
+        LOGGER.error(MessageFormat.format("cpId: {0} 德分记录 id: {1} 解冻失败", cpId, record.getId()), e);
         failed++;
         continue;
       }
       @SuppressWarnings("unchecked")
       List<PointRecord> currRecords = (List<PointRecord>) ret.getCurrRecords();
       if (CollectionUtils.isEmpty(currRecords) || currRecords.size() != 1) {
-        LOGGER.error("cpId: {} 没有找到解冻德分 id: {} 对应的原记录", cpId, record.getId());
+        LOGGER
+            .error(MessageFormat.format("cpId: {0} 没有找到解冻德分 id: {1} 对应的原记录", cpId, record.getId()));
         failed++;
         continue;
       }
       PointRecord record1 = currRecords.get(0);
       record.setUnFreezeId(record1.getId());
       pointRecordMapper.updateByPrimaryKeySelective(record);
-      LOGGER.info("cpId: {} 德分记录 {} 解冻完毕", cpId, record.getId());
+      LOGGER.info(MessageFormat.format("cpId: {0} 德分记录 {1} 解冻完毕", cpId, record.getId()));
     }
-    LOGGER.info("=== 德分解冻完毕, 处理 {} 条, 失败 {} 条 ===", total, failed);
+    LOGGER.info(MessageFormat.format("=== 德分解冻完毕, 处理 {0} 条, 失败 {1} 条 ===", total, failed));
     return total - failed;
   }
 

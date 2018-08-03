@@ -1,28 +1,17 @@
 package com.hds.xquark.service.point.impl;
 
-import com.hds.xquark.PointContextInitialize;
-import com.hds.xquark.config.PointDalConfig;
-import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommOperationResult;
-import com.hds.xquark.service.point.PointCommService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.Date;
-import javax.sql.DataSource;
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,7 +28,7 @@ public class PointOperationTest extends BaseOperationTest {
 
   private final TotalAuditType auditType = TotalAuditType.DTS;
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(PointOperationTest.class);
+  private final static Logger LOGGER = Logger.getLogger(PointOperationTest.class);
 
   @Test
   public void testBase() {
@@ -225,7 +214,8 @@ public class PointOperationTest extends BaseOperationTest {
 
   @Test
   public void testLog() {
-    LOGGER.info("---- test log ---");
+    LOGGER.info(MessageFormat.format("---- test log {0} ---", "haha"),
+        new RuntimeException("run time"));
   }
 
   @Test
