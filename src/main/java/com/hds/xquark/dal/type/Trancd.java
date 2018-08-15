@@ -31,15 +31,16 @@ public enum Trancd {
   DEDUCT_C("积分扣减"),
   CANCEL_P("德分取消"),
   CANCEL_C("积分取消"),
-  REVERT_P("积分退货"),
-  REVERT_C("德分退货"),
+  REVERT_P("德分退货"),
+  REVERT_C("积分退货"),
   REWARD_P("德分奖励"),
   REWARD_C("积分奖励"),
   WITHDRAW_C("积分提现"),
   DEPOSIT_P("德分发放"),
   DEPOSIT_C("积分发放"),
   MIGRATE_P("德分迁移"),
-  MIGRATE_C("积分迁移");
+  MIGRATE_C("积分迁移"),
+  ROLLBACK_C("提现积分退回");
 
   private final String desc;
 
