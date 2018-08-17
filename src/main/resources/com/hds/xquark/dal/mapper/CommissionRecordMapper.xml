@@ -124,6 +124,17 @@
         and isdeleted = false
     )
   </select>
+  <select id="listByTimeRange" resultType="com.hds.xquark.dal.model.CommissionRecord">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionsuspending
+    where created_at between (#{start,jdbcType=TIMESTAMP} and #{end,jdbcType=TIMESTAMP})
+    <if test="grade != null">
+      and gradeNumber = #{grade,jdbcType=INTEGER}
+    </if>
+    and isdeleted = false
+    order by created_at desc
+  </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update commissionsuspending
     set isdeleted = true

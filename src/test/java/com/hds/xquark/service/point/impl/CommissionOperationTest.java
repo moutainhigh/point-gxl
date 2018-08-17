@@ -1,7 +1,6 @@
 package com.hds.xquark.service.point.impl;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
-import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
@@ -147,6 +146,11 @@ public class CommissionOperationTest extends BaseOperationTest {
   public void grantByProcedure() {
     pointCommService.grantCommissionWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200),
         Trancd.DEPOSIT_C);
+  }
+
+  @Test
+  public void testTransformWithdraw() {
+    pointCommService.translateCommSuspendingToWithdrawLastMonth(new Date());
   }
 
 }

@@ -24,6 +24,7 @@
     <mapper resource="com/hds/xquark/dal/mapper/CommissionRecordMapper.xml"/>
     <mapper resource="com/hds/xquark/dal/mapper/CommissionTotalAuditMapper.xml"/>
     <mapper resource="com/hds/xquark/dal/mapper/PointTotalAuditMapper.xml"/>
+    <mapper resource="com/hds/xquark/dal/mapper/CustomerWithdrawalMapper.xml"/>
   </mappers>
 
 </configuration>

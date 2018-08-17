@@ -3,6 +3,7 @@ package com.hds.xquark.config;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
+import com.hds.xquark.dal.mapper.CustomerWithdrawalMapper;
 import com.hds.xquark.dal.mapper.GradeCodeMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
@@ -64,9 +65,13 @@ public class PointDalConfig {
     return newMapperFactoryBean(CommissionTotalAuditMapper.class).getObject();
   }
 
+  @Bean
+  public CustomerWithdrawalMapper customerWithdrawalMapper() throws Exception {
+    return newMapperFactoryBean(CustomerWithdrawalMapper.class).getObject();
+  }
+
   // @Autowired
   // Environment env;
-
   private <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz) throws Exception {
     final MapperFactoryBean<T> b = new MapperFactoryBean<T>();
     b.setMapperInterface(clazz);

@@ -15,6 +15,7 @@ import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
+import com.hds.xquark.dal.mapper.CustomerWithdrawalMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
@@ -23,6 +24,7 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.CommissionTotalAudit;
+import com.hds.xquark.dal.model.CustomerWithdrawal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointTotal;
@@ -45,11 +47,14 @@ import com.hds.xquark.service.point.operator.BasePointCommOperator;
 import com.hds.xquark.service.point.operator.PointOperatorFactory;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +62,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author wangxinhua on 2018/5/21. DESC:
  */
-@Service
+@Service("PointCommService")
 public class PointCommServiceImpl implements PointCommService {
 
   private final static Logger LOGGER = Logger.getLogger(PointCommServiceImpl.class);
@@ -75,6 +80,8 @@ public class PointCommServiceImpl implements PointCommService {
   private PointTotalAuditMapper pointTotalAuditMapper;
 
   private CommissionTotalAuditMapper commissionTotalAuditMapper;
+
+  private CustomerWithdrawalMapper customerWithdrawalMapper;
 
   @Autowired
   public void setPointGradeService(PointGradeService pointGradeService) {
@@ -112,6 +119,12 @@ public class PointCommServiceImpl implements PointCommService {
   public void setCommissionRecordMapper(
       CommissionRecordMapper commissionRecordMapper) {
     this.commissionRecordMapper = commissionRecordMapper;
+  }
+
+  @Autowired
+  public void setCustomerWithdrawalMapper(
+      CustomerWithdrawalMapper customerWithdrawalMapper) {
+    this.customerWithdrawalMapper = customerWithdrawalMapper;
   }
 
   /**
@@ -461,6 +474,68 @@ public class PointCommServiceImpl implements PointCommService {
         "新增积分Trancd错误");
     commissionTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
         StringUtils.substringBefore(trancd.name().toLowerCase(), "_"));
+  }
+
+  @Override
+  public List<CommissionRecord> listRecordByTime(Date start, Date end, String grade) {
+    return commissionRecordMapper.listByTimeRange(start, end, grade);
+  }
+
+  /**
+   * 从传入日期开始往前迁移一个月, 往前推到一个月的零点
+   *
+   * @param from 当前日期
+   */
+  @Override
+  @Transactional
+  public int translateCommSuspendingToWithdrawLastMonth(Date from) {
+    DateTime jodStart = new DateTime(from)
+        .minusDays(30).withTimeAtStartOfDay();
+    return translateCommSuspendingToWithdraw(jodStart.toDate(), from);
+  }
+
+  /**
+   * 将指定日期的积分提现记录迁移到withdraw表
+   *
+   * @param start 开始日期
+   * @param end 结束日期
+   * @return 执行结果
+   */
+  @Override
+  @Transactional
+  public int translateCommSuspendingToWithdraw(Date start, Date end) {
+    List<CommissionRecord> commissionRecords = listRecordByTime(start, end,
+        GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE);
+    LOGGER.info(String
+        .format("开始迁移提现记录: %s -> %s, 共 %d 条", DateFormatUtils.format(start, "yyyy-MM-dd HH:mm:ss"),
+            DateFormatUtils.format(end, "yyyy-MM-dd HH:mm:ss"), commissionRecords.size()));
+    int effected = 0;
+    if (CollectionUtils.isEmpty(commissionRecords)) {
+      return effected;
+    }
+    for (CommissionRecord record : commissionRecords) {
+      Long id = record.getId();
+      boolean withdrawExists = customerWithdrawalMapper.isSuspendingExists(id);
+      if (!withdrawExists) {
+        CustomerWithdrawal withdrawal = new CustomerWithdrawal();
+        withdrawal.setCommsuspendingId(id);
+        withdrawal.setCpId(record.getCpId());
+        withdrawal.setAmount(record.getCurrent());
+        withdrawal.setProcessingMonth(Integer.parseInt(DateFormatUtils.format(end, "yyyyMM")));
+        withdrawal.setSource(record.getSource());
+        try {
+          customerWithdrawalMapper.insert(withdrawal);
+        } catch (Exception e) {
+          LOGGER.error("提现记录 " + id + " 迁移到提现表失败", e);
+          continue;
+        }
+        effected++;
+      } else {
+        LOGGER.debug("提现记录 [" + id + "] 已处理, 跳过处理");
+      }
+    }
+    LOGGER.info(String.format("积分记录迁移完毕, 成功 %d 条", effected));
+    return effected;
   }
 
   @SuppressWarnings("unchecked")

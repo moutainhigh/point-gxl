@@ -1,13 +1,17 @@
 package com.hds.xquark.service.point;
 
 import com.hds.xquark.dal.model.BasePointCommTotal;
+import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wangxinhua on 2018/5/18. DESC: 积分信息service
@@ -102,4 +106,10 @@ public interface PointCommService {
 
   void grantCommissionWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
       Trancd trancd);
+
+  List<CommissionRecord> listRecordByTime(Date start, Date end, String grade);
+
+  int translateCommSuspendingToWithdrawLastMonth(Date from);
+
+  int translateCommSuspendingToWithdraw(Date start, Date end);
 }

@@ -22,6 +22,9 @@ public interface CommissionRecordMapper {
   List<CommissionRecord> listUnRollBackedByCpIdWithBizIdAndType(@Param("bizId") String bizId,
       @Param("cpId") Long cpId, @Param("type") Trancd type);
 
+  List<CommissionRecord> listByTimeRange(@Param("start") Date start, @Param("end") Date end,
+      @Param("grade") String grade);
+
   boolean selectRecordExists(
       @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
 
