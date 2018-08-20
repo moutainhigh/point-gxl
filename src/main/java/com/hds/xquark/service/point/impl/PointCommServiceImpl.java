@@ -9,6 +9,8 @@ import static com.hds.xquark.dal.type.Trancd.MIGRATE_P;
 import static com.hds.xquark.dal.type.Trancd.REWARD_C;
 import static com.hds.xquark.dal.type.Trancd.REWARD_P;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.constrant.PointConstrants;
@@ -37,6 +39,7 @@ import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.util.Transformer;
 import com.hds.xquark.dal.vo.CommissionRecordVO;
+import com.hds.xquark.dal.vo.CommissionWithdrawVO;
 import com.hds.xquark.dal.vo.PointRecordVO;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
@@ -50,6 +53,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -520,9 +524,10 @@ public class PointCommServiceImpl implements PointCommService {
         CustomerWithdrawal withdrawal = new CustomerWithdrawal();
         withdrawal.setCommsuspendingId(id);
         withdrawal.setCpId(record.getCpId());
-        withdrawal.setAmount(record.getCurrent());
+        withdrawal.setAmount(record.getCurrent().abs());
         withdrawal.setProcessingMonth(Integer.parseInt(DateFormatUtils.format(end, "yyyyMM")));
         withdrawal.setSource(record.getSource());
+        withdrawal.setWithdrawDate(record.getCreatedAt());
         try {
           customerWithdrawalMapper.insert(withdrawal);
         } catch (Exception e) {
@@ -531,11 +536,50 @@ public class PointCommServiceImpl implements PointCommService {
         }
         effected++;
       } else {
-        LOGGER.debug("提现记录 [" + id + "] 已处理, 跳过处理");
+        LOGGER.info("提现记录 [" + id + "] 已处理, 跳过处理");
       }
     }
     LOGGER.info(String.format("积分记录迁移完毕, 成功 %d 条", effected));
     return effected;
+  }
+
+  /**
+   * 查询提现记录
+   *
+   * @param orderMonth 月份，格式为201809
+   * @param source 平台, 若为空则为全平台
+   * @return 查询结果
+   */
+  @Override
+  public List<CommissionWithdrawVO> listWithdrawVO(Integer orderMonth, PlatformType source) {
+    return customerWithdrawalMapper.listWithdraw(orderMonth, Optional.fromNullable(source)
+        .transform(PlatformType.GET_CODE_FUNC).orNull());
+  }
+
+  /**
+   * 查询中行提现记录
+   *
+   * @param orderMonth 月份，格式为201809
+   * @param source 平台, 若为空则为全平台
+   * @return 查询结果
+   */
+  @Override
+  public List<CommissionWithdrawVO> listZHWithdrawVO(Integer orderMonth, PlatformType source) {
+    return customerWithdrawalMapper.listZHWithdraw(orderMonth, Optional.fromNullable(source)
+        .transform(PlatformType.GET_CODE_FUNC).orNull());
+  }
+
+  /**
+   * 查询非中行提现记录
+   *
+   * @param orderMonth 月份，格式为201809
+   * @param source 平台, 若为空则为全平台
+   * @return 查询结果
+   */
+  @Override
+  public List<CommissionWithdrawVO> listNonZHWithdrawVO(Integer orderMonth, PlatformType source) {
+    return customerWithdrawalMapper.listNonZHWithdraw(orderMonth, Optional.fromNullable(source)
+        .transform(PlatformType.GET_CODE_FUNC).orNull());
   }
 
   @SuppressWarnings("unchecked")

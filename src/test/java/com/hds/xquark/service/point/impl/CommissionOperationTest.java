@@ -1,5 +1,7 @@
 package com.hds.xquark.service.point.impl;
 
+import static com.hds.xquark.dal.type.TotalAuditType.API;
+
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.type.PlatformType;
@@ -20,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommissionOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 3000000L;
+  private final Long cpId = 1000080L;
   private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
 
-  private final TotalAuditType auditType = TotalAuditType.API;
+  private final TotalAuditType auditType = API;
 
   @Test
   public void testFreezeGrantRollBack() {
@@ -92,6 +94,18 @@ public class CommissionOperationTest extends BaseOperationTest {
   }
 
   @Test
+  public void testWithdraw() {
+    CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
+    pointCommService
+        .modifyCommission(cpId, "withdraw", GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE,
+            PlatformType.V,
+            modifyPoints, Trancd.WITHDRAW_C, API);
+    CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
+    Assert
+        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
+  }
+
+  @Test
   public void testConsume() {
 
     CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
@@ -151,6 +165,11 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void testTransformWithdraw() {
     pointCommService.translateCommSuspendingToWithdrawLastMonth(new Date());
+  }
+
+  @Test
+  public void testListWithdraw() {
+    System.out.println(pointCommService.listWithdrawVO(201808, null));
   }
 
 }

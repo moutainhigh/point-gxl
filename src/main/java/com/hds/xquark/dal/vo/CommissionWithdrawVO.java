@@ -5,11 +5,13 @@ import java.math.BigDecimal;
 /**
  * Created by wangxinhua. Date: 2018/8/17 Time: 下午6:40
  */
-public abstract class BaseCommissionWithdrawVO {
+public class CommissionWithdrawVO {
 
   private Long cpId;
 
   private String bankAccount;
+
+  private String bankNumber;
 
   private String bankName;
 
@@ -107,5 +109,29 @@ public abstract class BaseCommissionWithdrawVO {
 
   public void setBankName(String bankName) {
     this.bankName = bankName;
+  }
+
+  public String getBankNumber() {
+    return bankNumber;
+  }
+
+  public void setBankNumber(String bankNumber) {
+    this.bankNumber = bankNumber;
+  }
+
+  @Override
+  public String toString() {
+    return "CommissionWithdrawVO{" +
+        "cpId=" + cpId +
+        ", bankAccount='" + bankAccount + '\'' +
+        ", bankNumber='" + bankNumber + '\'' +
+        ", bankName='" + bankName + '\'' +
+        ", name='" + name + '\'' +
+        ", amount=" + amount +
+        ", phone='" + phone + '\'' +
+        ", tinCode='" + tinCode + '\'' +
+        ", remark='" + remark + '\'' +
+        ", errorMsg='" + errorMsg + '\'' +
+        '}';
   }
 }

@@ -7,6 +7,7 @@ import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
+import com.hds.xquark.dal.vo.CommissionWithdrawVO;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -112,4 +113,10 @@ public interface PointCommService {
   int translateCommSuspendingToWithdrawLastMonth(Date from);
 
   int translateCommSuspendingToWithdraw(Date start, Date end);
+
+  List<CommissionWithdrawVO> listWithdrawVO(Integer orderMonth, PlatformType source);
+
+  List<CommissionWithdrawVO> listZHWithdrawVO(Integer orderMonth, PlatformType source);
+
+  List<CommissionWithdrawVO> listNonZHWithdrawVO(Integer orderMonth, PlatformType source);
 }

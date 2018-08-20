@@ -1,5 +1,6 @@
 package com.hds.xquark.dal.type;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,13 @@ public enum PlatformType {
   S(4, "System");
 
   private static final Map<Integer, PlatformType> STATIC_MAP;
+
+  public static final Function<PlatformType, Integer> GET_CODE_FUNC = new Function<PlatformType, Integer>() {
+    @Override
+    public Integer apply(PlatformType platformType) {
+      return platformType.getCode();
+    }
+  };
 
   static {
     STATIC_MAP = new HashMap<>();
