@@ -36,7 +36,7 @@ public class CommissionOperationTest extends BaseOperationTest {
 
     pointCommService.modifyCommission(
         cpId,
-        bizId,
+        bizIdto
         "1003",
         PlatformType.H,
         modifyPoints, trancd, auditType);
@@ -169,7 +169,7 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testListWithdraw() {
-    System.out.println(pointCommService.listWithdrawVO(201808, null));
+    System.out.println(pointCommService.listWithdrawVO(201808, PlatformType.H));
   }
 
 }

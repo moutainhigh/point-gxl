@@ -9,7 +9,6 @@ import static com.hds.xquark.dal.type.Trancd.MIGRATE_P;
 import static com.hds.xquark.dal.type.Trancd.REWARD_C;
 import static com.hds.xquark.dal.type.Trancd.REWARD_P;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
@@ -53,7 +52,6 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -580,6 +578,58 @@ public class PointCommServiceImpl implements PointCommService {
   public List<CommissionWithdrawVO> listNonZHWithdrawVO(Integer orderMonth, PlatformType source) {
     return customerWithdrawalMapper.listNonZHWithdraw(orderMonth, Optional.fromNullable(source)
         .transform(PlatformType.GET_CODE_FUNC).orNull());
+  }
+
+  /**
+   * 查询提现记录
+   *
+   * @param cpId cpId
+   * @param month 月份
+   * @param source 平台
+   * @return 提现记录list
+   */
+  @Override
+  public List<CustomerWithdrawal> listWithDraw(Long cpId, Integer month, Integer source) {
+    return customerWithdrawalMapper.listByCpIdAndMonth(cpId, month, source);
+  }
+
+  /**
+   * 按月份更新状态
+   */
+  @Override
+  public boolean updateCustomerWithdrawByMonth(CustomerWithdrawal withdrawal) {
+    return customerWithdrawalMapper.updateByMonthSelective(withdrawal) > 0;
+  }
+
+  /**
+   * 按id更新状态
+   */
+  @Override
+  public boolean updateCustomerWithdrawById(CustomerWithdrawal withdrawal) {
+    return customerWithdrawalMapper.updateByPrimaryKeySelective(withdrawal) > 0;
+  }
+
+  /**
+   * 查询用户是否申请过提现
+   *
+   * @param cpId cpId
+   * @param month 月份
+   * @param source 平台
+   * @return true or false
+   */
+  @Override
+  public boolean isCpIdWithdrawed(Long cpId, Integer month, Integer source) {
+    return customerWithdrawalMapper.selectIsWithdrawExists(cpId, month, source);
+  }
+
+  /**
+   * 验证某月份是否已经处理过
+   *
+   * @param month 月份
+   */
+  @Override
+  public boolean isOrderMonthProcessed(Integer month) {
+    return customerWithdrawalMapper.selectOrderMonthProcessed(month);
   }
 
   @SuppressWarnings("unchecked")

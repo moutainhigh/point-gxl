@@ -3,6 +3,7 @@ package com.hds.xquark.service.point;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
+import com.hds.xquark.dal.model.CustomerWithdrawal;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
@@ -12,7 +13,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wangxinhua on 2018/5/18. DESC: 积分信息service
@@ -119,4 +119,14 @@ public interface PointCommService {
   List<CommissionWithdrawVO> listZHWithdrawVO(Integer orderMonth, PlatformType source);
 
   List<CommissionWithdrawVO> listNonZHWithdrawVO(Integer orderMonth, PlatformType source);
+
+  List<CustomerWithdrawal> listWithDraw(Long cpId, Integer month, Integer source);
+
+  boolean updateCustomerWithdrawByMonth(CustomerWithdrawal withdrawal);
+
+  boolean updateCustomerWithdrawById(CustomerWithdrawal withdrawal);
+
+  boolean isCpIdWithdrawed(Long cpId, Integer month, Integer source);
+
+  boolean isOrderMonthProcessed(Integer month);
 }

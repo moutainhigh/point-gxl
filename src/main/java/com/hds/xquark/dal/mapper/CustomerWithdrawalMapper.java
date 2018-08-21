@@ -15,7 +15,16 @@ public interface CustomerWithdrawalMapper {
 
   CustomerWithdrawal selectByPrimaryKey(Long id);
 
+  List<CustomerWithdrawal> listByCpIdAndMonth(@Param("cpId") Long cpId,
+      @Param("month") Integer month,
+      @Param("source") Integer source);
+
+  boolean selectIsWithdrawExists(@Param("cpId") Long cpId, @Param("month") Integer month,
+      @Param("source") Integer source);
+
   int updateByPrimaryKeySelective(CustomerWithdrawal record);
+
+  int updateByMonthSelective(CustomerWithdrawal record);
 
   int updateByPrimaryKey(CustomerWithdrawal record);
 
@@ -38,4 +47,8 @@ public interface CustomerWithdrawalMapper {
    */
   List<CommissionWithdrawVO> listNonZHWithdraw(@Param("orderMonth") Integer orderMonth,
       @Param("source") Integer source);
+
+  boolean selectIsCpIdWithdrawed(@Param("cpId") Long cpId, @Param("month") Integer month);
+
+  boolean selectOrderMonthProcessed(@Param("month") Integer month);
 }
