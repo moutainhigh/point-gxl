@@ -129,4 +129,6 @@ public interface PointCommService {
   boolean isCpIdWithdrawed(Long cpId, Integer month, Integer source);
 
   boolean isOrderMonthProcessed(Integer month);
+
+  List<String> listWithdrawTopMonth(int month);
 }

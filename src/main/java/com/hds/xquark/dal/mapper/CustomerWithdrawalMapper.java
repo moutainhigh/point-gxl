@@ -48,6 +48,14 @@ public interface CustomerWithdrawalMapper {
   List<CommissionWithdrawVO> listNonZHWithdraw(@Param("orderMonth") Integer orderMonth,
       @Param("source") Integer source);
 
+  /**
+   * 获取最近的可展示月份
+   *
+   * @param month 取几个月
+   * @return 月份集合
+   */
+  List<String> listTopMonth(@Param("month") int month);
+
   boolean selectIsCpIdWithdrawed(@Param("cpId") Long cpId, @Param("month") Integer month);
 
   boolean selectOrderMonthProcessed(@Param("month") Integer month);

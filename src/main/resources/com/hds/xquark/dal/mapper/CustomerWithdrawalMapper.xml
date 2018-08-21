@@ -147,6 +147,12 @@
                and source = #{source,jdbcType=INTEGER}
              )
   </select>
+  <select id="listTopMonth" resultType="java.lang.String">
+    select distinct processingMonth
+    from customerWithdrawal
+    order by processingMonth desc
+    limit #{month,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete
     from customerWithdrawal

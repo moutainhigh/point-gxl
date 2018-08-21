@@ -632,6 +632,11 @@ public class PointCommServiceImpl implements PointCommService {
     return customerWithdrawalMapper.selectOrderMonthProcessed(month);
   }
 
+  @Override
+  public List<String> listWithdrawTopMonth(int month) {
+    return customerWithdrawalMapper.listTopMonth(month);
+  }
+
   @SuppressWarnings("unchecked")
   private <T extends BasePointCommRecord> List<T> listUnFreezedRecord(Class<T> clazz) {
     if (clazz == PointRecord.class) {
