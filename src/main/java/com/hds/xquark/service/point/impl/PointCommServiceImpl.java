@@ -492,7 +492,7 @@ public class PointCommServiceImpl implements PointCommService {
   @Transactional
   public int translateCommSuspendingToWithdrawLastMonth(Date from) {
     DateTime jodStart = new DateTime(from)
-        .minusDays(30).withTimeAtStartOfDay();
+        .minusMonths(1).withTimeAtStartOfDay();
     return translateCommSuspendingToWithdraw(jodStart.toDate(), from);
   }
 
