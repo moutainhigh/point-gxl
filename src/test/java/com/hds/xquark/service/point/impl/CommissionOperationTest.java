@@ -36,7 +36,7 @@ public class CommissionOperationTest extends BaseOperationTest {
 
     pointCommService.modifyCommission(
         cpId,
-        bizIdto
+        bizId,
         "1003",
         PlatformType.H,
         modifyPoints, trancd, auditType);
@@ -170,6 +170,12 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void testListWithdraw() {
     System.out.println(pointCommService.listWithdrawVO(201808, PlatformType.H));
+  }
+
+  @Test
+  public void testSumTotal() {
+    System.out.println(pointCommService
+        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, CommissionTotal.class));
   }
 
 }

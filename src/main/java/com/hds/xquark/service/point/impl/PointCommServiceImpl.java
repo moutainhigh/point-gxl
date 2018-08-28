@@ -274,6 +274,20 @@ public class PointCommServiceImpl implements PointCommService {
   }
 
   /**
+   * 返回指定grade的积分\德分总额, 保留两位小数
+   */
+  @Override
+  public <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId,
+      Class<T> clazz) {
+    // 也许在将来需要支持
+    if (clazz == PointTotal.class) {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "暂不支持查询德分总数");
+    }
+    return commissionRecordMapper.sumTotalByGradeCodeAndCpId(gradeCode, cpId)
+        .setScale(2, BigDecimal.ROUND_HALF_EVEN);
+  }
+
+  /**
    * 保存积分或德分 或其他乱七八糟分, 如果还有什么鬼分用抽象类去实现
    *
    * @param total 积分或德分

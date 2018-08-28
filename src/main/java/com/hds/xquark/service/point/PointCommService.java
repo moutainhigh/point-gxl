@@ -81,6 +81,8 @@ public interface PointCommService {
   @SuppressWarnings("unchecked")
   <T extends BasePointCommTotal> T loadOrBuildInfo(Long cpId, Class<T> clazz);
 
+  <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId, Class<T> clazz);
+
   boolean saveTotal(BasePointCommTotal total,
       TotalAuditType auditType);
 
