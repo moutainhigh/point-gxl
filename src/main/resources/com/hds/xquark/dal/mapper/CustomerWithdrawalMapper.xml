@@ -46,75 +46,66 @@
              )
   </select>
   <select id="listZHWithdraw" resultMap="BaseWithDrawMap">
-    select cp.cpId as cp_id,
-    cp.namecn as name,
-    cp.phoneno1 as phone,
-    cp.tincode as tincode,
-    cp.source as source,
-    cb.bankaccount as bank_account,
-    cb.bankfullname as bank_name,
-    cb.banknumber as bank_number,
-    cw.amount as amount,
-    CONCAT(cp.customerNumber, ';', cw.processingMonth, ';', cp.source) as remark
-    from customerWithdrawal cw
-    left join customerprofile cp on cw.cpId = cp.cpId
-    left join customerbank cb on cw.cpId = cb.cpId
-    where cp.isdeleted = false
-    and cp.is_active = true
+    select cwd.cpid                                                             as cp_id,
+           cp.namecn                                                            as name,
+           cp.phoneno1                                                          as phone,
+           cp.tincode                                                           as tincode,
+           cwd.source                                                           as source,
+           cb.bankaccount                                                       as bank_account,
+           cb.bankfullname                                                      as bank_name,
+           cb.banknumber                                                        as bank_number,
+           cwd.total                                                            as amount,
+           CONCAT(cp.customerNumber, ';', cwd.processingMonth, ';', cwd.source) as remark
+    from (select cpid, processingMonth, source, sum(amount) as 'total'
+          from customerwithdrawal
+          where processingMonth = #{orderMonth,jdbcType=INTEGER}
+            and source = #{source,jdbcType=INTEGER}
+          group by cpid) cwd
+           inner join customerbank cb on cwd.cpId = cb.cpId
+           left join customerprofile cp on cwd.cpId = cp.cpId
+    where cb.isdeleted = 0
     and cb.bankfullname = '中国银行'
-    <if test="orderMonth != null">
-      and cw.processingMonth = #{orderMonth,jdbcType=INTEGER}
-    </if>
-    <if test="source != null">
-      and cp.source = #{source,jdbcType=INTEGER}
-    </if>
   </select>
   <select id="listNonZHWithdraw" resultMap="BaseWithDrawMap">
-    select cp.cpId as cp_id,
-    cp.namecn as name,
-    cp.phoneno1 as phone,
-    cp.tincode as tincode,
-    cp.source as source,
-    cb.bankaccount as bank_account,
-    cb.bankfullname as bank_name,
-    cb.banknumber as bank_number,
-    cw.amount as amount,
-    CONCAT(cp.customerNumber, ';', cw.processingMonth, ';', cp.source) as remark
-    from customerWithdrawal cw
-    left join customerprofile cp on cw.cpId = cp.cpId
-    left join customerbank cb on cw.cpId = cb.cpId
-    where cp.isdeleted = false
-    and cp.is_active = true
+    select cwd.cpid                                                             as cp_id,
+           cp.namecn                                                            as name,
+           cp.phoneno1                                                          as phone,
+           cp.tincode                                                           as tincode,
+           cwd.source                                                           as source,
+           cb.bankaccount                                                       as bank_account,
+           cb.bankfullname                                                      as bank_name,
+           cb.banknumber                                                        as bank_number,
+           cwd.total                                                            as amount,
+           CONCAT(cp.customerNumber, ';', cwd.processingMonth, ';', cwd.source) as remark
+    from (select cpid, processingMonth, source, sum(amount) as 'total'
+          from customerwithdrawal
+          where processingMonth = #{orderMonth,jdbcType=INTEGER}
+            and source = #{source,jdbcType=INTEGER}
+          group by cpid) cwd
+           inner join customerbank cb on cwd.cpId = cb.cpId
+           left join customerprofile cp on cwd.cpId = cp.cpId
+    where cb.isdeleted = 0
     and cb.bankfullname != '中国银行'
-    <if test="orderMonth != null">
-      and cw.processingMonth = #{orderMonth,jdbcType=INTEGER}
-    </if>
-    <if test="source != null">
-      and cp.source = #{source,jdbcType=INTEGER}
-    </if>
   </select>
   <select id="listWithdraw" resultMap="BaseWithDrawMap">
-    select cp.cpId as cp_id,
-    cp.namecn as name,
-    cp.phoneno1 as phone,
-    cp.tincode as tincode,
-    cp.source as source,
-    cb.bankaccount as bank_account,
-    cb.bankfullname as bank_name,
-    cb.banknumber as bank_number,
-    cw.amount as amount,
-    CONCAT(cp.customerNumber, ';', cw.processingMonth, ';', cp.source) as remark
-    from customerWithdrawal cw
-    left join customerprofile cp on cw.cpId = cp.cpId
-    left join customerbank cb on cw.cpId = cb.cpId
-    where cp.isdeleted = false
-    and cp.is_active = true
-    <if test="orderMonth != null">
-      and cw.processingMonth = #{orderMonth,jdbcType=INTEGER}
-    </if>
-    <if test="source != null">
-      and cp.source = #{source,jdbcType=INTEGER}
-    </if>
+    select cwd.cpid                                                             as cp_id,
+           cp.namecn                                                            as name,
+           cp.phoneno1                                                          as phone,
+           cp.tincode                                                           as tincode,
+           cwd.source                                                           as source,
+           cb.bankaccount                                                       as bank_account,
+           cb.bankfullname                                                      as bank_name,
+           cb.banknumber                                                        as bank_number,
+           cwd.total                                                            as amount,
+           CONCAT(cp.customerNumber, ';', cwd.processingMonth, ';', cwd.source) as remark
+    from (select cpid, processingMonth, source, sum(amount) as 'total'
+          from customerwithdrawal
+          where processingMonth = #{orderMonth,jdbcType=INTEGER}
+            and source = #{source,jdbcType=INTEGER}
+          group by cpid) cwd
+           inner join customerbank cb on cwd.cpId = cb.cpId
+           left join customerprofile cp on cwd.cpId = cp.cpId
+    where cb.isdeleted = 0
   </select>
   <select id="selectIsCpIdWithdrawed" resultType="java.lang.Boolean">
     select exists(
@@ -127,7 +118,7 @@
   <select id="selectOrderMonthProcessed" resultType="java.lang.Boolean">
     select exists(
              select 1 from customerWithdrawal where processingMonth = #{month,jdbcType=INTEGER}
-                                                and depositStatus != 0
+                                                and depositStatus != 1
              )
   </select>
   <select id="listByCpIdAndMonth" resultMap="BaseResultMap">

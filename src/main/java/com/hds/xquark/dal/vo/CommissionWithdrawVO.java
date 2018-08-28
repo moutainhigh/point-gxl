@@ -1,15 +1,11 @@
 package com.hds.xquark.dal.vo;
 
-import com.hds.xquark.dal.type.PlatformType;
 import java.math.BigDecimal;
 
 /**
  * Created by wangxinhua. Date: 2018/8/17 Time: 下午6:40
  */
 public class CommissionWithdrawVO {
-
-  // viviLife平台收取8%手续费
-  private final static BigDecimal VIVI_PRECENT = BigDecimal.valueOf(0.92);
 
   private Long cpId;
 
@@ -70,10 +66,6 @@ public class CommissionWithdrawVO {
   }
 
   public BigDecimal getAmount() {
-    // viivlife平台收取8%手续费
-    if (amount != null && source == PlatformType.V.getCode()) {
-      return amount.multiply(VIVI_PRECENT).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-    }
     return amount;
   }
 

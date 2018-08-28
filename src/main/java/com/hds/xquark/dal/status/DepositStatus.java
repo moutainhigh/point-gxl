@@ -1,7 +1,13 @@
 package com.hds.xquark.dal.status;
 
 public enum DepositStatus {
-  CREATED(0), SUCCEED(1), FAILED(4);
+  CREATED(1),
+
+  IN_PROGRESSING(2),
+
+  SUCCESS(3),
+
+  ERROR(4);
 
   private final int code;
 
