@@ -9,12 +9,14 @@ import static com.hds.xquark.dal.type.Trancd.MIGRATE_P;
 import static com.hds.xquark.dal.type.Trancd.REWARD_C;
 import static com.hds.xquark.dal.type.Trancd.REWARD_P;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
+import com.hds.xquark.dal.mapper.CustomerWithdrawalMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
@@ -23,6 +25,7 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.CommissionTotalAudit;
+import com.hds.xquark.dal.model.CustomerWithdrawal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointTotal;
@@ -35,6 +38,7 @@ import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.util.Transformer;
 import com.hds.xquark.dal.vo.CommissionRecordVO;
+import com.hds.xquark.dal.vo.CommissionWithdrawVO;
 import com.hds.xquark.dal.vo.PointRecordVO;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
@@ -45,11 +49,14 @@ import com.hds.xquark.service.point.operator.BasePointCommOperator;
 import com.hds.xquark.service.point.operator.PointOperatorFactory;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +64,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author wangxinhua on 2018/5/21. DESC:
  */
-@Service
+@Service("PointCommService")
 public class PointCommServiceImpl implements PointCommService {
 
   private final static Logger LOGGER = Logger.getLogger(PointCommServiceImpl.class);
@@ -75,6 +82,8 @@ public class PointCommServiceImpl implements PointCommService {
   private PointTotalAuditMapper pointTotalAuditMapper;
 
   private CommissionTotalAuditMapper commissionTotalAuditMapper;
+
+  private CustomerWithdrawalMapper customerWithdrawalMapper;
 
   @Autowired
   public void setPointGradeService(PointGradeService pointGradeService) {
@@ -112,6 +121,12 @@ public class PointCommServiceImpl implements PointCommService {
   public void setCommissionRecordMapper(
       CommissionRecordMapper commissionRecordMapper) {
     this.commissionRecordMapper = commissionRecordMapper;
+  }
+
+  @Autowired
+  public void setCustomerWithdrawalMapper(
+      CustomerWithdrawalMapper customerWithdrawalMapper) {
+    this.customerWithdrawalMapper = customerWithdrawalMapper;
   }
 
   /**
@@ -256,6 +271,20 @@ public class PointCommServiceImpl implements PointCommService {
       ret = BasePointCommTotal.emptyInfo(cpId, clazz);
     }
     return ret;
+  }
+
+  /**
+   * 返回指定grade的积分\德分总额, 保留两位小数
+   */
+  @Override
+  public <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId,
+      Class<T> clazz) {
+    // 也许在将来需要支持
+    if (clazz == PointTotal.class) {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "暂不支持查询德分总数");
+    }
+    return commissionRecordMapper.sumTotalByGradeCodeAndCpId(gradeCode, cpId)
+        .setScale(2, BigDecimal.ROUND_HALF_EVEN);
   }
 
   /**
@@ -461,6 +490,165 @@ public class PointCommServiceImpl implements PointCommService {
         "新增积分Trancd错误");
     commissionTotalMapper.grantWithProcedure(cpId, platform.getCode(), val, trancd.name(),
         StringUtils.substringBefore(trancd.name().toLowerCase(), "_"));
+  }
+
+  @Override
+  public List<CommissionRecord> listRecordByTime(Date start, Date end, String grade) {
+    return commissionRecordMapper.listByTimeRange(start, end, grade);
+  }
+
+  /**
+   * 从传入日期开始往前迁移一个月, 往前推到一个月的零点
+   *
+   * @param from 当前日期
+   */
+  @Override
+  @Transactional
+  public int translateCommSuspendingToWithdrawLastMonth(Date from) {
+    DateTime jodStart = new DateTime(from)
+        .minusMonths(1).withTimeAtStartOfDay();
+    return translateCommSuspendingToWithdraw(jodStart.toDate(), from);
+  }
+
+  /**
+   * 将指定日期的积分提现记录迁移到withdraw表
+   *
+   * @param start 开始日期
+   * @param end 结束日期
+   * @return 执行结果
+   */
+  @Override
+  @Transactional
+  public int translateCommSuspendingToWithdraw(Date start, Date end) {
+    List<CommissionRecord> commissionRecords = listRecordByTime(start, end,
+        GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE);
+    LOGGER.info(String
+        .format("开始迁移提现记录: %s -> %s, 共 %d 条", DateFormatUtils.format(start, "yyyy-MM-dd HH:mm:ss"),
+            DateFormatUtils.format(end, "yyyy-MM-dd HH:mm:ss"), commissionRecords.size()));
+    int effected = 0;
+    if (CollectionUtils.isEmpty(commissionRecords)) {
+      return effected;
+    }
+    for (CommissionRecord record : commissionRecords) {
+      Long id = record.getId();
+      boolean withdrawExists = customerWithdrawalMapper.isSuspendingExists(id);
+      if (!withdrawExists) {
+        CustomerWithdrawal withdrawal = new CustomerWithdrawal();
+        withdrawal.setCommsuspendingId(id);
+        withdrawal.setCpId(record.getCpId());
+        withdrawal.setAmount(record.getCurrent().abs());
+        withdrawal.setProcessingMonth(Integer.parseInt(DateFormatUtils.format(end, "yyyyMM")));
+        withdrawal.setSource(record.getSource());
+        withdrawal.setWithdrawDate(record.getCreatedAt());
+        try {
+          customerWithdrawalMapper.insert(withdrawal);
+        } catch (Exception e) {
+          LOGGER.error("提现记录 " + id + " 迁移到提现表失败", e);
+          continue;
+        }
+        effected++;
+      } else {
+        LOGGER.info("提现记录 [" + id + "] 已处理, 跳过处理");
+      }
+    }
+    LOGGER.info(String.format("积分记录迁移完毕, 成功 %d 条", effected));
+    return effected;
+  }
+
+  /**
+   * 查询提现记录
+   *
+   * @param orderMonth 月份，格式为201809
+   * @param source 平台, 若为空则为全平台
+   * @return 查询结果
+   */
+  @Override
+  public List<CommissionWithdrawVO> listWithdrawVO(Integer orderMonth, PlatformType source) {
+    return customerWithdrawalMapper.listWithdraw(orderMonth, Optional.fromNullable(source)
+        .transform(PlatformType.GET_CODE_FUNC).orNull());
+  }
+
+  /**
+   * 查询中行提现记录
+   *
+   * @param orderMonth 月份，格式为201809
+   * @param source 平台, 若为空则为全平台
+   * @return 查询结果
+   */
+  @Override
+  public List<CommissionWithdrawVO> listZHWithdrawVO(Integer orderMonth, PlatformType source) {
+    return customerWithdrawalMapper.listZHWithdraw(orderMonth, Optional.fromNullable(source)
+        .transform(PlatformType.GET_CODE_FUNC).orNull());
+  }
+
+  /**
+   * 查询非中行提现记录
+   *
+   * @param orderMonth 月份，格式为201809
+   * @param source 平台, 若为空则为全平台
+   * @return 查询结果
+   */
+  @Override
+  public List<CommissionWithdrawVO> listNonZHWithdrawVO(Integer orderMonth, PlatformType source) {
+    return customerWithdrawalMapper.listNonZHWithdraw(orderMonth, Optional.fromNullable(source)
+        .transform(PlatformType.GET_CODE_FUNC).orNull());
+  }
+
+  /**
+   * 查询提现记录
+   *
+   * @param cpId cpId
+   * @param month 月份
+   * @param source 平台
+   * @return 提现记录list
+   */
+  @Override
+  public List<CustomerWithdrawal> listWithDraw(Long cpId, Integer month, Integer source) {
+    return customerWithdrawalMapper.listByCpIdAndMonth(cpId, month, source);
+  }
+
+  /**
+   * 按月份更新状态
+   */
+  @Override
+  public boolean updateCustomerWithdrawByMonth(CustomerWithdrawal withdrawal) {
+    return customerWithdrawalMapper.updateByMonthSelective(withdrawal) > 0;
+  }
+
+  /**
+   * 按id更新状态
+   */
+  @Override
+  public boolean updateCustomerWithdrawById(CustomerWithdrawal withdrawal) {
+    return customerWithdrawalMapper.updateByPrimaryKeySelective(withdrawal) > 0;
+  }
+
+  /**
+   * 查询用户是否申请过提现
+   *
+   * @param cpId cpId
+   * @param month 月份
+   * @param source 平台
+   * @return true or false
+   */
+  @Override
+  public boolean isCpIdWithdrawed(Long cpId, Integer month, Integer source) {
+    return customerWithdrawalMapper.selectIsWithdrawExists(cpId, month, source);
+  }
+
+  /**
+   * 验证某月份是否已经处理过
+   *
+   * @param month 月份
+   */
+  @Override
+  public boolean isOrderMonthProcessed(Integer month) {
+    return customerWithdrawalMapper.selectOrderMonthProcessed(month);
+  }
+
+  @Override
+  public List<String> listWithdrawTopMonth(int month) {
+    return customerWithdrawalMapper.listTopMonth(month);
   }
 
   @SuppressWarnings("unchecked")

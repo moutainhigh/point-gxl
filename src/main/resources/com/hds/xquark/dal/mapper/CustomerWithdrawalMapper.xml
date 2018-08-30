@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hds.xquark.dal.mapper.CustomerWithdrawalMapper">
+  <resultMap id="BaseResultMap" type="com.hds.xquark.dal.model.CustomerWithdrawal">
+    <id column="Id" jdbcType="BIGINT" property="id"/>
+    <result column="commsuspendingId" jdbcType="BIGINT" property="commsuspendingId"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="withdrawDate" jdbcType="TIMESTAMP" property="withdrawDate"/>
+    <result column="amount" jdbcType="DECIMAL" property="amount"/>
+    <result column="source" jdbcType="TINYINT" property="source"/>
+    <result column="processingMonth" jdbcType="INTEGER" property="processingMonth"/>
+    <result column="createdDate" jdbcType="TIMESTAMP" property="createdDate"/>
+    <result column="depositStatus" jdbcType="TINYINT" property="depositStatus"/>
+    <result column="updatedDate" jdbcType="TIMESTAMP" property="updatedDate"/>
+    <result column="remark" jdbcType="VARCHAR" property="remark"/>
+  </resultMap>
+  <resultMap id="BaseWithDrawMap" type="com.hds.xquark.dal.vo.CommissionWithdrawVO">
+    <result column="cp_id" jdbcType="BIGINT" property="cpId"/>
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount"/>
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="amount" jdbcType="DECIMAL" property="amount"/>
+    <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    <result column="tincode" jdbcType="VARCHAR" property="tinCode"/>
+    <result column="source" jdbcType="INTEGER" property="source"/>
+    <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    <result column="error_msg" jdbcType="VARCHAR" property="errorMsg"/>
+    <result column="bank_number" jdbcType="VARCHAR" property="bankNumber"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id, commsuspendingId, cpId, withdrawDate, amount, source, processingMonth, createdDate,
+    depositStatus, updatedDate, remark
+  </sql>
+  <sql id="Base_Commission_Colum_List">
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from customerWithdrawal
+    where Id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="isSuspendingExists" resultType="java.lang.Boolean">
+    select exists(
+             select 1 from customerWithdrawal where commsuspendingId = #{susId,jdbcType=BIGINT}
+             )
+  </select>
+  <select id="listZHWithdraw" resultMap="BaseWithDrawMap">
+    select cwd.cpid                                                             as cp_id,
+           cp.namecn                                                            as name,
+           cp.phoneno1                                                          as phone,
+           cp.tincode                                                           as tincode,
+           cwd.source                                                           as source,
+           cb.bankaccount                                                       as bank_account,
+           cb.bankfullname                                                      as bank_name,
+           cb.banknumber                                                        as bank_number,
+           cwd.total                                                            as amount,
+           CONCAT(cp.customerNumber, ';', cwd.processingMonth, ';', cwd.source) as remark
+    from (select cpid, processingMonth, source, sum(amount) as 'total'
+          from customerwithdrawal
+          where processingMonth = #{orderMonth,jdbcType=INTEGER}
+            and source = #{source,jdbcType=INTEGER}
+          group by cpid) cwd
+           inner join customerbank cb on cwd.cpId = cb.cpId
+           left join customerprofile cp on cwd.cpId = cp.cpId
+    where cb.isdeleted = 0
+    and cb.bankfullname = '中国银行'
+  </select>
+  <select id="listNonZHWithdraw" resultMap="BaseWithDrawMap">
+    select cwd.cpid                                                             as cp_id,
+           cp.namecn                                                            as name,
+           cp.phoneno1                                                          as phone,
+           cp.tincode                                                           as tincode,
+           cwd.source                                                           as source,
+           cb.bankaccount                                                       as bank_account,
+           cb.bankfullname                                                      as bank_name,
+           cb.banknumber                                                        as bank_number,
+           cwd.total                                                            as amount,
+           CONCAT(cp.customerNumber, ';', cwd.processingMonth, ';', cwd.source) as remark
+    from (select cpid, processingMonth, source, sum(amount) as 'total'
+          from customerwithdrawal
+          where processingMonth = #{orderMonth,jdbcType=INTEGER}
+            and source = #{source,jdbcType=INTEGER}
+          group by cpid) cwd
+           inner join customerbank cb on cwd.cpId = cb.cpId
+           left join customerprofile cp on cwd.cpId = cp.cpId
+    where cb.isdeleted = 0
+    and cb.bankfullname != '中国银行'
+  </select>
+  <select id="listWithdraw" resultMap="BaseWithDrawMap">
+    select cwd.cpid                                                             as cp_id,
+           cp.namecn                                                            as name,
+           cp.phoneno1                                                          as phone,
+           cp.tincode                                                           as tincode,
+           cwd.source                                                           as source,
+           cb.bankaccount                                                       as bank_account,
+           cb.bankfullname                                                      as bank_name,
+           cb.banknumber                                                        as bank_number,
+           cwd.total                                                            as amount,
+           CONCAT(cp.customerNumber, ';', cwd.processingMonth, ';', cwd.source) as remark
+    from (select cpid, processingMonth, source, sum(amount) as 'total'
+          from customerwithdrawal
+          where processingMonth = #{orderMonth,jdbcType=INTEGER}
+            and source = #{source,jdbcType=INTEGER}
+          group by cpid) cwd
+           inner join customerbank cb on cwd.cpId = cb.cpId
+           left join customerprofile cp on cwd.cpId = cp.cpId
+    where cb.isdeleted = 0
+  </select>
+  <select id="selectIsCpIdWithdrawed" resultType="java.lang.Boolean">
+    select exists(
+             select 1
+             from customerWithdrawal
+             where cpId = #{cpId,jdbcType=BIGINT}
+               and processingMonth = #{month,jdbcType=INTEGER}
+             )
+  </select>
+  <select id="selectOrderMonthProcessed" resultType="java.lang.Boolean">
+    select exists(
+             select 1 from customerWithdrawal where processingMonth = #{month,jdbcType=INTEGER}
+                                                and depositStatus != 1
+             )
+  </select>
+  <select id="listByCpIdAndMonth" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from customerWithdrawal
+    where cpId = #{cpId,jdbcType=BIGINT}
+    and processingMonth = #{month,jdbcType=INTEGER}
+    and source = #{source,jdbcType=INTEGER}
+  </select>
+  <select id="selectIsWithdrawExists" resultType="java.lang.Boolean">
+    select exists(
+             select 1
+             from customerWithdrawal
+             where cpId = #{cpId,jdbcType=BIGINT}
+               and processingMonth = #{month,jdbcType=INTEGER}
+               and source = #{source,jdbcType=INTEGER}
+             )
+  </select>
+  <select id="listTopMonth" resultType="java.lang.String">
+    select distinct processingMonth
+    from customerWithdrawal
+    order by processingMonth desc
+    limit #{month,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete
+    from customerWithdrawal
+    where Id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hds.xquark.dal.model.CustomerWithdrawal">
+    insert into customerWithdrawal (Id,
+                                    commsuspendingId,
+                                    cpId,
+                                    withdrawDate,
+                                    amount,
+                                    source,
+                                    processingMonth,
+                                    createdDate,
+                                    depositStatus,
+                                    updatedDate,
+                                    remark)
+    values (#{id,jdbcType=BIGINT},
+            #{commsuspendingId,jdbcType=BIGINT},
+            #{cpId,jdbcType=BIGINT},
+            #{withdrawDate,jdbcType=TIMESTAMP},
+            #{amount,jdbcType=DECIMAL},
+            #{source,jdbcType=TINYINT},
+            #{processingMonth,jdbcType=INTEGER},
+            NOW(),
+            #{depositStatus,jdbcType=TINYINT},
+            NOW(),
+            #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hds.xquark.dal.model.CustomerWithdrawal">
+    insert into customerWithdrawal
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="commsuspendingId != null">
+        commsuspendingId,
+      </if>
+      <if test="cpId != null">
+        cpId,
+      </if>
+      <if test="withdrawDate != null">
+        withdrawDate,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="processingMonth != null">
+        processingMonth,
+      </if>
+      <if test="createdDate != null">
+        createdDate,
+      </if>
+      <if test="depositStatus != null">
+        depositStatus,
+      </if>
+      <if test="updatedDate != null">
+        updatedDate,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="commsuspendingId != null">
+        #{commsuspendingId,jdbcType=BIGINT},
+      </if>
+      <if test="cpId != null">
+        #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="withdrawDate != null">
+        #{withdrawDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=TINYINT},
+      </if>
+      <if test="processingMonth != null">
+        #{processingMonth,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null">
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositStatus != null">
+        #{depositStatus,jdbcType=TINYINT},
+      </if>
+      <if test="updatedDate != null">
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective"
+    parameterType="com.hds.xquark.dal.model.CustomerWithdrawal">
+    update customerWithdrawal
+    <set>
+      <if test="commsuspendingId != null">
+        commsuspendingId = #{commsuspendingId,jdbcType=BIGINT},
+      </if>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="withdrawDate != null">
+        withdrawDate = #{withdrawDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=TINYINT},
+      </if>
+      <if test="processingMonth != null">
+        processingMonth = #{processingMonth,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null">
+        createdDate = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositStatus != null">
+        depositStatus = #{depositStatus,jdbcType=TINYINT},
+      </if>
+      <if test="updatedDate != null">
+        updatedDate = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.CustomerWithdrawal">
+    update customerWithdrawal
+    set commsuspendingId = #{commsuspendingId,jdbcType=BIGINT},
+        cpId             = #{cpId,jdbcType=BIGINT},
+        withdrawDate     = #{withdrawDate,jdbcType=TIMESTAMP},
+        amount           = #{amount,jdbcType=DECIMAL},
+        source           = #{source,jdbcType=TINYINT},
+        processingMonth  = #{processingMonth,jdbcType=INTEGER},
+        createdDate      = #{createdDate,jdbcType=TIMESTAMP},
+        depositStatus    = #{depositStatus,jdbcType=TINYINT},
+        updatedDate      = #{updatedDate,jdbcType=TIMESTAMP},
+        remark           = #{remark,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByMonthSelective">
+    update customerWithdrawal
+    <set>
+      <if test="commsuspendingId != null">
+        commsuspendingId = #{commsuspendingId,jdbcType=BIGINT},
+      </if>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="withdrawDate != null">
+        withdrawDate = #{withdrawDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=TINYINT},
+      </if>
+      <if test="createdDate != null">
+        createdDate = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositStatus != null">
+        depositStatus = #{depositStatus,jdbcType=TINYINT},
+      </if>
+      <if test="updatedDate != null">
+        updatedDate = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where processingMonth = #{processingMonth,jdbcType=INTEGER}
+  </update>
+</mapper>

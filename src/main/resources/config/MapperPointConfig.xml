@@ -10,10 +10,10 @@
       </plugin>
   </plugins> -->
 
-  <!--<settings>-->
+  <settings>
     <!--打印查询语句-->
-  <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
-  <!--</settings>-->
+    <setting name="logImpl" value="STDOUT_LOGGING"/>
+  </settings>
 
   <mappers>
     <!--中台相关的mapper-->
@@ -24,6 +24,7 @@
     <mapper resource="com/hds/xquark/dal/mapper/CommissionRecordMapper.xml"/>
     <mapper resource="com/hds/xquark/dal/mapper/CommissionTotalAuditMapper.xml"/>
     <mapper resource="com/hds/xquark/dal/mapper/PointTotalAuditMapper.xml"/>
+    <mapper resource="com/hds/xquark/dal/mapper/CustomerWithdrawalMapper.xml"/>
   </mappers>
 
 </configuration>

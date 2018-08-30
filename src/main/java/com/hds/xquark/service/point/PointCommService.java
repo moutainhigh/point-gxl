@@ -1,12 +1,17 @@
 package com.hds.xquark.service.point;
 
 import com.hds.xquark.dal.model.BasePointCommTotal;
+import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
+import com.hds.xquark.dal.model.CustomerWithdrawal;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
+import com.hds.xquark.dal.vo.CommissionWithdrawVO;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,6 +81,8 @@ public interface PointCommService {
   @SuppressWarnings("unchecked")
   <T extends BasePointCommTotal> T loadOrBuildInfo(Long cpId, Class<T> clazz);
 
+  <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId, Class<T> clazz);
+
   boolean saveTotal(BasePointCommTotal total,
       TotalAuditType auditType);
 
@@ -102,4 +109,28 @@ public interface PointCommService {
 
   void grantCommissionWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
       Trancd trancd);
+
+  List<CommissionRecord> listRecordByTime(Date start, Date end, String grade);
+
+  int translateCommSuspendingToWithdrawLastMonth(Date from);
+
+  int translateCommSuspendingToWithdraw(Date start, Date end);
+
+  List<CommissionWithdrawVO> listWithdrawVO(Integer orderMonth, PlatformType source);
+
+  List<CommissionWithdrawVO> listZHWithdrawVO(Integer orderMonth, PlatformType source);
+
+  List<CommissionWithdrawVO> listNonZHWithdrawVO(Integer orderMonth, PlatformType source);
+
+  List<CustomerWithdrawal> listWithDraw(Long cpId, Integer month, Integer source);
+
+  boolean updateCustomerWithdrawByMonth(CustomerWithdrawal withdrawal);
+
+  boolean updateCustomerWithdrawById(CustomerWithdrawal withdrawal);
+
+  boolean isCpIdWithdrawed(Long cpId, Integer month, Integer source);
+
+  boolean isOrderMonthProcessed(Integer month);
+
+  List<String> listWithdrawTopMonth(int month);
 }

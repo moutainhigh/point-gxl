@@ -3,6 +3,7 @@ package com.hds.xquark.dal.mapper;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.vo.CommissionRecordVO;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +23,9 @@ public interface CommissionRecordMapper {
   List<CommissionRecord> listUnRollBackedByCpIdWithBizIdAndType(@Param("bizId") String bizId,
       @Param("cpId") Long cpId, @Param("type") Trancd type);
 
+  List<CommissionRecord> listByTimeRange(@Param("start") Date start, @Param("end") Date end,
+      @Param("grade") String grade);
+
   boolean selectRecordExists(
       @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
 
@@ -33,5 +37,7 @@ public interface CommissionRecordMapper {
   List<CommissionRecord> listFreezedRecordAfterDate(@Param("date") Date date);
 
   List<CommissionRecord> listUnFreezedRecord();
+
+  BigDecimal sumTotalByGradeCodeAndCpId(@Param("code") String code, @Param("cpId") Long cpId);
 
 }

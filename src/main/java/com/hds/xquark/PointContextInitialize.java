@@ -31,7 +31,7 @@ public class PointContextInitialize {
     context.register(PointServiceConfig.class);
     context.refresh();
 
-    this.pointCommService = context.getBean(PointCommServiceImpl.class);
+    this.pointCommService = context.getBean("PointCommService", PointCommService.class);
   }
 
   public PointCommService getPointService() {
