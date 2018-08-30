@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,14 +67,21 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       if (isRecordRollbacked(record)) {
         throw new BizException(GlobalErrorCode.POINT_BACKED);
       }
+      PlatformType platform;
+      if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)
+          || StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)) {
+        platform = PlatformType.fromCode(record.getBelongingTo());
+      } else {
+        platform = record.getPlatForm();
+      }
       // 修改记录
       BigDecimal negateUsable = record.getCurrent().negate();
       BigDecimal negateFreeze = record.getCurrentFreezed().negate();
-      PointCommCalHelper.plus(infoAfter, record.getPlatForm(), negateUsable);
+      PointCommCalHelper.plus(infoAfter, platform, negateUsable);
       PointCommCalHelper
-          .plusFreeze(infoAfter, record.getPlatForm(), negateFreeze);
+          .plusFreeze(infoAfter, platform, negateFreeze);
       // TODO map中的value没有使用意义
-      detailMap.put(PlatformType.fromCode(record.getSource()), record.getCurrent());
+      detailMap.put(platform, record.getCurrent());
     }
     return new PointCommCalResult(infoAfter, (List<BasePointCommRecord>) records, detailMap);
   }
@@ -118,7 +126,15 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     // TODO 回滚记录数据量不大, 嵌套循环暂时不会造成性能损耗
     for (BasePointCommRecord record : rollBacked) {
       for (BasePointCommRecord backedRec : rollBackRecords) {
-        if (Objects.equals(backedRec.getSource(), record.getSource())) {
+        boolean condition;
+        if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)
+            || StringUtils
+            .equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
+          condition = Objects.equals(backedRec.getSource(), record.getBelongingTo());
+        } else {
+          condition = Objects.equals(backedRec.getSource(), record.getSource());
+        }
+        if (condition) {
           record.setRollbackId(backedRec.getId());
           record.setRollbacked(true);
           updateRecord(record);

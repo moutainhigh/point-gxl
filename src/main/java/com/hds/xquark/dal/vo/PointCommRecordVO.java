@@ -45,6 +45,8 @@ public class PointCommRecordVO {
    */
   private Integer source;
 
+  private Integer belongingTo;
+
   private Boolean rollbacked;
 
   @JsonIgnore
@@ -141,6 +143,14 @@ public class PointCommRecordVO {
 
   public void setSource(Integer source) {
     this.source = source;
+  }
+
+  public Integer getBelongingTo() {
+    return belongingTo;
+  }
+
+  public void setBelongingTo(Integer belongingTo) {
+    this.belongingTo = belongingTo;
   }
 
   public Date getCreatedAt() {

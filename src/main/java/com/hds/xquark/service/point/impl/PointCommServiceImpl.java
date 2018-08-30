@@ -9,6 +9,7 @@ import static com.hds.xquark.dal.type.Trancd.MIGRATE_P;
 import static com.hds.xquark.dal.type.Trancd.REWARD_C;
 import static com.hds.xquark.dal.type.Trancd.REWARD_P;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
@@ -274,7 +275,7 @@ public class PointCommServiceImpl implements PointCommService {
   }
 
   /**
-   * 返回指定grade的积分\德分总额, 保留两位小数
+   * 返回指定grade的积分\德分总额, 保留两位小数, 若查询不到则返回0
    */
   @Override
   public <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId,
@@ -283,8 +284,13 @@ public class PointCommServiceImpl implements PointCommService {
     if (clazz == PointTotal.class) {
       throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "暂不支持查询德分总数");
     }
-    return commissionRecordMapper.sumTotalByGradeCodeAndCpId(gradeCode, cpId)
-        .setScale(2, BigDecimal.ROUND_HALF_EVEN);
+    BigDecimal dbVal = commissionRecordMapper.sumTotalByGradeCodeAndCpId(gradeCode, cpId);
+    return Optional.fromNullable(dbVal).transform(new Function<BigDecimal, BigDecimal>() {
+      @Override
+      public BigDecimal apply(BigDecimal bigDecimal) {
+        return bigDecimal.setScale(2, BigDecimal.ROUND_HALF_EVEN).abs();
+      }
+    }).or(BigDecimal.ZERO);
   }
 
   /**

@@ -12,6 +12,7 @@
     <result column="current_freezed_point" jdbcType="BIGINT" property="currentFreezedPoint"/>
     <result column="trancd" jdbcType="VARCHAR" property="trancd"/>
     <result column="source" jdbcType="INTEGER" property="source"/>
+    <result column="belongingTo" jdbcType="INTEGER" property="belongingTo"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
     <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
     <result column="un_freeze_id" jdbcType="BIGINT" property="unFreezeId"/>
@@ -31,18 +32,19 @@
     <result column="current_point" jdbcType="DECIMAL" property="currentPoint"/>
     <result column="current_freezed_point" jdbcType="DECIMAL" property="currentFreezedPoint"/>
     <result column="source" jdbcType="VARCHAR" property="source"/>
+    <result column="belongingTo" jdbcType="INTEGER" property="belongingTo"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
     <result column="trancd" jdbcType="VARCHAR" property="recordType"/>
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, cpId, grade_id, gradeNumber, orderid, current_point, current_freezed_point, trancd, source,
+    id, cpId, grade_id, gradeNumber, orderid, current_point, current_freezed_point, trancd, source, belongingTo,
     rollbacked, rollback_id, un_freeze_id, created_at, updated_at, freezed_at, freezed_to
   </sql>
   <sql id="Join_Column_List">
     record.id, record.cpId, record.grade_id, record.gradeNumber,
     record.orderid, record.current_point, record.current_freezed_point,
-    record.trancd, record.source, record.rollbacked, record.rollback_id, record.un_freeze_id,
+    record.trancd, record.source, record.belongingTo, record.rollbacked, record.rollback_id, record.un_freeze_id,
     record.created_at, record.updated_at, record.freezed_at, record.freezed_to
   </sql>
   <select id="selectByPrimaryKey" parameterType="String" resultMap="BaseResultMap">
@@ -167,13 +169,13 @@
   </select>
   <select id="selectRecordExists" resultType="java.lang.Boolean">
     select exists(
-      select 1
-      from pointsuspending
-      where cpId = #{cpId,jdbcType=BIGINT}
-        and orderid = #{bizId,jdbcType=VARCHAR}
-        and trancd = #{type,jdbcType=VARCHAR}
-        and isdeleted = false
-    )
+             select 1
+             from pointsuspending
+             where cpId = #{cpId,jdbcType=BIGINT}
+               and orderid = #{bizId,jdbcType=VARCHAR}
+               and trancd = #{type,jdbcType=VARCHAR}
+               and isdeleted = false
+             )
   </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update pointsuspending
@@ -186,7 +188,8 @@
     </selectKey>
     insert into pointsuspending (
     id, cpId, grade_id, gradeNumber, orderid, current_point, current_freezed_point,
-    trancd, source, rollbacked, rollback_id, un_freeze_id, created_at, updated_at, freezed_at,
+    trancd, source, belongingTo, rollbacked, rollback_id, un_freeze_id, created_at, updated_at,
+    freezed_at,
     freezed_to
     )
     values
@@ -197,7 +200,9 @@
     #{currentPoint,jdbcType=BIGINT},
     #{currentFreezedPoint,jdbcType=BIGINT},
     #{trancd,jdbcType=VARCHAR},
-    #{source,jdbcType=BIGINT}, false,
+    #{source,jdbcType=BIGINT},
+    #{belongingTo,jdbcType=TINYINT},
+    false,
     #{rollbackId,jdbcType=BIGINT},
     #{unFreezeId,jdbcType=BIGINT},
     NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
@@ -230,6 +235,9 @@
       <if test="source != null">
         source = #{source,jdbcType=INTEGER},
       </if>
+      <if test="belongingTo != null">
+        belongingTo = #{belongingTo,jdbcType=TINYINT},
+      </if>
       <if test="rollbacked != null">
         rollbacked = #{rollbacked,jdbcType=TINYINT},
       </if>
@@ -251,20 +259,21 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.PointRecord">
     update pointsuspending
-    set cpId                = #{cpId,jdbcType=BIGINT},
-      grade_id              = #{gradeId,jdbcType=BIGINT},
-      gradeNumber           = #{codeNumber,jdbcType=VARCHAR},
-      orderid               = #{businessId,jdbcType=VARCHAR},
-      current_point         = #{currentPoint,jdbcType=BIGINT},
-      current_freezed_point = #{currentFreezedPoint,jdbcType=BIGINT},
-      trancd                = #{trancd,jdbcType=VARCHAR},
-      source                = #{source,jdbcType=BIGINT},
-      rollbacked            = #{rollbacked,jdbcType=TINYINT},
-      rollback_id           = #{rollbackId,jdbcType=BIGINT},
-      un_freeze_id          = #{unFreezeId,jdbcType=BIGINT},
-      freezed_at            = #{freezedAt,jdbcType=TIMESTAMP},
-      freezed_to            = #{freezedTo,jdbcType=TIMESTAMP},
-      updated_at            = NOW()
+    set cpId                  = #{cpId,jdbcType=BIGINT},
+        grade_id              = #{gradeId,jdbcType=BIGINT},
+        gradeNumber           = #{codeNumber,jdbcType=VARCHAR},
+        orderid               = #{businessId,jdbcType=VARCHAR},
+        current_point         = #{currentPoint,jdbcType=BIGINT},
+        current_freezed_point = #{currentFreezedPoint,jdbcType=BIGINT},
+        trancd                = #{trancd,jdbcType=VARCHAR},
+        source                = #{source,jdbcType=BIGINT},
+        belongingTo           = #{belongingTo,jdbcType=TINYINT},
+        rollbacked            = #{rollbacked,jdbcType=TINYINT},
+        rollback_id           = #{rollbackId,jdbcType=BIGINT},
+        un_freeze_id          = #{unFreezeId,jdbcType=BIGINT},
+        freezed_at            = #{freezedAt,jdbcType=TIMESTAMP},
+        freezed_to            = #{freezedTo,jdbcType=TIMESTAMP},
+        updated_at            = NOW()
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

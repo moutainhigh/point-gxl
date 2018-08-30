@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommissionOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 1000080L;
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
+  private final Long cpId = 3000000L;
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(100);
 
   private final TotalAuditType auditType = API;
 
@@ -132,14 +132,14 @@ public class CommissionOperationTest extends BaseOperationTest {
     pointCommService.modifyCommission(
         cpId,
         bizId,
-        "2002",
-        PlatformType.E,
+        GradeCodeConstrants.CONSUME_COMMISSION_CODE,
+        PlatformType.H,
         modifyPoints, trancd, auditType);
 
     pointCommService.modifyCommission(
         cpId,
         bizId,
-        "2004",
+        GradeCodeConstrants.CANCEL_COMMISSION_CODE,
         PlatformType.H,
         modifyPoints, trancd, auditType);
 
