@@ -137,11 +137,12 @@
     and isdeleted = false
     order by created_at desc
   </select>
-  <select id="sumTotalByGradeCodeAndCpId" resultType="java.math.BigDecimal">
+  <select id="sumTotal" resultType="java.math.BigDecimal">
     select sum(current_comm)
     from commissionsuspending
     where gradeNumber = #{code,jdbcType=VARCHAR}
       and cpId = #{cpId,jdbcType=BIGINT}
+      and trancd = #{trancd,jdbcType=VARCHAR}
       and isdeleted = false
   </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.Long">

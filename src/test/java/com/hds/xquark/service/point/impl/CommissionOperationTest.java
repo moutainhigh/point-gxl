@@ -175,7 +175,7 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void testSumTotal() {
     System.out.println(pointCommService
-        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, CommissionTotal.class));
+        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, , CommissionTotal.class, ));
   }
 
 }

@@ -40,7 +40,11 @@ public enum Trancd {
   DEPOSIT_C("积分发放"),
   MIGRATE_P("德分迁移"),
   MIGRATE_C("积分迁移"),
-  ROLLBACK_C("提现积分退回");
+  ROLLBACK_C("提现积分退回"),
+  CNRM1("服务费1"),
+  CNRM2("服务费2"),
+  CBM1("立省值1"),
+  CBM2("立省值2");
 
   private final String desc;
 

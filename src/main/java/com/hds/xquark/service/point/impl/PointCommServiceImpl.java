@@ -279,12 +279,12 @@ public class PointCommServiceImpl implements PointCommService {
    */
   @Override
   public <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId,
-      Class<T> clazz) {
+      Trancd trancd, Class<T> clazz) {
     // 也许在将来需要支持
     if (clazz == PointTotal.class) {
       throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "暂不支持查询德分总数");
     }
-    BigDecimal dbVal = commissionRecordMapper.sumTotalByGradeCodeAndCpId(gradeCode, cpId);
+    BigDecimal dbVal = commissionRecordMapper.sumTotal(gradeCode, cpId, trancd);
     return Optional.fromNullable(dbVal).transform(new Function<BigDecimal, BigDecimal>() {
       @Override
       public BigDecimal apply(BigDecimal bigDecimal) {
