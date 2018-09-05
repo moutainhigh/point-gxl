@@ -67,7 +67,13 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       if (isRecordRollbacked(record)) {
         throw new BizException(GlobalErrorCode.POINT_BACKED);
       }
-      PlatformType platform = record.getPlatForm();
+      PlatformType platform;
+      if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)
+          || StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)) {
+        platform = PlatformType.fromCode(record.getBelongingTo());
+      } else {
+        platform = record.getPlatForm();
+      }
       // 修改记录
       BigDecimal negateUsable = record.getCurrent().negate();
       BigDecimal negateFreeze = record.getCurrentFreezed().negate();
@@ -132,6 +138,15 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
           record.setRollbackId(backedRec.getId());
           record.setRollbacked(true);
           updateRecord(record);
+
+          // 更新回滚记录与原纪录一致 shit~~~~
+          if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)
+              || StringUtils
+              .equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
+            backedRec.setSource(record.getSource());
+            backedRec.setBelongingTo(record.getBelongingTo());
+            updateRecord(backedRec);
+          }
         }
       }
     }

@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommissionOperationTest extends BaseOperationTest {
 
   private final Long cpId = 3000000L;
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(100);
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(10);
 
   private final TotalAuditType auditType = API;
 
@@ -175,7 +175,8 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void testSumTotal() {
     System.out.println(pointCommService
-        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, , CommissionTotal.class, ));
+        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, Trancd.REWARD_C,
+            CommissionTotal.class));
   }
 
 }
