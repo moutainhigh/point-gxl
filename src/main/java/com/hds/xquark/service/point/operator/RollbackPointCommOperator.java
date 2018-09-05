@@ -13,6 +13,7 @@ import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
 import com.hds.xquark.dal.type.Trancd;
+import com.hds.xquark.dal.util.Transformer;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
@@ -143,9 +144,12 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
           if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)
               || StringUtils
               .equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
-            backedRec.setSource(record.getSource());
-            backedRec.setBelongingTo(record.getBelongingTo());
-            updateRecord(backedRec);
+            // 不能修改原纪录, 会破坏循环条件
+            BasePointCommRecord recordToUpdate = Transformer
+                .fromBean(backedRec, backedRec.getClass());
+            recordToUpdate.setSource(record.getSource());
+            recordToUpdate.setBelongingTo(record.getBelongingTo());
+            updateRecord(recordToUpdate);
           }
         }
       }
