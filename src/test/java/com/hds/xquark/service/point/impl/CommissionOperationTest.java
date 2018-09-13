@@ -37,14 +37,14 @@ public class CommissionOperationTest extends BaseOperationTest {
     pointCommService.modifyCommission(
         cpId,
         bizId,
-        "1003",
+        "1003" ,
         PlatformType.H,
         modifyPoints, trancd, auditType);
 
     pointCommService.modifyCommission(
         cpId,
         bizId,
-        "1004",
+        "1004" ,
         PlatformType.H,
         modifyPoints, trancd, auditType);
 
@@ -60,7 +60,7 @@ public class CommissionOperationTest extends BaseOperationTest {
     pointCommService.modifyCommission(
         cpId,
         getBizId(),
-        "2003",
+        "2003" ,
         platform,
         modifyPoints, Trancd.ROYA, auditType);
 
@@ -97,7 +97,7 @@ public class CommissionOperationTest extends BaseOperationTest {
   public void testWithdraw() {
     CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
     pointCommService
-        .modifyCommission(cpId, "withdraw", GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE,
+        .modifyCommission(cpId, "withdraw" , GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE,
             PlatformType.V,
             modifyPoints, Trancd.WITHDRAW_C, API);
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
@@ -132,14 +132,14 @@ public class CommissionOperationTest extends BaseOperationTest {
     pointCommService.modifyCommission(
         cpId,
         bizId,
-        "2002",
+        "2002" ,
         PlatformType.E,
         modifyPoints, trancd, auditType);
 
     pointCommService.modifyCommission(
         cpId,
         bizId,
-        "2004",
+        "2004" ,
         PlatformType.H,
         modifyPoints, trancd, auditType);
 
@@ -175,7 +175,8 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void testSumTotal() {
     System.out.println(pointCommService
-        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, , CommissionTotal.class, ));
+        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, Trancd.DEPOSIT_C,
+            CommissionTotal.class));
   }
 
 }
