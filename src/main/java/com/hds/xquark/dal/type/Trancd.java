@@ -44,7 +44,9 @@ public enum Trancd {
   CNRM1("服务费1"),
   CNRM2("服务费2"),
   CBM1("立省值1"),
-  CBM2("立省值2");
+  CBM2("立省值2"),
+  ACHA1("VIP首单推荐奖1"),
+  ACHA2("VIP首单推荐奖2");
 
   private final String desc;
 
