@@ -10,7 +10,6 @@ import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointTotal;
-import com.hds.xquark.dal.type.BelongintToType;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
@@ -74,6 +73,7 @@ public abstract class BasePointCommOperator {
    * @param businessId 业务id
    * @param grade 规则
    * @param pointComms 动态积分/德分
+   * @param trancd
    * @return 积分计算结果 {@link PointCommOperationResult}
    */
   public PointCommOperationResult doOperation(Long cpId, String businessId, GradeCode grade,
@@ -144,7 +144,9 @@ public abstract class BasePointCommOperator {
   /**
    * 校验积分规则与历史积分信息
    *
+   *
    * @param context @throws BizException 校验有问题排除业务异常
+   * @param operateType
    */
   protected void preCheck(PointCommOperatorContext context,
       PointOperateType operateType) {
@@ -194,8 +196,7 @@ public abstract class BasePointCommOperator {
     PlatformType platform = calRet.getPlatform();
     Long cpId = calRet.getCpId();
     return PointCommCalHelper
-        .buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, BelongintToType.NON,
-            recordType, clazz);
+        .buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, recordType, clazz);
   }
 
   /**
@@ -216,31 +217,7 @@ public abstract class BasePointCommOperator {
     for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
       PlatformType platform = entry.getKey();
       T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
-          infoAfter, platform, BelongintToType.NON, recordType, clazz);
-      ret.add(record);
-    }
-    return ret;
-  }
-
-  /**
-   * 应colson特殊要求扣减做特殊处理
-   */
-  <T extends BasePointCommRecord> List<T> buildRecordsForConsume(String bizId, GradeCode grade,
-      PointCommOperationResult calRet, Trancd recordType, Class<T> clazz) {
-    Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
-    if (MapUtils.isEmpty(detailMap)) {
-      throw new BizException(GlobalErrorCode.UNKNOWN, "没有区分积分平台");
-    }
-    BasePointCommTotal infoBefore = calRet.getInfoBefore();
-    BasePointCommTotal infoAfter = calRet.getInfoAfter();
-    Long cpId = calRet.getCpId();
-    List<T> ret = new ArrayList<>(detailMap.size());
-    for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
-      PlatformType platform = entry.getKey();
-      // 将platform
-      T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
-          infoAfter, calRet.getPlatform(), BelongintToType.valueOf(platform.name()), recordType,
-          clazz);
+          infoAfter, platform, recordType, clazz);
       ret.add(record);
     }
     return ret;

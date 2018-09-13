@@ -13,7 +13,6 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointTotal;
-import com.hds.xquark.dal.type.BelongintToType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
@@ -297,31 +296,19 @@ public class PointCommCalHelper {
     return null;
   }
 
-  public static <T extends BasePointCommRecord, S extends BasePointCommTotal> T buildRecord(
-      Long cpId, String bizId, GradeCode grade,
-      S infoBefore, S infoAfter, PlatformType platform,
-      Trancd recordType,
-      Class<T> clazz) {
-    return buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, BelongintToType.NON,
-        recordType, clazz);
-  }
-
   /**
    * 通过详细参数构造记录对象
    */
   public static <T extends BasePointCommRecord, S extends BasePointCommTotal> T buildRecord(
       Long cpId, String bizId, GradeCode grade,
-      S infoBefore, S infoAfter, PlatformType platform,
-      BelongintToType belongingTo, Trancd recordType,
+      S infoBefore, S infoAfter, PlatformType platform, Trancd recordType,
       Class<T> clazz) {
     Preconditions.checkArgument(infoBefore != null && infoAfter != null,
         "积分计算错误");
-    PlatformType realPlatform = belongingTo == BelongintToType.NON ? platform
-        : PlatformType.fromCode(belongingTo.getCode());
-    BigDecimal modified = getUsable(infoAfter, realPlatform)
-        .subtract(getUsable(infoBefore, realPlatform));
-    BigDecimal modifiedFreezed = getFreezed(infoAfter, realPlatform)
-        .subtract(getFreezed(infoBefore, realPlatform));
+    BigDecimal modified = getUsable(infoAfter, platform)
+        .subtract(getUsable(infoBefore, platform));
+    BigDecimal modifiedFreezed = getFreezed(infoAfter, platform)
+        .subtract(getFreezed(infoBefore, platform));
     T record;
     try {
       record = clazz.newInstance();
@@ -334,7 +321,6 @@ public class PointCommCalHelper {
     record.setCurrentFreezed(modifiedFreezed);
     record.setCodeNumber(grade.getCodeNumber());
     record.setSource(platform.getCode());
-    record.setBelongingTo(belongingTo.getCode());
     record.setCpId(cpId);
     record.setGradeId(grade.getId());
     // TODO 类型需要修改

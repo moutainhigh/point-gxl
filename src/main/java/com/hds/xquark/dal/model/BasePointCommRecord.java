@@ -40,8 +40,6 @@ public abstract class BasePointCommRecord {
    */
   private Integer source;
 
-  private Integer belongingTo;
-
   private Boolean rollbacked;
 
   /**
@@ -126,14 +124,6 @@ public abstract class BasePointCommRecord {
 
   public void setSource(Integer source) {
     this.source = source;
-  }
-
-  public Integer getBelongingTo() {
-    return belongingTo;
-  }
-
-  public void setBelongingTo(Integer belongingTo) {
-    this.belongingTo = belongingTo;
   }
 
   public Boolean getRollbacked() {

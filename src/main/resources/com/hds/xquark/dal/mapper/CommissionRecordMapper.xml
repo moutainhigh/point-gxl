@@ -12,7 +12,6 @@
     <result column="current_freezed_comm" jdbcType="DECIMAL" property="currentFreezedComm"/>
     <result column="trancd" jdbcType="VARCHAR" property="trancd"/>
     <result column="source" jdbcType="TINYINT" property="source"/>
-    <result column="belongingTo" jdbcType="INTEGER" property="belongingTo"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
     <result column="un_freeze_id" jdbcType="BIGINT" property="unFreezeId"/>
     <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
@@ -33,20 +32,19 @@
     <result column="current_freezed_comm" jdbcType="DECIMAL"
       property="currentFreezedCommission"/>
     <result column="source" jdbcType="VARCHAR" property="source"/>
-    <result column="belongingTo" jdbcType="INTEGER" property="belongingTo"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
     <result column="trancd" jdbcType="VARCHAR" property="recordType"/>
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, cpId, grade_Id, gradeNumber, orderid, current_comm, current_freezed_comm, trancd,
-    source, belongingTo, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
+    source, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
     freezed_to
   </sql>
   <sql id="Join_Column_List">
     record.id, record.cpId, record.grade_id, record.gradeNumber,
     record.orderid, record.current_comm, record.current_freezed_comm,
-    record.trancd, record.source, record.belongingTo, record.rollbacked, record.rollback_id, record.un_freeze_id,
+    record.trancd, record.source, record.rollbacked, record.rollback_id, record.un_freeze_id,
     record.created_at, record.updated_at, record.freezed_at, record.freezed_to
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -156,7 +154,7 @@
     </selectKey>
     insert into commissionsuspending (id, cpId, grade_Id,
     gradeNumber, orderid, current_comm,
-    current_freezed_comm, trancd, source, belongingTo,
+    current_freezed_comm, trancd, source,
     rollbacked, un_freeze_id, rollback_id,
     created_at, updated_at, freezed_at,
     freezed_to)
@@ -164,7 +162,7 @@
     #{codeNumber,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR},
     #{currentComm,jdbcType=DECIMAL},
     #{currentFreezedComm,jdbcType=DECIMAL},
-    #{trancd,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT}, #{belongingTo,jdbcType=TINYINT},
+    #{trancd,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT},
     #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
     #{rollbackId,jdbcType=BIGINT},
     NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
@@ -198,9 +196,6 @@
       <if test="source != null">
         source = #{source,jdbcType=TINYINT},
       </if>
-      <if test="belongingTo != null">
-        belongingTo = #{belongingTo,jdbcType=TINYINT},
-      </if>
       <if test="rollbacked != null">
         rollbacked = #{rollbacked,jdbcType=TINYINT},
       </if>
@@ -222,21 +217,20 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.CommissionRecord">
     update commissionsuspending
-    set cpId                 = #{cpId,jdbcType=BIGINT},
-        grade_Id             = #{gradeId,jdbcType=BIGINT},
-        gradeNumber          = #{codeNumber,jdbcType=VARCHAR},
-        orderid              = #{businessId,jdbcType=VARCHAR},
-        current_comm         = #{currentComm,jdbcType=DECIMAL},
-        current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
-        trancd               = #{trancd,jdbcType=VARCHAR},
-        source               = #{source,jdbcType=TINYINT},
-        belongingTo          = #{belongingTo,jdbcType=TINYINT},
-        rollbacked           = #{rollbacked,jdbcType=TINYINT},
-        un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},
-        rollback_id          = #{rollbackId,jdbcType=BIGINT},
-        updated_at           = NOW(),
-        freezed_at           = #{freezedAt,jdbcType=TIMESTAMP},
-        freezed_to           = #{freezedTo,jdbcType=TIMESTAMP}
+    set cpId               = #{cpId,jdbcType=BIGINT},
+      grade_Id             = #{gradeId,jdbcType=BIGINT},
+      gradeNumber          = #{codeNumber,jdbcType=VARCHAR},
+      orderid              = #{businessId,jdbcType=VARCHAR},
+      current_comm         = #{currentComm,jdbcType=DECIMAL},
+      current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
+      trancd               = #{trancd,jdbcType=VARCHAR},
+      source               = #{source,jdbcType=TINYINT},
+      rollbacked           = #{rollbacked,jdbcType=TINYINT},
+      un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},
+      rollback_id          = #{rollbackId,jdbcType=BIGINT},
+      updated_at           = NOW(),
+      freezed_at           = #{freezedAt,jdbcType=TIMESTAMP},
+      freezed_to           = #{freezedTo,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
