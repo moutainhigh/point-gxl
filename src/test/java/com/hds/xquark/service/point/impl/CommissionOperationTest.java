@@ -164,7 +164,7 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testTransformWithdraw() {
-    pointCommService.translateCommSuspendingToWithdrawLastMonth(new Date());
+    pointCommService.translateCommSuspendingToWithdraw(new Date(), );
   }
 
   @Test
@@ -176,6 +176,11 @@ public class CommissionOperationTest extends BaseOperationTest {
   public void testSumTotal() {
     System.out.println(pointCommService
         .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, CommissionTotal.class));
+  }
+
+  @Test
+  public void testListVO() {
+    Assert.assertNotNull(pointCommService.listCommissionRecords(cpId, null, null, null));
   }
 
 }

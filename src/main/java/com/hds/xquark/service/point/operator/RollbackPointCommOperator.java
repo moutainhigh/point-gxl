@@ -103,7 +103,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       Class<? extends BasePointCommRecord> clazz) {
     // 找出回滚了多少积分
     List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade,
-        calRet, calRet.getTrancd(), clazz);
+        calRet, clazz);
     for (BasePointCommRecord record : rollBackRecords) {
       record.setRollbacked(false);
       saveRecord(record);

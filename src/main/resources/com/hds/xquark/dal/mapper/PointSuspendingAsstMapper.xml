@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hds.xquark.dal.mapper.PointSuspendingAsstMapper">
+  <resultMap id="BaseResultMap" type="com.hds.xquark.dal.model.PointSuspendingAsst">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="grade_Id" jdbcType="BIGINT" property="gradeId"/>
+    <result column="gradeNumber" jdbcType="VARCHAR" property="gradeNumber"/>
+    <result column="orderid" jdbcType="VARCHAR" property="orderId"/>
+    <result column="current_point" jdbcType="DECIMAL" property="current"/>
+    <result column="trancd" jdbcType="VARCHAR" property="trancd"/>
+    <result column="source" jdbcType="TINYINT" property="source"/>
+    <result column="locked" jdbcType="TINYINT" property="locked"/>
+    <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
+    <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+    <result column="isdeleted" jdbcType="BIT" property="isDeleted"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cpId, grade_Id, gradeNumber, orderid, current_point, trancd, source, locked,
+    rollbacked, rollback_id, created_at, updated_at, isdeleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from pointsuspendingasst
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete
+    from pointsuspendingasst
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hds.xquark.dal.model.PointSuspendingAsst">
+    insert into pointsuspendingasst (id,
+                                     cpId,
+                                     grade_Id,
+                                     gradeNumber,
+                                     orderid,
+                                     current_point,
+                                     trancd,
+                                     source,
+                                     locked,
+                                     rollbacked,
+                                     rollback_id,
+                                     created_at,
+                                     updated_at,
+                                     isdeleted)
+    values (#{id,jdbcType=BIGINT},
+            #{cpId,jdbcType=BIGINT},
+            #{gradeId,jdbcType=BIGINT},
+            #{gradeNumber,jdbcType=VARCHAR},
+            #{orderId,jdbcType=VARCHAR},
+            #{currentPoint,jdbcType=DECIMAL},
+            #{trancd,jdbcType=VARCHAR},
+            #{source,jdbcType=TINYINT},
+            #{locked,jdbcType=TINYINT},
+            #{rollbacked,jdbcType=TINYINT},
+            #{rollbackId,jdbcType=BIGINT},
+            #{createdAt,jdbcType=TIMESTAMP},
+            #{updatedAt,jdbcType=TIMESTAMP},
+            #{isDeleted,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hds.xquark.dal.model.PointSuspendingAsst">
+    insert into pointsuspendingasst
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cpId != null">
+        cpId,
+      </if>
+      <if test="gradeId != null">
+        grade_Id,
+      </if>
+      <if test="gradeNumber != null">
+        gradeNumber,
+      </if>
+      <if test="orderId != null">
+        orderid,
+      </if>
+      <if test="currentPoint != null">
+        current_point,
+      </if>
+      <if test="trancd != null">
+        trancd,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="locked != null">
+        locked,
+      </if>
+      <if test="rollbacked != null">
+        rollbacked,
+      </if>
+      <if test="rollbackId != null">
+        rollback_id,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="isDeleted != null">
+        isdeleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cpId != null">
+        #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="gradeId != null">
+        #{gradeId,jdbcType=BIGINT},
+      </if>
+      <if test="gradeNumber != null">
+        #{gradeNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentPoint != null">
+        #{currentPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="trancd != null">
+        #{trancd,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=TINYINT},
+      </if>
+      <if test="locked != null">
+        #{locked,jdbcType=TINYINT},
+      </if>
+      <if test="rollbacked != null">
+        #{rollbacked,jdbcType=TINYINT},
+      </if>
+      <if test="rollbackId != null">
+        #{rollbackId,jdbcType=BIGINT},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective"
+    parameterType="com.hds.xquark.dal.model.PointSuspendingAsst">
+    update pointsuspendingasst
+    <set>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="gradeId != null">
+        grade_Id = #{gradeId,jdbcType=BIGINT},
+      </if>
+      <if test="gradeNumber != null">
+        gradeNumber = #{gradeNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null">
+        orderid = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentPoint != null">
+        current_point = #{currentPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="trancd != null">
+        trancd = #{trancd,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=TINYINT},
+      </if>
+      <if test="locked != null">
+        locked = #{locked,jdbcType=TINYINT},
+      </if>
+      <if test="rollbacked != null">
+        rollbacked = #{rollbacked,jdbcType=TINYINT},
+      </if>
+      <if test="rollbackId != null">
+        rollback_id = #{rollbackId,jdbcType=BIGINT},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        isdeleted = #{isDeleted,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.PointSuspendingAsst">
+    update pointsuspendingasst
+    set cpId          = #{cpId,jdbcType=BIGINT},
+        grade_Id      = #{gradeId,jdbcType=BIGINT},
+        gradeNumber   = #{gradeNumber,jdbcType=VARCHAR},
+        orderid       = #{orderId,jdbcType=VARCHAR},
+        current_point = #{currentPoint,jdbcType=DECIMAL},
+        trancd        = #{trancd,jdbcType=VARCHAR},
+        source        = #{source,jdbcType=TINYINT},
+        locked        = #{locked,jdbcType=TINYINT},
+        rollbacked    = #{rollbacked,jdbcType=TINYINT},
+        rollback_id   = #{rollbackId,jdbcType=BIGINT},
+        created_at    = #{createdAt,jdbcType=TIMESTAMP},
+        updated_at    = #{updatedAt,jdbcType=TIMESTAMP},
+        isdeleted     = #{isDeleted,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

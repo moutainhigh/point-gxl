@@ -204,7 +204,6 @@ public abstract class BasePointCommOperator {
    */
   <T extends BasePointCommRecord> List<T> buildRecords(String bizId, GradeCode grade,
       PointCommOperationResult calRet,
-      Trancd recordType,
       Class<T> clazz) {
     Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
     if (MapUtils.isEmpty(detailMap)) {
@@ -217,7 +216,7 @@ public abstract class BasePointCommOperator {
     for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
       PlatformType platform = entry.getKey();
       T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
-          infoAfter, platform, recordType, clazz);
+          infoAfter, platform, calRet.getTrancd(), clazz);
       ret.add(record);
     }
     return ret;

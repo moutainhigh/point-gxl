@@ -1,5 +1,8 @@
 package com.hds.xquark.dal.constrant;
 
+import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
 /**
  * created by
  *
@@ -35,5 +38,11 @@ public class GradeCodeConstrants {
    * 提现积分
    */
   public static final String WITH_DRAW_COMMISSION_CODE = "2007";
+
+  /**
+   * combine point and commission consume to a set
+   */
+  public static final Set<String> CONSUME_CODE = ImmutableSet
+      .of(CONSUME_COMMISSION_CODE, CONSUME_POINT_CODE);
 
 }
