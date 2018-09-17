@@ -110,11 +110,14 @@ public interface PointCommService {
   void grantCommissionWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
       Trancd trancd);
 
-  List<CommissionRecord> listRecordByTime(Date start, Date end, String grade);
+  List<CommissionRecord> listRecordByTime(Date start, Date end, String grade,
+      Integer source);
 
-  int translateCommSuspendingToWithdrawLastMonth(Date from);
+  int translateCommSuspendingToWithdraw(Date from,
+      PlatformType platform);
 
-  int translateCommSuspendingToWithdraw(Date start, Date end);
+  int translateCommSuspendingToWithdraw(Date start, Date end,
+      PlatformType platform);
 
   List<CommissionWithdrawVO> listWithdrawVO(Integer orderMonth, PlatformType source);
 
@@ -132,5 +135,5 @@ public interface PointCommService {
 
   boolean isOrderMonthProcessed(Integer month);
 
-  List<String> listWithdrawTopMonth(int month);
+  List<String> listWithdrawTopDate(int limit, PlatformType platform);
 }

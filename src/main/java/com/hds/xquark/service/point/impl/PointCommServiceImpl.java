@@ -66,7 +66,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("PointCommService")
 public class PointCommServiceImpl implements PointCommService {
-
   private final static Logger LOGGER = Logger.getLogger(PointCommServiceImpl.class);
 
   private PointGradeService pointGradeService;
@@ -493,21 +492,31 @@ public class PointCommServiceImpl implements PointCommService {
   }
 
   @Override
-  public List<CommissionRecord> listRecordByTime(Date start, Date end, String grade) {
-    return commissionRecordMapper.listByTimeRange(start, end, grade);
+  public List<CommissionRecord> listRecordByTime(Date start, Date end, String grade,
+      Integer source) {
+    return commissionRecordMapper.listByTimeRange(start, end, grade, source);
   }
 
   /**
    * 从传入日期开始往前迁移一个月, 往前推到一个月的零点
    *
    * @param from 当前日期
+   * @param platform platform
    */
   @Override
   @Transactional
-  public int translateCommSuspendingToWithdrawLastMonth(Date from) {
-    DateTime jodStart = new DateTime(from)
-        .minusMonths(1).withTimeAtStartOfDay();
-    return translateCommSuspendingToWithdraw(jodStart.toDate(), from);
+  public int translateCommSuspendingToWithdraw(Date from,
+      PlatformType platform) {
+    DateTime jobStart;
+    // viviLife 一周提现一次
+    if (platform == PlatformType.V) {
+      jobStart = new DateTime(from)
+          .minusWeeks(1).withTimeAtStartOfDay();
+    } else {
+      jobStart = new DateTime(from)
+          .minusMonths(1).withTimeAtStartOfDay();
+    }
+    return translateCommSuspendingToWithdraw(jobStart.toDate(), from, platform);
   }
 
   /**
@@ -515,15 +524,19 @@ public class PointCommServiceImpl implements PointCommService {
    *
    * @param start 开始日期
    * @param end 结束日期
+   * @param platform 迁移平台
    * @return 执行结果
    */
   @Override
   @Transactional
-  public int translateCommSuspendingToWithdraw(Date start, Date end) {
+  public int translateCommSuspendingToWithdraw(Date start, Date end,
+      PlatformType platform) {
     List<CommissionRecord> commissionRecords = listRecordByTime(start, end,
-        GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE);
+        GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE, platform.getCode());
     LOGGER.info(String
-        .format("开始迁移提现记录: %s -> %s, 共 %d 条", DateFormatUtils.format(start, "yyyy-MM-dd HH:mm:ss"),
+        .format("开始迁移 %s 提现记录: %s -> %s, 共 %d 条",
+            platform.getFullName(),
+            DateFormatUtils.format(start, "yyyy-MM-dd HH:mm:ss"),
             DateFormatUtils.format(end, "yyyy-MM-dd HH:mm:ss"), commissionRecords.size()));
     int effected = 0;
     if (CollectionUtils.isEmpty(commissionRecords)) {
@@ -537,7 +550,10 @@ public class PointCommServiceImpl implements PointCommService {
         withdrawal.setCommsuspendingId(id);
         withdrawal.setCpId(record.getCpId());
         withdrawal.setAmount(record.getCurrent().abs());
-        withdrawal.setProcessingMonth(Integer.parseInt(DateFormatUtils.format(end, "yyyyMM")));
+        String dateFormat = platform == PlatformType.V ?
+            "yyyyMMdd" : "yyyyMM";
+        // viviLife 记录到天
+        withdrawal.setProcessingMonth(Integer.parseInt(DateFormatUtils.format(end, dateFormat)));
         withdrawal.setSource(record.getSource());
         withdrawal.setWithdrawDate(record.getCreatedAt());
         try {
@@ -647,8 +663,8 @@ public class PointCommServiceImpl implements PointCommService {
   }
 
   @Override
-  public List<String> listWithdrawTopMonth(int month) {
-    return customerWithdrawalMapper.listTopMonth(month);
+  public List<String> listWithdrawTopDate(int limit, PlatformType platform) {
+    return customerWithdrawalMapper.listTopDate(limit, platform.getCode());
   }
 
   @SuppressWarnings("unchecked")

@@ -7,7 +7,7 @@
 
   <groupId>com.hds.xquark</groupId>
   <artifactId>xquark-point-core</artifactId>
-  <version>3.2.4</version>
+  <version>3.2.4-suspending</version>
 
   <name>xquark-point-core</name>
   <!-- FIXME change it to the project's website -->

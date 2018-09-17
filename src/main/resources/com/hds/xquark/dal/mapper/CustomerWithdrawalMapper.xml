@@ -138,9 +138,10 @@
                and source = #{source,jdbcType=INTEGER}
              )
   </select>
-  <select id="listTopMonth" resultType="java.lang.String">
+  <select id="listTopDate" resultType="java.lang.String">
     select distinct processingMonth
     from customerWithdrawal
+    where source = #{source,jdbcType=INTEGER}
     order by processingMonth desc
     limit #{month,jdbcType=INTEGER}
   </select>
