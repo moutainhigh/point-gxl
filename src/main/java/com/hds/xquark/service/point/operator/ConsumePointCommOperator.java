@@ -51,8 +51,8 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 扣减需要保存多条积分记录
-    Trancd trancd = calRet.getTrancd();
-    List<? extends BasePointCommRecord> records = buildRecords(bizId, grade, calRet, clazz);
+    List<? extends BasePointCommRecord> records = buildRecordsForConsume(bizId, grade, calRet,
+        clazz);
     Iterator<? extends BasePointCommRecord> iterator = records.iterator();
 
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);

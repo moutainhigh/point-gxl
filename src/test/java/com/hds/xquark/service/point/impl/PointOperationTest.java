@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point.impl;
 
+import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
@@ -24,7 +25,7 @@ public class PointOperationTest extends BaseOperationTest {
 
   private final Long cpId = 3000000L;
 
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(1);
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
 
   private final TotalAuditType auditType = TotalAuditType.DTS;
 
@@ -72,7 +73,7 @@ public class PointOperationTest extends BaseOperationTest {
         cpId,
         bizId,
         "1002",
-        PlatformType.E,
+        PlatformType.H,
         modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
@@ -118,20 +119,20 @@ public class PointOperationTest extends BaseOperationTest {
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
     String bizId = String.valueOf(new Date().getTime());
 
-    pointCommService.modifyCommission(
+    pointCommService.modifyPoint(
         cpId,
         bizId,
-        "1001",
+        GradeCodeConstrants.GRANT_POINT_CODE,
         PlatformType.H,
         modifyPoints, Trancd.PRBA, auditType);
 
 //    Assert.assertEquals(totalBefore.getFreezedHds(),
 //        totalAfter.getFreezedHds().subtract(modifyPoints));
 
-    pointCommService.modifyCommission(
+    pointCommService.modifyPoint(
         cpId,
         bizId,
-        "1004",
+        GradeCodeConstrants.CANCEL_POINT_CODE,
         PlatformType.H,
         modifyPoints, Trancd.PRBA, auditType);
 
@@ -186,7 +187,7 @@ public class PointOperationTest extends BaseOperationTest {
         getBizId(),
         "1002",
         PlatformType.H,
-        modifyPoints, Trancd.ROYA, auditType);
+        BigDecimal.valueOf(50), Trancd.ROYA, auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
     Assert

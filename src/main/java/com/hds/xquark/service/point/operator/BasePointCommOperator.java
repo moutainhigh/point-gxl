@@ -17,6 +17,7 @@ import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
+import com.hds.xquark.dal.type.BelongintToType;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
@@ -222,7 +223,8 @@ public abstract class BasePointCommOperator {
     PlatformType platform = calRet.getPlatform();
     Long cpId = calRet.getCpId();
     return PointCommCalHelper
-        .buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, recordType, clazz);
+        .buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, BelongintToType.NON,
+            recordType, clazz);
   }
 
   /**
@@ -242,7 +244,32 @@ public abstract class BasePointCommOperator {
     for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
       PlatformType platform = entry.getKey();
       T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
-          infoAfter, platform, calRet.getTrancd(), clazz);
+          infoAfter, platform, BelongintToType.NON, trancd, clazz);
+      ret.add(record);
+    }
+    return ret;
+  }
+
+  /**
+   * 应colson特殊要求扣减做特殊处理
+   */
+  <T extends BasePointCommRecord> List<T> buildRecordsForConsume(String bizId, GradeCode grade,
+      PointCommOperationResult calRet, Class<T> clazz) {
+    Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
+    if (MapUtils.isEmpty(detailMap)) {
+      throw new BizException(GlobalErrorCode.UNKNOWN, "没有区分积分平台");
+    }
+    BasePointCommTotal infoBefore = calRet.getInfoBefore();
+    BasePointCommTotal infoAfter = calRet.getInfoAfter();
+    Long cpId = calRet.getCpId();
+    List<T> ret = new ArrayList<>(detailMap.size());
+    for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
+      PlatformType platform = entry.getKey();
+      // 将platform
+      T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
+          infoAfter, calRet.getPlatform(), BelongintToType.valueOf(platform.name()),
+          calRet.getTrancd(),
+          clazz);
       ret.add(record);
     }
     return ret;
