@@ -1,14 +1,21 @@
 package com.hds.xquark.service.point.operator;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
+import com.hds.xquark.dal.mapper.CommissionSuspendingAsstMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
+import com.hds.xquark.dal.mapper.PointSuspendingAsstMapper;
+import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
+import com.hds.xquark.dal.model.CommissionSuspendingAsst;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
+import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
@@ -36,11 +43,21 @@ import org.springframework.util.ReflectionUtils;
  */
 public abstract class BasePointCommOperator {
 
+  private PointCommService pointCommService;
+
   protected PointRecordMapper pointRecordMapper;
 
   protected CommissionRecordMapper commissionRecordMapper;
 
-  private PointCommService pointCommService;
+  protected PointSuspendingAsstMapper pointSuspendingAsstMapper;
+
+  protected CommissionSuspendingAsstMapper commissionSuspendingAsstMapper;
+
+  static final Map<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>
+      ASST_MAPPINT =
+      ImmutableMap.<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>of(
+          PointRecord.class, PointSuspendingAsst.class,
+          CommissionRecord.class, CommissionSuspendingAsst.class);
 
   /**
    * 积分状态字段
@@ -66,6 +83,18 @@ public abstract class BasePointCommOperator {
     this.pointCommService = pointCommService;
   }
 
+  @Autowired
+  public void setPointSuspendingAsstMapper(
+      PointSuspendingAsstMapper pointSuspendingAsstMapper) {
+    this.pointSuspendingAsstMapper = pointSuspendingAsstMapper;
+  }
+
+  @Autowired
+  public void setCommissionSuspendingAsstMapper(
+      CommissionSuspendingAsstMapper commissionSuspendingAsstMapper) {
+    this.commissionSuspendingAsstMapper = commissionSuspendingAsstMapper;
+  }
+
   /**
    * 计算积分/德分
    *
@@ -73,7 +102,6 @@ public abstract class BasePointCommOperator {
    * @param businessId 业务id
    * @param grade 规则
    * @param pointComms 动态积分/德分
-   * @param trancd
    * @return 积分计算结果 {@link PointCommOperationResult}
    */
   public PointCommOperationResult doOperation(Long cpId, String businessId, GradeCode grade,
@@ -144,9 +172,7 @@ public abstract class BasePointCommOperator {
   /**
    * 校验积分规则与历史积分信息
    *
-   *
    * @param context @throws BizException 校验有问题排除业务异常
-   * @param operateType
    */
   protected void preCheck(PointCommOperatorContext context,
       PointOperateType operateType) {
@@ -300,6 +326,32 @@ public abstract class BasePointCommOperator {
       return commissionRecordMapper.updateByPrimaryKeySelective((CommissionRecord) record) > 0;
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
+    }
+  }
+
+  /**
+   * 根据不同类型保存asst
+   */
+  protected boolean saveAsst(BasePointCommAsst asst) {
+    checkNotNull(asst);
+    if (asst instanceof PointSuspendingAsst) {
+      return pointSuspendingAsstMapper.insert((PointSuspendingAsst) asst) > 0;
+    } else if (asst instanceof CommissionSuspendingAsst) {
+      return commissionSuspendingAsstMapper.insert((CommissionSuspendingAsst) asst) > 0;
+    } else {
+      throw new IllegalStateException("asst type not allowed");
+    }
+  }
+
+  protected boolean updateAsst(BasePointCommAsst asst) {
+    checkNotNull(asst);
+    if (asst instanceof PointSuspendingAsst) {
+      return pointSuspendingAsstMapper.updateByPrimaryKeySelective((PointSuspendingAsst) asst) > 0;
+    } else if (asst instanceof CommissionSuspendingAsst) {
+      return commissionSuspendingAsstMapper
+          .updateByPrimaryKeySelective((CommissionSuspendingAsst) asst) > 0;
+    } else {
+      throw new IllegalStateException("asst type not allowed");
     }
   }
 

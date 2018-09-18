@@ -4,11 +4,14 @@ import com.google.common.base.Preconditions;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
+import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
+import com.hds.xquark.dal.model.CommissionSuspendingAsst;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
+import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
@@ -125,6 +128,23 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
         }
       }
     }
+
+    // 如果存在asst则同时回退asst
+    Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
+    List<? extends BasePointCommAsst> asstsToRollback =
+        findAssts(bizId, calRet.getCpId(), calRet.getTrancd(), asstClazz);
+    if (CollectionUtils.isNotEmpty(asstsToRollback)) {
+      for (BasePointCommAsst asst : asstsToRollback) {
+        BasePointCommAsst newAsst = BasePointCommAsst.copy(asst);
+        newAsst.setId(null);
+        saveAsst(newAsst);
+
+        asst.setRollbacked(true);
+        asst.setRollbackId(newAsst.getId());
+        updateAsst(asst);
+      }
+    }
+
     return rollBackRecords;
   }
 
@@ -153,6 +173,18 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
           .listUnRollBackedByCpIdWithBizIdAndType(bizId, cpId, recordType);
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T extends BasePointCommAsst> List<T> findAssts(String bizId, Long cpId, Trancd trancd,
+      Class<T> clazz) {
+    if (clazz == PointSuspendingAsst.class) {
+      return (List<T>) pointSuspendingAsstMapper.listAsst(bizId, cpId, trancd);
+    } else if (clazz == CommissionSuspendingAsst.class) {
+      return (List<T>) commissionSuspendingAsstMapper.listAsst(bizId, cpId, trancd);
+    } else {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "asst 操作不允许");
     }
   }
 }

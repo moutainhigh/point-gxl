@@ -2,17 +2,10 @@ package com.hds.xquark.service.point.operator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.ImmutableMap;
-import com.hds.xquark.dal.mapper.CommissionSuspendingAsstMapper;
-import com.hds.xquark.dal.mapper.PointSuspendingAsstMapper;
 import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
-import com.hds.xquark.dal.model.CommissionRecord;
-import com.hds.xquark.dal.model.CommissionSuspendingAsst;
 import com.hds.xquark.dal.model.GradeCode;
-import com.hds.xquark.dal.model.PointRecord;
-import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
@@ -28,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,24 +28,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ConsumePointCommOperator extends BasePointCommOperator {
-
-  private final PointSuspendingAsstMapper pointSuspendingAsstMapper;
-
-  private final CommissionSuspendingAsstMapper commissionSuspendingAsstMapper;
-
-  private final Map<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>
-      ASST_MAPPINT =
-      ImmutableMap.<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>of(
-          PointRecord.class, PointSuspendingAsst.class,
-          CommissionRecord.class, CommissionSuspendingAsst.class);
-
-  @Autowired
-  public ConsumePointCommOperator(
-      PointSuspendingAsstMapper pointSuspendingAsstMapper,
-      CommissionSuspendingAsstMapper commissionSuspendingAsstMapper) {
-    this.pointSuspendingAsstMapper = pointSuspendingAsstMapper;
-    this.commissionSuspendingAsstMapper = commissionSuspendingAsstMapper;
-  }
 
   @Override
   public PointCommCalResult calRet(PointCommOperatorContext context) {
@@ -83,7 +57,8 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
 
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
     BasePointCommAsst asst =
-        BasePointCommAsst.empty(asstClazz, calRet.getCpId(), grade, calRet.getPlatform(), trancd);
+        BasePointCommAsst
+            .empty(asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(), trancd);
     while (iterator.hasNext()) {
       BasePointCommRecord record = iterator.next();
       if (record.getCurrent().signum() == 0) {
@@ -134,17 +109,4 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     }
   }
 
-  /**
-   * 根据不同类型保存asst
-   */
-  private boolean saveAsst(BasePointCommAsst asst) {
-    checkNotNull(asst);
-    if (asst instanceof PointSuspendingAsst) {
-      return pointSuspendingAsstMapper.insert((PointSuspendingAsst) asst) > 0;
-    } else if (asst instanceof CommissionSuspendingAsst) {
-      return commissionSuspendingAsstMapper.insert((CommissionSuspendingAsst) asst) > 0;
-    } else {
-      throw new IllegalStateException("asst type not allowed");
-    }
-  }
 }

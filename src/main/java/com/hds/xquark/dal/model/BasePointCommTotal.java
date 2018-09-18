@@ -106,7 +106,7 @@ public abstract class BasePointCommTotal {
 
   protected abstract BasePointCommTotal getInstance();
 
-  public static <T extends BasePointCommTotal> T getInstance(Class<T> clazz) {
+  private static <T extends BasePointCommTotal> T getInstance(Class<T> clazz) {
     T info;
     try {
       info = clazz.newInstance();

@@ -6,6 +6,7 @@ import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @author wangxinhua createdAt 18-9-16 下午12:48
@@ -32,7 +33,7 @@ public abstract class BasePointCommAsst {
   /**
    * 本次积分
    */
-  private BigDecimal current;
+  private BigDecimal current = BigDecimal.ZERO;
   /**
    * 收入类型，PRBA，CNRA
    */
@@ -44,11 +45,11 @@ public abstract class BasePointCommAsst {
   /**
    * 当用户发生退货时，会被锁定
    */
-  private Boolean locked;
+  private Boolean locked = false;
   /**
    * 是否已回退
    */
-  private Boolean rollbacked;
+  private Boolean rollbacked = false;
   /**
    * 回退记录id
    */
@@ -56,14 +57,14 @@ public abstract class BasePointCommAsst {
 
   private Date createdAt;
   private Date updatedAt;
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
   /**
    * build an empty instance of basePointCommAsst
    */
   public static BasePointCommAsst empty(
       Class<? extends BasePointCommAsst> clazz,
-      Long cpId,
+      String orderId, Long cpId,
       GradeCode gradeCode,
       PlatformType platform,
       Trancd trancd) {
@@ -74,6 +75,7 @@ public abstract class BasePointCommAsst {
       throw new IllegalStateException(clazz.getSimpleName() + "cant be instanced");
     }
     asst.setCpId(cpId);
+    asst.setOrderId(orderId);
     asst.setGradeId(gradeCode.getId());
     asst.setGradeNumber(gradeCode.getCodeNumber());
     asst.setSource(platform.getCode());
@@ -215,5 +217,34 @@ public abstract class BasePointCommAsst {
     BigDecimal curr = this.getCurrent();
     this.setCurrent(curr.add(record.getCurrent()));
     return this;
+  }
+
+  public boolean isEmpty() {
+    return this.getCurrent().signum() == 0;
+  }
+
+  /**
+   * 从旧的积分信息上构造一个一样的对象
+   *
+   * @param oldInfo 旧的数据对象
+   * @return 新的积分信息
+   */
+  public static <T extends BasePointCommAsst> T copy(T oldInfo) {
+    @SuppressWarnings("unchecked")
+    T newInstance = (T) getInstance(oldInfo.getClass());
+    BeanUtils.copyProperties(oldInfo, newInstance);
+    return newInstance;
+  }
+
+  private static <T extends BasePointCommAsst> T getInstance(Class<T> clazz) {
+    T info;
+    try {
+      info = clazz.newInstance();
+    } catch (InstantiationException | IllegalAccessException e) {
+      // class是抽象父类无法实例化或者缺少默认构造函数
+      throw new RuntimeException("积分信息构造失败, 请确保class不是是抽象父类"
+          + "且有默认构造函数", e);
+    }
+    return info;
   }
 }

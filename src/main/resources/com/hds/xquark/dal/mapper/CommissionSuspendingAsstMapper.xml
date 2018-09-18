@@ -28,12 +28,23 @@
     from commissionsuspendingasst
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="listAsst" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissionsuspendingasst
+    where orderid = #{orderId,jdbcType=VARCHAR}
+    and cpId = #{cpId,jdbcType=BIGINT}
+    and trancd = #{trancd,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete
     from commissionsuspendingasst
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.CommissionSuspendingAsst">
+    <selectKey keyProperty="id" resultType="long">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
     insert into commissionsuspendingasst (id,
                                           cpId,
                                           grade_Id,
@@ -53,15 +64,15 @@
             #{gradeId,jdbcType=BIGINT},
             #{gradeNumber,jdbcType=VARCHAR},
             #{orderId,jdbcType=VARCHAR},
-            #{currentComm,jdbcType=DECIMAL},
+    #{current,jdbcType=DECIMAL},
             #{trancd,jdbcType=VARCHAR},
             #{source,jdbcType=TINYINT},
-            #{locked,jdbcType=TINYINT},
+    FALSE,
             #{rollbacked,jdbcType=TINYINT},
             #{rollbackId,jdbcType=BIGINT},
-            #{createdAt,jdbcType=TIMESTAMP},
-            #{updatedAt,jdbcType=TIMESTAMP},
-            #{isdeleted,jdbcType=BIT})
+    NOW(),
+    NOW(),
+    FALSE)
   </insert>
   <insert id="insertSelective" parameterType="com.hds.xquark.dal.model.CommissionSuspendingAsst">
     insert into commissionsuspendingasst
@@ -81,7 +92,7 @@
       <if test="orderId != null">
         orderid,
       </if>
-      <if test="currentComm != null">
+      <if test="current != null">
         current_comm,
       </if>
       <if test="trancd != null">
@@ -125,8 +136,8 @@
       <if test="orderId != null">
         #{orderId,jdbcType=VARCHAR},
       </if>
-      <if test="currentComm != null">
-        #{currentComm,jdbcType=DECIMAL},
+      <if test="current != null">
+        #{current,jdbcType=DECIMAL},
       </if>
       <if test="trancd != null">
         #{trancd,jdbcType=VARCHAR},
@@ -170,8 +181,8 @@
       <if test="orderId != null">
         orderid = #{orderId,jdbcType=VARCHAR},
       </if>
-      <if test="currentComm != null">
-        current_comm = #{currentComm,jdbcType=DECIMAL},
+      <if test="current != null">
+        current_comm = #{current,jdbcType=DECIMAL},
       </if>
       <if test="trancd != null">
         trancd = #{trancd,jdbcType=VARCHAR},
@@ -188,15 +199,10 @@
       <if test="rollbackId != null">
         rollback_id = #{rollbackId,jdbcType=BIGINT},
       </if>
-      <if test="createdAt != null">
-        created_at = #{createdAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updatedAt != null">
-        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
-      </if>
       <if test="isdeleted != null">
         isdeleted = #{isdeleted,jdbcType=BIT},
       </if>
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -206,14 +212,13 @@
         grade_Id     = #{gradeId,jdbcType=BIGINT},
         gradeNumber  = #{gradeNumber,jdbcType=VARCHAR},
         orderid      = #{orderId,jdbcType=VARCHAR},
-        current_comm = #{currentComm,jdbcType=DECIMAL},
+        current_comm = #{current,jdbcType=DECIMAL},
         trancd       = #{trancd,jdbcType=VARCHAR},
         source       = #{source,jdbcType=TINYINT},
         locked       = #{locked,jdbcType=TINYINT},
         rollbacked   = #{rollbacked,jdbcType=TINYINT},
         rollback_id  = #{rollbackId,jdbcType=BIGINT},
-        created_at   = #{createdAt,jdbcType=TIMESTAMP},
-        updated_at   = #{updatedAt,jdbcType=TIMESTAMP},
+        created_at   = NOW(),
         isdeleted    = #{isdeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>

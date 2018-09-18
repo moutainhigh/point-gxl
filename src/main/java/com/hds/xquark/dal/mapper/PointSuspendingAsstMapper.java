@@ -1,6 +1,9 @@
 package com.hds.xquark.dal.mapper;
 
 import com.hds.xquark.dal.model.PointSuspendingAsst;
+import com.hds.xquark.dal.type.Trancd;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface PointSuspendingAsstMapper {
 
@@ -15,4 +18,7 @@ public interface PointSuspendingAsstMapper {
   int updateByPrimaryKeySelective(PointSuspendingAsst record);
 
   int updateByPrimaryKey(PointSuspendingAsst record);
+
+  List<PointSuspendingAsst> listAsst(
+      @Param("orderId") String orderId, @Param("cpId") Long cpId, @Param("trancd") Trancd trancd);
 }
