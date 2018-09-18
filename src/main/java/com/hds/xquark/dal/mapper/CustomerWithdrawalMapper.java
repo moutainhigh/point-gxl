@@ -52,9 +52,11 @@ public interface CustomerWithdrawalMapper {
    * 获取最近的可展示月份
    *
    * @param month 取几个月
+   * @param source 平台
    * @return 月份集合
    */
-  List<String> listTopMonth(@Param("month") int month);
+  List<String> listTopDate(@Param("month") int month,
+      @Param("source") Integer source);
 
   boolean selectIsCpIdWithdrawed(@Param("cpId") Long cpId, @Param("month") Integer month);
 

@@ -24,7 +24,7 @@ public interface CommissionRecordMapper {
       @Param("cpId") Long cpId, @Param("type") Trancd type);
 
   List<CommissionRecord> listByTimeRange(@Param("start") Date start, @Param("end") Date end,
-      @Param("grade") String grade);
+      @Param("grade") String grade, @Param("source") Integer source);
 
   boolean selectRecordExists(
       @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
