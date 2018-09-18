@@ -375,7 +375,7 @@ public class PointCommServiceImpl implements PointCommService {
   @Override
   public Map<String, Object> listCommissionRecords(Long cpId, Integer source, Integer offset,
       Integer size) {
-    List<CommissionRecordVO> list = commissionRecordMapper.listVO(cpId, source, offset, size);
+    List<CommissionRecordVO> list = commissionRecordMapper.listVoAsst(cpId, source, offset, size);
     Long total = commissionRecordMapper.count(cpId, source);
     return ImmutableMap.of("list", list, "total", total);
   }
