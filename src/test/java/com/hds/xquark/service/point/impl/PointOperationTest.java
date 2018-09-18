@@ -1,6 +1,8 @@
 package com.hds.xquark.service.point.impl;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
+import com.hds.xquark.dal.model.BasePointCommAsst;
+import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
@@ -10,6 +12,8 @@ import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -84,7 +88,15 @@ public class PointOperationTest extends BaseOperationTest {
         modifyPoints, trancd, auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
+
+    List<? extends BasePointCommAsst> assts = pointCommService.listAsst(bizId, cpId, trancd,
+        PointSuspendingAsst.class);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
+    Assert.assertTrue(CollectionUtils.isNotEmpty(assts));
+
+    // 50.0.equals(50.00) is not true
+    Assert.assertTrue(assts.get(0).getCurrent().abs().compareTo(modifyPoints) == 0);
+    Assert.assertTrue(assts.get(1).getCurrent().abs().compareTo(modifyPoints) == 0);
   }
 
   @Test
@@ -228,6 +240,12 @@ public class PointOperationTest extends BaseOperationTest {
   @Test
   public void testListRecords() {
     Assert.assertNotNull(pointCommService.listPointRecords(cpId, null, null, null));
+  }
+
+  @Test
+  public void testRollbackAsst() {
+    testConsumeRollBack();
+
   }
 
   private String getBizId() {

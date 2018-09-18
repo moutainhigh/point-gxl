@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommissionOperationTest extends BaseOperationTest {
 
   private final Long cpId = 3000000L;
-  private final BigDecimal modifyPoints = BigDecimal.valueOf(10);
+  private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
 
   private final TotalAuditType auditType = API;
 

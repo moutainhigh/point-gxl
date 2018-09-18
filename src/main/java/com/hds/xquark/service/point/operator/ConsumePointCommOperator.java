@@ -1,7 +1,6 @@
 package com.hds.xquark.service.point.operator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
@@ -56,10 +55,6 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     Iterator<? extends BasePointCommRecord> iterator = records.iterator();
 
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
-    BasePointCommAsst asst =
-        BasePointCommAsst
-            .empty(asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(),
-                calRet.getTrancd());
     while (iterator.hasNext()) {
       BasePointCommRecord record = iterator.next();
       if (record.getCurrent().signum() == 0) {
@@ -68,12 +63,19 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
       }
       record.setRollbacked(false);
       saveRecord(record);
-      // this should not work before feature/belonging-to being merged
-      if (Objects.equals(record.getSource(), asst.getSource())) {
+      // only consume operations
+    }
+    boolean isConsume = GradeCodeConstrants.CONSUME_CODE.contains(grade.getCodeNumber());
+    if (isConsume) {
+      BasePointCommAsst asst =
+          BasePointCommAsst
+              .empty(asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(),
+                  calRet.getTrancd());
+      for (BasePointCommRecord record : records) {
         asst.addRecord(record);
       }
+      saveAsst(asst);
     }
-    saveAsst(asst);
     return records;
   }
 

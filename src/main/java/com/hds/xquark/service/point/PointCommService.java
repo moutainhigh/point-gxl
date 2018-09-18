@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point;
 
+import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
 import com.hds.xquark.dal.model.CommissionTotal;
@@ -135,4 +136,7 @@ public interface PointCommService {
   boolean isOrderMonthProcessed(Integer month);
 
   List<String> listWithdrawTopMonth(int month);
+
+  <T extends BasePointCommAsst> List<T> listAsst(String bizId, Long cpId, Trancd trancd,
+      Class<T> clazz);
 }

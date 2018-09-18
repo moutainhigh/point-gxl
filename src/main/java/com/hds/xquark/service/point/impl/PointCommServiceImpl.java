@@ -15,20 +15,25 @@ import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
+import com.hds.xquark.dal.mapper.CommissionSuspendingAsstMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
 import com.hds.xquark.dal.mapper.CustomerWithdrawalMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
+import com.hds.xquark.dal.mapper.PointSuspendingAsstMapper;
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
+import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.CommissionRecord;
+import com.hds.xquark.dal.model.CommissionSuspendingAsst;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.CommissionTotalAudit;
 import com.hds.xquark.dal.model.CustomerWithdrawal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.model.PointRecord;
+import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.model.PointTotalAudit;
 import com.hds.xquark.dal.type.AuditType;
@@ -86,6 +91,10 @@ public class PointCommServiceImpl implements PointCommService {
 
   private CustomerWithdrawalMapper customerWithdrawalMapper;
 
+  private PointSuspendingAsstMapper pointSuspendingAsstMapper;
+
+  private CommissionSuspendingAsstMapper commissionSuspendingAsstMapper;
+
   @Autowired
   public void setPointGradeService(PointGradeService pointGradeService) {
     this.pointGradeService = pointGradeService;
@@ -128,6 +137,18 @@ public class PointCommServiceImpl implements PointCommService {
   public void setCustomerWithdrawalMapper(
       CustomerWithdrawalMapper customerWithdrawalMapper) {
     this.customerWithdrawalMapper = customerWithdrawalMapper;
+  }
+
+  @Autowired
+  public void setPointSuspendingAsstMapper(
+      PointSuspendingAsstMapper pointSuspendingAsstMapper) {
+    this.pointSuspendingAsstMapper = pointSuspendingAsstMapper;
+  }
+
+  @Autowired
+  public void setCommissionSuspendingAsstMapper(
+      CommissionSuspendingAsstMapper commissionSuspendingAsstMapper) {
+    this.commissionSuspendingAsstMapper = commissionSuspendingAsstMapper;
   }
 
   /**
@@ -655,6 +676,19 @@ public class PointCommServiceImpl implements PointCommService {
   @Override
   public List<String> listWithdrawTopMonth(int month) {
     return customerWithdrawalMapper.listTopMonth(month);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T extends BasePointCommAsst> List<T> listAsst(String bizId, Long cpId, Trancd trancd,
+      Class<T> clazz) {
+    if (clazz == PointSuspendingAsst.class) {
+      return (List<T>) pointSuspendingAsstMapper.listAsst(bizId, cpId, trancd);
+    } else if (clazz == CommissionSuspendingAsst.class) {
+      return (List<T>) commissionSuspendingAsstMapper.listAsst(bizId, cpId, trancd);
+    } else {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "asst类型不支持");
+    }
   }
 
   @SuppressWarnings("unchecked")

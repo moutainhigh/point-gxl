@@ -116,8 +116,8 @@
       <if test="updatedAt != null">
         updated_at,
       </if>
-      <if test="isdeleted != null">
-        isdeleted,
+      <if test="isDeleted != null">
+        isDeleted,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -160,8 +160,8 @@
       <if test="updatedAt != null">
         #{updatedAt,jdbcType=TIMESTAMP},
       </if>
-      <if test="isdeleted != null">
-        #{isdeleted,jdbcType=BIT},
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -199,8 +199,8 @@
       <if test="rollbackId != null">
         rollback_id = #{rollbackId,jdbcType=BIGINT},
       </if>
-      <if test="isdeleted != null">
-        isdeleted = #{isdeleted,jdbcType=BIT},
+      <if test="isDeleted != null">
+        isdeleted = #{isDeleted,jdbcType=BIT},
       </if>
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     </set>
@@ -219,7 +219,7 @@
         rollbacked   = #{rollbacked,jdbcType=TINYINT},
         rollback_id  = #{rollbackId,jdbcType=BIGINT},
         created_at   = NOW(),
-        isdeleted    = #{isdeleted,jdbcType=BIT}
+        isdeleted    = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

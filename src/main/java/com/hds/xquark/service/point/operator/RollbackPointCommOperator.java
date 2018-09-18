@@ -161,7 +161,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     // 如果存在asst则同时回退asst
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
     List<? extends BasePointCommAsst> asstsToRollback =
-        findAssts(bizId, calRet.getCpId(), calRet.getTrancd(), asstClazz);
+        pointCommService.listAsst(bizId, calRet.getCpId(), calRet.getTrancd(), asstClazz);
     if (CollectionUtils.isNotEmpty(asstsToRollback)) {
       for (BasePointCommAsst asst : asstsToRollback) {
         BasePointCommAsst newAsst = BasePointCommAsst.copy(asst);
@@ -204,18 +204,6 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
           .listUnRollBackedByCpIdWithBizIdAndType(bizId, cpId, recordType);
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T extends BasePointCommAsst> List<T> findAssts(String bizId, Long cpId, Trancd trancd,
-      Class<T> clazz) {
-    if (clazz == PointSuspendingAsst.class) {
-      return (List<T>) pointSuspendingAsstMapper.listAsst(bizId, cpId, trancd);
-    } else if (clazz == CommissionSuspendingAsst.class) {
-      return (List<T>) commissionSuspendingAsstMapper.listAsst(bizId, cpId, trancd);
-    } else {
-      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "asst 操作不允许");
     }
   }
 }

@@ -44,7 +44,7 @@ import org.springframework.util.ReflectionUtils;
  */
 public abstract class BasePointCommOperator {
 
-  private PointCommService pointCommService;
+  protected PointCommService pointCommService;
 
   protected PointRecordMapper pointRecordMapper;
 
