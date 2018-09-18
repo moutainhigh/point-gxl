@@ -233,6 +233,7 @@ public abstract class BasePointCommOperator {
   <T extends BasePointCommRecord> List<T> buildRecords(String bizId, GradeCode grade,
       PointCommOperationResult calRet,
       Class<T> clazz) {
+    Trancd trancd = calRet.getTrancd();
     Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
     if (MapUtils.isEmpty(detailMap)) {
       throw new BizException(GlobalErrorCode.UNKNOWN, "没有区分积分平台");

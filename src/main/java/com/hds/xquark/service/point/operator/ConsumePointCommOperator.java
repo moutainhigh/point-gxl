@@ -58,7 +58,8 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
     BasePointCommAsst asst =
         BasePointCommAsst
-            .empty(asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(), trancd);
+            .empty(asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(),
+                calRet.getTrancd());
     while (iterator.hasNext()) {
       BasePointCommRecord record = iterator.next();
       if (record.getCurrent().signum() == 0) {
