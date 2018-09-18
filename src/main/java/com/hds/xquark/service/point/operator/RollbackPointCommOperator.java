@@ -166,6 +166,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       for (BasePointCommAsst asst : asstsToRollback) {
         BasePointCommAsst newAsst = BasePointCommAsst.copy(asst);
         newAsst.setId(null);
+        // 取反
+        newAsst.setCurrent(newAsst.getCurrent().negate());
         saveAsst(newAsst);
 
         asst.setRollbacked(true);
