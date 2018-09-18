@@ -42,6 +42,6 @@ public interface CommissionRecordMapper {
   List<CommissionRecord> listUnFreezedRecord();
 
   BigDecimal sumTotal(@Param("code") String code, @Param("cpId") Long cpId,
-      @Param("trancd") Trancd trancd);
+      Trancd trancd);
 
 }
