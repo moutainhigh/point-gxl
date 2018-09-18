@@ -138,8 +138,6 @@ public interface PointCommService {
 
   boolean isOrderMonthProcessed(Integer month);
 
-  List<String> listWithdrawTopMonth(int month);
-
   <T extends BasePointCommAsst> List<T> listAsst(String bizId, Long cpId, Trancd trancd,
       Class<T> clazz);
 

@@ -8,7 +8,6 @@ import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import com.hds.xquark.utils.DateUtils;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.junit.Assert;
@@ -165,7 +164,7 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testTransformWithdraw() {
-    pointCommService.translateCommSuspendingToWithdraw(new Date(), DateUtils.addDay(new Date(), 1));
+    pointCommService.translateCommSuspendingToWithdraw(new Date(), PlatformType.V);
   }
 
   @Test
