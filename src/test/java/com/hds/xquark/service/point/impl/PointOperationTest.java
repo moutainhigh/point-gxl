@@ -224,6 +224,11 @@ public class PointOperationTest extends BaseOperationTest {
         .grantPointWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200), Trancd.REWARD_P);
   }
 
+  @Test
+  public void testListRecords() {
+    Assert.assertNotNull(pointCommService.listPointRecords(cpId, null, null, null));
+  }
+
   private String getBizId() {
     return String.valueOf(new Date().getTime());
   }

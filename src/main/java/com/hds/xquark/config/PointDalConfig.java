@@ -1,11 +1,13 @@
 package com.hds.xquark.config;
 
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
+import com.hds.xquark.dal.mapper.CommissionSuspendingAsstMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
 import com.hds.xquark.dal.mapper.CommissionTotalMapper;
 import com.hds.xquark.dal.mapper.CustomerWithdrawalMapper;
 import com.hds.xquark.dal.mapper.GradeCodeMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
+import com.hds.xquark.dal.mapper.PointSuspendingAsstMapper;
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
 import com.hds.xquark.dal.mapper.PointTotalMapper;
 import javax.sql.DataSource;
@@ -68,6 +70,16 @@ public class PointDalConfig {
   @Bean
   public CustomerWithdrawalMapper customerWithdrawalMapper() throws Exception {
     return newMapperFactoryBean(CustomerWithdrawalMapper.class).getObject();
+  }
+
+  @Bean
+  public CommissionSuspendingAsstMapper commissionSuspendingAsstMapper() throws Exception {
+    return newMapperFactoryBean(CommissionSuspendingAsstMapper.class).getObject();
+  }
+
+  @Bean
+  public PointSuspendingAsstMapper pointSuspendingAsstMapper() throws Exception {
+    return newMapperFactoryBean(PointSuspendingAsstMapper.class).getObject();
   }
 
   // @Autowired

@@ -368,10 +368,10 @@ public class PointCommServiceImpl implements PointCommService {
    * 查询德分记录
    */
   @Override
-  public Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset,
+  public Map<String, Object> listPointRecords(Long cpId, Integer source, Integer offset,
       Integer size) {
-    List<PointRecordVO> list = pointRecordMapper.listVO(cpId, code, offset, size);
-    Long total = pointRecordMapper.count(cpId, code);
+    List<PointRecordVO> list = pointRecordMapper.listVOAsst(cpId, source, offset, size);
+    Long total = pointRecordMapper.count(cpId, source);
     return ImmutableMap.of("list", list, "total", total);
   }
 
@@ -379,10 +379,10 @@ public class PointCommServiceImpl implements PointCommService {
    * 查询积分记录
    */
   @Override
-  public Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset,
+  public Map<String, Object> listCommissionRecords(Long cpId, Integer source, Integer offset,
       Integer size) {
-    List<CommissionRecordVO> list = commissionRecordMapper.listVO(cpId, code, offset, size);
-    Long total = commissionRecordMapper.count(cpId, code);
+    List<CommissionRecordVO> list = commissionRecordMapper.listVO(cpId, source, offset, size);
+    Long total = commissionRecordMapper.count(cpId, source);
     return ImmutableMap.of("list", list, "total", total);
   }
 

@@ -19,30 +19,44 @@ public interface PointRecordMapper {
 
   int updateByPrimaryKey(PointRecord record);
 
-  List<PointRecord> listByUserId(@Param("userId") String userId,
-      @Param("direction") String direction);
+  List<PointRecord> listByUserId(
+      @Param("userId") String userId, @Param("direction") String direction);
 
-  List<PointRecord> listByCpId(@Param("cpId") Long cpId,
-      @Param("direction") String direction);
+  List<PointRecord> listByCpId(@Param("cpId") Long cpId, @Param("direction") String direction);
 
-  List<PointRecordVO> listVO(@Param("cpId") Long cpId, @Param("source") Integer source,
-      @Param("offset") Integer offset, @Param("size") Integer size);
+  List<PointRecordVO> listVO(
+      @Param("cpId") Long cpId,
+      @Param("source") Integer source,
+      @Param("offset") Integer offset,
+      @Param("size") Integer size);
+
+  /**
+   * 新的查询, 连接asst, 查询多条记录
+   */
+  List<PointRecordVO> listVOAsst(
+      @Param("cpId") Long cpId,
+      @Param("source") Integer source,
+      @Param("offset") Integer offset,
+      @Param("size") Integer size);
 
   Long count(@Param("cpId") Long cpId, @Param("source") Integer sourceCode);
 
-  PointRecord loadUnRollBackedByUserIdWithBizId(@Param("bizId") String bizId, @Param("userId") String userId);
+  PointRecord loadUnRollBackedByUserIdWithBizId(
+      @Param("bizId") String bizId, @Param("userId") String userId);
 
-  PointRecord loadUnRollBackedByCpIdWithBizId(@Param("bizId") String bizId,
-      @Param("cpId") Long cpId);
+  PointRecord loadUnRollBackedByCpIdWithBizId(
+      @Param("bizId") String bizId, @Param("cpId") Long cpId);
 
-  List<PointRecord> listUnRollBackedByCpIdWithBizIdAndType(@Param("bizId") String bizId,
-      @Param("cpId") Long cpId, @Param("type") Trancd type);
+  List<PointRecord> listUnRollBackedByCpIdWithBizIdAndType(
+      @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
 
   boolean selectRecordExists(
       @Param("bizId") String bizId, @Param("cpId") Long cpId, @Param("type") Trancd type);
 
-  PointRecord loadUnRollBackedByUserIdWithBizIdAndFCode(@Param("bizId") String bizId,
-      @Param("userId") String userId, @Param("functionCode") String functionCode);
+  PointRecord loadUnRollBackedByUserIdWithBizIdAndFCode(
+      @Param("bizId") String bizId,
+      @Param("userId") String userId,
+      @Param("functionCode") String functionCode);
 
   List<PointRecord> listFreezedRecordAfterDate(@Param("date") Date date);
 

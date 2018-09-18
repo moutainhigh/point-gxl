@@ -73,6 +73,71 @@
       limit #{offset}, #{size}
     </if>
   </select>
+  <select id="listVoAsst" resultMap="VOResultMap">
+    select quaComm.id,
+    quaComm.cpId,
+    quaComm.grade_id,
+    quaComm.gradeNumber,
+    quaComm.orderid,
+    quaComm.current_comm,
+    quaComm.current_freezed_comm,
+    quaComm.trancd,
+    quaComm.source,
+    quaComm.rollbacked,
+    quaComm.rollback_id,
+    quaComm.created_at,
+    quaComm.updated_at,
+    cp.namecn as user_name,
+    gc.description as grade_desc
+    from (select id,
+    cpId,
+    grade_id,
+    gradeNumber,
+    orderid,
+    current_comm,
+    current_freezed_comm,
+    trancd,
+    source,
+    rollbacked,
+    rollback_id,
+    created_at,
+    updated_at
+    from commissionsuspending
+    where cpId = #{cpId,jdbcType=BIGINT}
+    <if test="source != null">
+      and source = #{source, jdbcType=INTEGER}
+    </if>
+    and isdeleted = false
+    and trancd != 'DEDUCT_C'
+    union
+    select id,
+    cpId,
+    grade_id,
+    gradeNumber,
+    orderid,
+    current_comm,
+    0 as 'current_freezed_comm',
+    trancd,
+    source,
+    rollbacked,
+    rollback_id,
+    created_at,
+    updated_at
+    from commissionsuspendingAsst
+    where cpId = #{cpId,jdbcType=BIGINT}
+    <if test="source != null">
+      and source = #{source, jdbcType=INTEGER}
+    </if>
+    and isdeleted = false
+    and trancd = 'DEDUCT_C') quaComm
+    inner join customerProfile cp on quaComm.cpId = cp.cpId
+    inner join gradeCode gc on quaComm.grade_id = gc.id
+    where cp.isdeleted = false
+    order by quaComm.created_at desc
+    <if test="offset != null and size != null">
+      limit #{offset}, #{size}
+    </if>
+  </select>
   <select id="count" resultType="java.lang.Long">
     select count(*)
     from commissionsuspending record
@@ -116,13 +181,13 @@
   </select>
   <select id="selectRecordExists" resultType="java.lang.Boolean">
     select exists(
-      select 1
-      from commissionsuspending
-      where cpId = #{cpId,jdbcType=BIGINT}
-        and orderid = #{bizId,jdbcType=VARCHAR}
-        and trancd = #{type,jdbcType=VARCHAR}
-        and isdeleted = false
-    )
+             select 1
+             from commissionsuspending
+             where cpId = #{cpId,jdbcType=BIGINT}
+               and orderid = #{bizId,jdbcType=VARCHAR}
+               and trancd = #{type,jdbcType=VARCHAR}
+               and isdeleted = false
+             )
   </select>
   <select id="listByTimeRange" resultMap="BaseResultMap">
     select
@@ -217,20 +282,20 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.CommissionRecord">
     update commissionsuspending
-    set cpId               = #{cpId,jdbcType=BIGINT},
-      grade_Id             = #{gradeId,jdbcType=BIGINT},
-      gradeNumber          = #{codeNumber,jdbcType=VARCHAR},
-      orderid              = #{businessId,jdbcType=VARCHAR},
-      current_comm         = #{currentComm,jdbcType=DECIMAL},
-      current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
-      trancd               = #{trancd,jdbcType=VARCHAR},
-      source               = #{source,jdbcType=TINYINT},
-      rollbacked           = #{rollbacked,jdbcType=TINYINT},
-      un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},
-      rollback_id          = #{rollbackId,jdbcType=BIGINT},
-      updated_at           = NOW(),
-      freezed_at           = #{freezedAt,jdbcType=TIMESTAMP},
-      freezed_to           = #{freezedTo,jdbcType=TIMESTAMP}
+    set cpId                 = #{cpId,jdbcType=BIGINT},
+        grade_Id             = #{gradeId,jdbcType=BIGINT},
+        gradeNumber          = #{codeNumber,jdbcType=VARCHAR},
+        orderid              = #{businessId,jdbcType=VARCHAR},
+        current_comm         = #{currentComm,jdbcType=DECIMAL},
+        current_freezed_comm = #{currentFreezedComm,jdbcType=DECIMAL},
+        trancd               = #{trancd,jdbcType=VARCHAR},
+        source               = #{source,jdbcType=TINYINT},
+        rollbacked           = #{rollbacked,jdbcType=TINYINT},
+        un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},
+        rollback_id          = #{rollbackId,jdbcType=BIGINT},
+        updated_at           = NOW(),
+        freezed_at           = #{freezedAt,jdbcType=TIMESTAMP},
+        freezed_to           = #{freezedTo,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -90,9 +90,10 @@ public interface PointCommService {
   boolean updateTotal(BasePointCommTotal total,
       TotalAuditType auditType);
 
-  Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset, Integer size);
+  Map<String, Object> listPointRecords(Long cpId, Integer source, Integer offset, Integer size);
 
-  Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset, Integer size);
+  Map<String, Object> listCommissionRecords(Long cpId, Integer source, Integer offset,
+      Integer size);
 
   int releaseCommission(TotalAuditType auditType);
 
