@@ -168,6 +168,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
         newAsst.setId(null);
         // 取反
         newAsst.setCurrent(newAsst.getCurrent().negate());
+        newAsst.setGradeId(grade.getId());
+        newAsst.setGradeNumber(grade.getCodeNumber());
         saveAsst(newAsst);
 
         asst.setRollbacked(true);
