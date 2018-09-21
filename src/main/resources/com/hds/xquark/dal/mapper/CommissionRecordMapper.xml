@@ -208,7 +208,7 @@
   <select id="sumTotal" resultType="java.math.BigDecimal">
     select sum(current_comm)
     from commissionsuspending
-    where (gradeNumber = #{code,jdbcType=VARCHAR} or trancd = #{trancd,jdbcType=VARCHAR})
+    where (gradeNumber = 2006 or trancd in ('DEPOSIT_C', 'MIGRATE_C'))
       and cpId = #{cpId,jdbcType=BIGINT}
       and isdeleted = false
   </select>
