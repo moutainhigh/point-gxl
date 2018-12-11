@@ -1,8 +1,6 @@
 package com.hds.xquark.dal.vo;
 
-import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import java.math.BigDecimal;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * created by
