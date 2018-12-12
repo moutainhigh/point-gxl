@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public abstract class BaseOperationTest {
 
   PointCommService pointCommService;
+  private PointContextInitialize initialize;
 
   @Before
   public void init() {
@@ -23,8 +24,11 @@ public abstract class BaseOperationTest {
         "byyroot",
         "v7&#5efr&777");
     PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-    PointContextInitialize initialize = new PointContextInitialize(dataSource, transactionManager);
-    pointCommService = initialize.getPointService();
+    this.initialize = new PointContextInitialize(dataSource, transactionManager);
+    pointCommService = this.initialize.getPointService();
   }
 
+  public PointContextInitialize getInitialize() {
+    return initialize;
+  }
 }

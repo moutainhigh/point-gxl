@@ -2,6 +2,7 @@ package com.hds.xquark.service.point.impl;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.model.BasePointCommAsst;
+import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
@@ -9,11 +10,13 @@ import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
+import com.hds.xquark.service.point.type.FunctionCodeType;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -246,6 +249,15 @@ public class PointOperationTest extends BaseOperationTest {
   public void testRollbackAsst() {
     testConsumeRollBack();
 
+  }
+
+  @Test
+  public void testPointNew() {
+//    getInitialize().getPointService().loadByCpId(cpId);
+    PointCommOperationResult<PointTotal, PointRecord> modify = getInitialize().getPointServiceNew()
+        .modify(cpId, getBizId(), Pair.of(FunctionCodeType.CONSUME_PACKET_POINT,
+            Trancd.PACKET_POINT), PlatformType.E, BigDecimal.valueOf(10));
+    System.out.println(modify);
   }
 
   private String getBizId() {

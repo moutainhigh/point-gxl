@@ -7,6 +7,7 @@ import java.util.Set;
  * created by
  *
  * @author wangxinhua at 18-6-18 上午10:53
+ * @deprecated using {@link com.hds.xquark.service.point.type.FunctionCodeType instead}
  */
 public class GradeCodeConstrants {
 
@@ -21,6 +22,16 @@ public class GradeCodeConstrants {
   public static final String RETURN_POINT_CODE = "1005";
 
   public static final String RELEASE_POINT_CODE = "1006";
+
+  /**
+   * 消费到德分红包
+   */
+  public static final String CONSUME_PACKET_POINT_CODE = "1007";
+
+  /**
+   * 德分红包回退
+   */
+  public static final String RETURN_PACKET_POINT_CODE = "1008";
 
   public static final String GRANT_COMMISSION_CODE = "2001";
 

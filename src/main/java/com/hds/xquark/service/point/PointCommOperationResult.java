@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author wangxinhua on 2018/5/21. DESC: 积分操作计算结果
  */
-public class PointCommOperationResult {
+public class PointCommOperationResult<T extends BasePointCommTotal, R extends BasePointCommRecord> {
 
   /**
    * 规则id
@@ -38,17 +38,17 @@ public class PointCommOperationResult {
   /**
    * 修改后积分积分信息
    */
-  private BasePointCommTotal infoBefore;
+  private T infoBefore;
 
   /**
    * 修改后的积分信息
    */
-  private BasePointCommTotal infoAfter;
+  private T infoAfter;
 
-  private List<? extends BasePointCommRecord> currRecords;
+  private List<R> currRecords;
 
   @JsonIgnore
-  private List<BasePointCommRecord> rollBacked;
+  private List<R> rollBacked;
 
   @JsonIgnore
   private Trancd trancd;
@@ -93,36 +93,36 @@ public class PointCommOperationResult {
     this.platform = platform;
   }
 
-  public BasePointCommTotal getInfoAfter() {
-    return infoAfter;
-  }
-
-  public void setInfoAfter(BasePointCommTotal infoAfter) {
-    this.infoAfter = infoAfter;
-  }
-
-  public BasePointCommTotal getInfoBefore() {
+  public T getInfoBefore() {
     return infoBefore;
   }
 
-  public void setInfoBefore(BasePointCommTotal infoBefore) {
+  public void setInfoBefore(T infoBefore) {
     this.infoBefore = infoBefore;
   }
 
-  public List<BasePointCommRecord> getRollBacked() {
+  public T getInfoAfter() {
+    return infoAfter;
+  }
+
+  public void setInfoAfter(T infoAfter) {
+    this.infoAfter = infoAfter;
+  }
+
+  public List<R> getCurrRecords() {
+    return currRecords;
+  }
+
+  public void setCurrRecords(List<R> currRecords) {
+    this.currRecords = currRecords;
+  }
+
+  public List<R> getRollBacked() {
     return rollBacked;
   }
 
-  public void setRollBacked(List<BasePointCommRecord> rollBacked) {
+  public void setRollBacked(List<R> rollBacked) {
     this.rollBacked = rollBacked;
-  }
-
-  public CodeNameType getUsingGradeType() {
-    return usingGradeType;
-  }
-
-  public void setUsingGradeType(CodeNameType usingGradeType) {
-    this.usingGradeType = usingGradeType;
   }
 
   public Trancd getTrancd() {
@@ -137,15 +137,16 @@ public class PointCommOperationResult {
     return detailMap;
   }
 
-  public void setDetailMap(Map<PlatformType, BigDecimal> detailMap) {
+  public void setDetailMap(
+      Map<PlatformType, BigDecimal> detailMap) {
     this.detailMap = detailMap;
   }
 
-  public List<? extends BasePointCommRecord> getCurrRecords() {
-    return currRecords;
+  public CodeNameType getUsingGradeType() {
+    return usingGradeType;
   }
 
-  public void setCurrRecords(List<? extends BasePointCommRecord> currRecords) {
-    this.currRecords = currRecords;
+  public void setUsingGradeType(CodeNameType usingGradeType) {
+    this.usingGradeType = usingGradeType;
   }
 }
