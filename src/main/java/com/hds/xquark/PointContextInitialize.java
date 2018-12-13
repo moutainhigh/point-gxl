@@ -43,11 +43,11 @@ public class PointContextInitialize {
     return this.pointCommService;
   }
 
-  public PointService getPointServiceNew() {
-    return this.pointService;
+  public CommissionService getCommissionService() {
+    return commissionService;
   }
 
-  public CommissionService getCommissionService() {
-    return this.commissionService;
+  public PointService getPointServiceNew() {
+    return pointService;
   }
 }

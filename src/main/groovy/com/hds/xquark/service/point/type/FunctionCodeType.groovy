@@ -1,5 +1,8 @@
 package com.hds.xquark.service.point.type
 
+import com.hds.xquark.dal.type.Trancd
+import org.apache.commons.lang3.tuple.Pair
+
 /**
  * @author wangxinhua.
  * @date 2018/12/12
@@ -74,7 +77,35 @@ enum FunctionCodeType {
     /**
      * 发放冻结积分
      */
-    RELEASE_COMMISSION("2006");
+    RELEASE_COMMISSION("2006"),
+
+    /**
+     * 积分提现
+     */
+    WITH_DRAW_COMMISSION("2007"),
+
+    /**
+     * 退货订单收益补偿
+     */
+    REFUND_WITH_DRAW_GRANT("2008")
+
+
+    /**
+     * 发放红包
+     */
+    static Pair<FunctionCodeType, Trancd> PACKET_SEND = Pair.of(CONSUME_PACKET_POINT,
+        Trancd.PACKET_POINT)
+
+    /**
+     * 回退红包
+     */
+    static Pair<FunctionCodeType, Trancd> PACKET_RETURN = Pair.of(RETURN_PACKET_POINT,
+        Trancd.PACKET_POINT)
+
+    /**
+     * 退货订单积分补偿
+     */
+    static Pair<FunctionCodeType, Trancd> LOGISTIC_PAY_BACK = Pair.of(WITH_DRAW_COMMISSION, Trancd.REWARD_C)
 
     private final String code
 

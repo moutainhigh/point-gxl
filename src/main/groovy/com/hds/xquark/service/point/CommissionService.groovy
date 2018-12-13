@@ -70,7 +70,7 @@ class CommissionService implements TokenService<CommissionTotal, CommissionRecor
         checkNotNull(grade, "规则代码无效")
         def operator = PointOperatorFactory.getOperator(grade.getCodeName())
         def ret = operator.doOperation(cpId, bizId, grade, platform, amount, PointOperateType.COMMISSION, bizPack.getRight())
-//        saveRet(bizId, grade, ret, operator, CommissionRecord.class, TotalAuditType.API)
+        saveRet(bizId, grade, ret, operator, CommissionRecord.class, TotalAuditType.API)
         ret
     }
 }

@@ -68,7 +68,7 @@ class PointService implements TokenService<PointTotal, PointRecord> {
         checkNotNull(grade, "规则代码无效")
         def operator = PointOperatorFactory.getOperator(grade.getCodeName())
         def ret = operator.doOperation(cpId, bizId, grade, platform, amount, PointOperateType.POINT, bizPack.getRight())
-//        saveRet(bizId, grade, ret, operator, PointRecord.class, TotalAuditType.API)
+        saveRet(bizId, grade, ret, operator, PointRecord.class, TotalAuditType.API)
         ret
     }
 }
