@@ -93,19 +93,19 @@ enum FunctionCodeType {
     /**
      * 发放红包
      */
-    static Pair<FunctionCodeType, Trancd> PACKET_SEND = Pair.of(CONSUME_PACKET_POINT,
+    static Pair<FunctionCodeType, Trancd> packetSend = Pair.of(CONSUME_PACKET_POINT,
         Trancd.PACKET_POINT)
 
     /**
      * 回退红包
      */
-    static Pair<FunctionCodeType, Trancd> PACKET_RETURN = Pair.of(RETURN_PACKET_POINT,
+    static Pair<FunctionCodeType, Trancd> packetReturn = Pair.of(RETURN_PACKET_POINT,
         Trancd.PACKET_POINT)
 
     /**
      * 退货订单积分补偿
      */
-    static Pair<FunctionCodeType, Trancd> LOGISTIC_PAY_BACK = Pair.of(WITH_DRAW_COMMISSION, Trancd.REWARD_C)
+    static Pair<FunctionCodeType, Trancd> logisticPayBack = Pair.of(REFUND_WITH_DRAW_GRANT, Trancd.REWARD_C)
 
     private final String code
 

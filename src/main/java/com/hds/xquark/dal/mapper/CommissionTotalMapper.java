@@ -18,6 +18,8 @@ public interface CommissionTotalMapper {
 
   int updateByPrimaryKey(CommissionTotal record);
 
+  int updateByCpId(CommissionTotal record);
+
   void grantWithProcedure(
       @Param("cpId") Long cpId, @Param("source") int source, @Param("val") BigDecimal val,
       @Param("trancd") String trancd, @Param("desc") String desc);

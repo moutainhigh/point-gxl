@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point
 
+import com.hds.xquark.dal.constrant.PointConstrants
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper
 import com.hds.xquark.dal.mapper.PointTotalMapper
 import com.hds.xquark.dal.model.PointRecord
@@ -13,11 +14,11 @@ import org.apache.commons.lang3.tuple.Pair
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import static com.google.common.base.Preconditions.checkArgument
 import static com.google.common.base.Preconditions.checkNotNull
 
 /**
- * @author wangxinhua.
- * @date 2018/12/12
+ * @author wangxinhua.* @date 2018/12/12
  */
 @Service("PointService")
 class PointService implements TokenService<PointTotal, PointRecord> {
@@ -47,6 +48,11 @@ class PointService implements TokenService<PointTotal, PointRecord> {
     }
 
     @Override
+    boolean updateByCpId(PointTotal total, TotalAuditType auditType) {
+        pointTotalMapper.updateByCpId(total)
+    }
+
+    @Override
     boolean saveTotal(PointTotal total, TotalAuditType totalAuditType) {
         saveAudit(total, AuditType.INSERT, totalAuditType)
         pointTotalMapper.insert(total)
@@ -66,6 +72,7 @@ class PointService implements TokenService<PointTotal, PointRecord> {
         def funcCodeType = bizPack.getLeft()
         def grade = pointGradeService.loadByFunctionCode(funcCodeType.getCode())
         checkNotNull(grade, "规则代码无效")
+        checkArgument(grade.codeNumber.startsWith(PointConstrants.POINT_CATEGORY as String), "规则代码不匹配")
         def operator = PointOperatorFactory.getOperator(grade.getCodeName())
         def ret = operator.doOperation(cpId, bizId, grade, platform, amount, PointOperateType.POINT, bizPack.getRight())
         saveRet(bizId, grade, ret, operator, PointRecord.class, TotalAuditType.API)

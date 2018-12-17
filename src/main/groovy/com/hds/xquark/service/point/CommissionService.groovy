@@ -1,11 +1,11 @@
 package com.hds.xquark.service.point
 
+import com.hds.xquark.dal.constrant.PointConstrants
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper
 import com.hds.xquark.dal.mapper.CommissionTotalMapper
 import com.hds.xquark.dal.model.CommissionRecord
 import com.hds.xquark.dal.model.CommissionTotal
 import com.hds.xquark.dal.model.CommissionTotalAudit
-import com.hds.xquark.dal.model.PointTotalAudit
 import com.hds.xquark.dal.type.AuditType
 import com.hds.xquark.dal.type.PlatformType
 import com.hds.xquark.dal.type.PointOperateType
@@ -17,6 +17,9 @@ import com.hds.xquark.service.point.type.FunctionCodeType
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
+import static com.google.common.base.Preconditions.checkNotNull
+import static com.google.common.base.Preconditions.checkArgument
 
 /**
  * @author wangxinhua.
@@ -49,6 +52,11 @@ class CommissionService implements TokenService<CommissionTotal, CommissionRecor
     }
 
     @Override
+    boolean updateByCpId(CommissionTotal total, TotalAuditType auditType) {
+        commissionTotalMapper.updateByCpId(total)
+    }
+
+    @Override
     boolean saveTotal(CommissionTotal total, TotalAuditType totalAuditType) {
         saveAudit(total, AuditType.INSERT, totalAuditType)
         commissionTotalMapper.insert(total)
@@ -68,6 +76,7 @@ class CommissionService implements TokenService<CommissionTotal, CommissionRecor
         def funcCodeType = bizPack.getLeft()
         def grade = pointGradeService.loadByFunctionCode(funcCodeType.getCode())
         checkNotNull(grade, "规则代码无效")
+        checkArgument(grade.codeNumber.startsWith(PointConstrants.COMMISSION_CATEGORY as String), "规则代码不匹配")
         def operator = PointOperatorFactory.getOperator(grade.getCodeName())
         def ret = operator.doOperation(cpId, bizId, grade, platform, amount, PointOperateType.COMMISSION, bizPack.getRight())
         saveRet(bizId, grade, ret, operator, CommissionRecord.class, TotalAuditType.API)

@@ -37,6 +37,8 @@ interface TokenService<T extends BasePointCommTotal, R extends BasePointCommReco
      */
     boolean updateTotal(T total, TotalAuditType totalAuditType)
 
+    boolean updateByCpId(T total, TotalAuditType totalAuditType)
+
     /**
      * 保存总额
      * @param total 总额对象

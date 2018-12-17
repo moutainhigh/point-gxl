@@ -2,6 +2,8 @@ package com.hds.xquark.service.point.impl;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.model.BasePointCommAsst;
+import com.hds.xquark.dal.model.CommissionRecord;
+import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
@@ -30,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PointOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 3000000L;
+  private final Long cpId = 3006431L;
 
   private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
 
@@ -254,10 +256,17 @@ public class PointOperationTest extends BaseOperationTest {
   @Test
   public void testPointNew() {
 //    getInitialize().getPointService().loadByCpId(cpId);
-    PointCommOperationResult<PointTotal, PointRecord> modify = getInitialize().getPointServiceNew()
-        .modify(cpId, getBizId(), Pair.of(FunctionCodeType.CONSUME_PACKET_POINT,
-            Trancd.PACKET_POINT), PlatformType.E, BigDecimal.valueOf(10));
-    System.out.println(modify);
+//    PointCommOperationResult<PointTotal, PointRecord> modify = getInitialize().getPointServiceNew()
+//        .modify(cpId, getBizId(), FunctionCodeType.getPacketSend(), PlatformType.E,
+//            BigDecimal.valueOf(10));
+//    System.out.println(modify);
+//    PointTotal pointTotal = getInitialize().getPointServiceNew().loadTotal(cpId);
+
+    PointTotal forUpdate = new PointTotal();
+    forUpdate.setCpId(cpId);
+    forUpdate.setUsablePointPacket(BigDecimal.valueOf(20000));
+    getInitialize().getPointServiceNew().updateByCpId(forUpdate, TotalAuditType.API);
+    System.out.println(forUpdate);
   }
 
   private String getBizId() {

@@ -24,6 +24,8 @@ public class PointTotal extends BasePointCommTotal {
 
   private BigDecimal usablePointEcomm;
 
+  private BigDecimal usablePointPacket;
+
   private BigDecimal freezedPointEcomm;
 
   @JsonIgnore
@@ -140,6 +142,14 @@ public class PointTotal extends BasePointCommTotal {
     setFreezedPointEcomm(freezedEcomm);
   }
 
+  public BigDecimal getUsablePointPacket() {
+    return usablePointPacket;
+  }
+
+  public void setUsablePointPacket(BigDecimal usablePointPacket) {
+    this.usablePointPacket = usablePointPacket;
+  }
+
   @Override
   protected BasePointCommTotal getInstance() {
     return new PointTotal();
@@ -153,6 +163,7 @@ public class PointTotal extends BasePointCommTotal {
         ", usablePointViviLife=" + usablePointViviLife +
         ", freezedPointViviLife=" + freezedPointViviLife +
         ", usablePointEcomm=" + usablePointEcomm +
+        ", usablePointPacket=" + usablePointPacket +
         ", freezedPointEcomm=" + freezedPointEcomm +
         '}';
   }
