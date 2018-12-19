@@ -24,7 +24,7 @@ public class PointTotal extends BasePointCommTotal {
 
   private BigDecimal usablePointEcomm;
 
-  private BigDecimal usablePointPacket;
+  private BigDecimal usablePointPacket = BigDecimal.ZERO;
 
   private BigDecimal freezedPointEcomm;
 
@@ -144,6 +144,10 @@ public class PointTotal extends BasePointCommTotal {
 
   public BigDecimal getUsablePointPacket() {
     return usablePointPacket;
+  }
+
+  public BigDecimal getTotalUsableWithPacket() {
+    return getTotalUsable().add(getUsablePointPacket());
   }
 
   public void setUsablePointPacket(BigDecimal usablePointPacket) {

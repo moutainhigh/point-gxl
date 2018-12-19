@@ -1,8 +1,10 @@
 package com.hds.xquark.service.point
 
+import com.google.common.base.Optional
 import com.hds.xquark.dal.constrant.PointConstrants
 import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper
 import com.hds.xquark.dal.mapper.CommissionTotalMapper
+import com.hds.xquark.dal.model.BasePointCommTotal
 import com.hds.xquark.dal.model.CommissionRecord
 import com.hds.xquark.dal.model.CommissionTotal
 import com.hds.xquark.dal.model.CommissionTotalAudit
@@ -41,8 +43,19 @@ class CommissionService implements TokenService<CommissionTotal, CommissionRecor
     }
 
     @Override
-    CommissionTotal loadTotal(Long cpId) {
-        commissionTotalMapper.selectByCpId(cpId)
+    Optional<CommissionTotal> loadTotal(Long cpId) {
+        Optional.fromNullable(commissionTotalMapper.selectByCpId(cpId))
+    }
+
+    @Override
+    CommissionTotal initTotal(Long cpId) {
+        boolean isExists = commissionTotalMapper.selectTotalExists(cpId)
+        if (isExists) {
+            return loadTotal(cpId).get()
+        }
+        CommissionTotal total = BasePointCommTotal.emptyInfo(cpId, CommissionTotal.class)
+        commissionTotalMapper.insert(total)
+        total
     }
 
     @Override

@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PointOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 3006431L;
+  private final Long cpId = 3111111L;
 
   private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
 
@@ -262,7 +262,7 @@ public class PointOperationTest extends BaseOperationTest {
 //    System.out.println(modify);
 //    PointTotal pointTotal = getInitialize().getPointServiceNew().loadTotal(cpId);
 
-    PointTotal forUpdate = new PointTotal();
+    PointTotal forUpdate = getInitialize().getPointServiceNew().initTotal(cpId);
     forUpdate.setCpId(cpId);
     forUpdate.setUsablePointPacket(BigDecimal.valueOf(20000));
     getInitialize().getPointServiceNew().updateByCpId(forUpdate, TotalAuditType.API);
