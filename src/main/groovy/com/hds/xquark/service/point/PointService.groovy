@@ -1,8 +1,11 @@
 package com.hds.xquark.service.point
 
+import com.google.common.base.Optional
 import com.hds.xquark.dal.constrant.PointConstrants
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper
 import com.hds.xquark.dal.mapper.PointTotalMapper
+import com.hds.xquark.dal.model.BasePointCommTotal
+import com.hds.xquark.dal.model.CommissionTotal
 import com.hds.xquark.dal.model.PointRecord
 import com.hds.xquark.dal.model.PointTotal
 import com.hds.xquark.dal.model.PointTotalAudit
@@ -37,8 +40,19 @@ class PointService implements TokenService<PointTotal, PointRecord> {
     }
 
     @Override
-    PointTotal loadTotal(Long cpId) {
-        pointTotalMapper.selectByCpId(cpId)
+    Optional<PointTotal> loadTotal(Long cpId) {
+        Optional.fromNullable(pointTotalMapper.selectByCpId(cpId))
+    }
+
+    @Override
+    PointTotal initTotal(Long cpId) {
+        def isExists = pointTotalMapper.selectTotalExists(cpId)
+        if (isExists) {
+            return loadTotal(cpId).get()
+        }
+        PointTotal total = BasePointCommTotal.emptyInfo(cpId, PointTotal.class)
+        pointTotalMapper.insert(total)
+        total
     }
 
     @Override
