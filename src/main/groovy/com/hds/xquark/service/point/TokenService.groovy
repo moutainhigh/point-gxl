@@ -33,9 +33,9 @@ interface TokenService<T extends BasePointCommTotal, R extends BasePointCommReco
      * @param total 总额对象
      * @return 插入结果
      */
-    boolean updateTotal(T total, TotalAuditType totalAuditType)
+    boolean updateTotal(T total)
 
-    boolean updateByCpId(T total, TotalAuditType totalAuditType)
+    boolean updateByCpId(T total)
 
     /**
      * 保存总额
@@ -43,9 +43,9 @@ interface TokenService<T extends BasePointCommTotal, R extends BasePointCommReco
      * @param totalAuditType 审核类型
      * @return 保存结果
      */
-    boolean saveTotal(T total, TotalAuditType totalAuditType)
+    boolean saveTotal(T total)
 
-    boolean saveAudit(T total, AuditType auditType, TotalAuditType totalAuditType)
+    boolean saveAudit(T total, AuditType auditType)
 
     /**
      * 操作总额并追加相应的记录
@@ -69,7 +69,7 @@ trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
      * @param total 总额对象
      * @return 插入结果
      */
-    abstract boolean updateTotal(T total, TotalAuditType totalAuditType)
+    abstract boolean updateTotal(T total)
 
     /**
      * 保存总额
@@ -77,7 +77,7 @@ trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
      * @param totalAuditType 审核类型
      * @return 保存结果
      */
-    abstract boolean saveTotal(T total, TotalAuditType totalAuditType)
+    abstract boolean saveTotal(T total)
 
     /**
      * 保存结果
@@ -98,8 +98,8 @@ trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
 
         // 更新或保存用户积分信息
         T infoAfter = operationResult.getInfoAfter()
-        boolean ret = infoAfter.getId() == null ? saveTotal(infoAfter, auditType)
-                : updateTotal(infoAfter, auditType)
+        boolean ret = infoAfter.getId() == null ? saveTotal(infoAfter)
+                : updateTotal(infoAfter)
         if (!ret) {
             throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
         }

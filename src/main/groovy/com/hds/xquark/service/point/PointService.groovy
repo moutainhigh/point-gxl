@@ -42,28 +42,28 @@ class PointService implements TokenService<PointTotal, PointRecord> {
     }
 
     @Override
-    boolean updateTotal(PointTotal total, TotalAuditType auditType) {
-        saveAudit(total, AuditType.UPDATE, auditType)
+    boolean updateTotal(PointTotal total) {
+        saveAudit(total, AuditType.UPDATE)
         pointTotalMapper.updateByPrimaryKeySelective(total)
     }
 
     @Override
-    boolean updateByCpId(PointTotal total, TotalAuditType auditType) {
+    boolean updateByCpId(PointTotal total) {
         pointTotalMapper.updateByCpId(total)
     }
 
     @Override
-    boolean saveTotal(PointTotal total, TotalAuditType totalAuditType) {
-        saveAudit(total, AuditType.INSERT, totalAuditType)
+    boolean saveTotal(PointTotal total) {
+        saveAudit(total, AuditType.INSERT)
         pointTotalMapper.insert(total)
     }
 
     @Override
-    boolean saveAudit(PointTotal total, AuditType auditType, TotalAuditType totalAuditType) {
+    boolean saveAudit(PointTotal total, AuditType auditType) {
         PointTotalAudit audit = Transformer.fromBean(total, PointTotalAudit.class)
         audit.setId(total.getId())
         audit.setAuditType(auditType.getCode())
-        audit.setAuditUser(totalAuditType.name())
+        audit.setAuditUser(TotalAuditType.API.name())
         pointTotalAuditMapper.insert(audit) > 0
     }
 

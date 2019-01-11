@@ -46,28 +46,28 @@ class CommissionService implements TokenService<CommissionTotal, CommissionRecor
     }
 
     @Override
-    boolean updateTotal(CommissionTotal total, TotalAuditType auditType) {
-        saveAudit(total, AuditType.UPDATE, auditType)
+    boolean updateTotal(CommissionTotal total) {
+        saveAudit(total, AuditType.UPDATE)
         commissionTotalMapper.updateByPrimaryKeySelective(total)
     }
 
     @Override
-    boolean updateByCpId(CommissionTotal total, TotalAuditType auditType) {
+    boolean updateByCpId(CommissionTotal total) {
         commissionTotalMapper.updateByCpId(total)
     }
 
     @Override
-    boolean saveTotal(CommissionTotal total, TotalAuditType totalAuditType) {
-        saveAudit(total, AuditType.INSERT, totalAuditType)
+    boolean saveTotal(CommissionTotal total) {
+        saveAudit(total, AuditType.INSERT)
         commissionTotalMapper.insert(total)
     }
 
     @Override
-    boolean saveAudit(CommissionTotal total, AuditType auditType, TotalAuditType totalAuditType) {
+    boolean saveAudit(CommissionTotal total, AuditType auditType) {
         CommissionTotalAudit audit = Transformer.fromBean(total, CommissionTotalAudit.class)
         audit.setId(total.getId())
         audit.setAuditType(auditType.getCode())
-        audit.setAuditUser(totalAuditType.name())
+        audit.setAuditUser(TotalAuditType.API.name())
         commissionTotalAuditMapper.insert(audit) > 0
     }
 
