@@ -47,8 +47,10 @@ public enum Trancd {
   CBM2("立省值2"),
   ACHA1("VIP首单推荐奖1"),
   ACHA2("VIP首单推荐奖2"),
-  SOCIAL_P("社区德分");
-
+  SOCIAL_P("社区德分"),
+  PACKET_POINT("德分红包"),
+  TRANSFER_C("德分转换"),
+  TRANSFER_P("转为收益");
   private final String desc;
 
   Trancd(String desc) {
