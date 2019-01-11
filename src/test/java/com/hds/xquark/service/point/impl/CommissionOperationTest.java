@@ -4,6 +4,7 @@ import static com.hds.xquark.dal.type.TotalAuditType.API;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.model.CommissionTotal;
+import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommissionOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 3000000L;
+  private final Long cpId = 3111111L;
   private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
 
   private final TotalAuditType auditType = API;
@@ -182,6 +183,22 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void testListVO() {
     Assert.assertNotNull(pointCommService.listCommissionRecords(cpId, null, null, null));
+  }
+
+  @Test
+  public void testPointNew() {
+//    getInitialize().getPointService().loadByCpId(cpId);
+//    PointCommOperationResult<PointTotal, PointRecord> modify = getInitialize().getPointServiceNew()
+//        .modify(cpId, getBizId(), FunctionCodeType.getPacketSend(), PlatformType.E,
+//            BigDecimal.valueOf(10));
+//    System.out.println(modify);
+//    PointTotal pointTotal = getInitialize().getPointServiceNew().loadTotal(cpId);
+
+    CommissionTotal forUpdate = getInitialize().getCommissionService().initTotal(cpId);
+    forUpdate.setCpId(cpId);
+    forUpdate.setUsableCommHds(BigDecimal.valueOf(20000));
+    getInitialize().getCommissionService().updateByCpId(forUpdate, TotalAuditType.API);
+    System.out.println(forUpdate);
   }
 
 }

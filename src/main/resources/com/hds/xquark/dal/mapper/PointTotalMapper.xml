@@ -46,6 +46,11 @@
     CALL GrantPoint(#{cpId,jdbcType=BIGINT}, #{source,jdbcType=INTEGER}, #{val,jdbcType=DECIMAL},
                     #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
   </select>
+  <select id="selectTotalExists" resultType="java.lang.Boolean">
+    select exists(
+      select 1 from pointTotal where cpId = #{cpId}
+             )
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete

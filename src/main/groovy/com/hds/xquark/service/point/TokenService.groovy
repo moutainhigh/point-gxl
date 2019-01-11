@@ -1,5 +1,6 @@
 package com.hds.xquark.service.point
 
+import com.google.common.base.Optional
 import com.hds.xquark.dal.model.BasePointCommRecord
 import com.hds.xquark.dal.model.BasePointCommTotal
 import com.hds.xquark.dal.model.GradeCode
@@ -26,7 +27,14 @@ interface TokenService<T extends BasePointCommTotal, R extends BasePointCommReco
      * @param cpId 用户id
      * @return 总额
      */
-    T loadTotal(Long cpId)
+    Optional<T> loadTotal(Long cpId)
+
+    /**
+     * 初始化积分数据
+     * @param cpId 用户id
+     * @return
+     */
+    T initTotal(Long cpId)
 
     /**
      * 更新总额
@@ -101,7 +109,7 @@ trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
         boolean ret = infoAfter.getId() == null ? saveTotal(infoAfter)
                 : updateTotal(infoAfter)
         if (!ret) {
-            throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试");
+            throw new BizException(GlobalErrorCode.INTERNAL_ERROR, "内部错误, 请稍后再试")
         }
         operationResult.setCurrRecords(records)
     }
