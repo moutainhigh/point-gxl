@@ -137,6 +137,13 @@ public class PointTotal extends BasePointCommTotal {
     return getFreezedPointEcomm();
   }
 
+  /**
+   * 德分+红包
+   */
+  public BigDecimal getTotalUsableWithPacket() {
+    return getTotalUsable().add(getUsablePointPacket());
+  }
+
   @Override
   public void setFreezedEcomm(BigDecimal freezedEcomm) {
     setFreezedPointEcomm(freezedEcomm);

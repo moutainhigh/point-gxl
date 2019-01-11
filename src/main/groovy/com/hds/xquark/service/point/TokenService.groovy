@@ -14,8 +14,6 @@ import com.hds.xquark.service.point.type.FunctionCodeType
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.transaction.annotation.Transactional
 
-import java.lang.invoke.MethodHandleImpl
-
 /**
  * @author wangxinhua.* @date 2018/12/12
  * 统一代币service, 代币可以指积分、德分等
