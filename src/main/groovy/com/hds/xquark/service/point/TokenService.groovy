@@ -12,7 +12,9 @@ import com.hds.xquark.service.error.BizException
 import com.hds.xquark.service.error.GlobalErrorCode
 import com.hds.xquark.service.point.operator.BasePointCommOperator
 import com.hds.xquark.service.point.type.FunctionCodeType
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.tuple.Pair
+import org.apache.log4j.Logger
 import org.springframework.transaction.annotation.Transactional
 
 /**
@@ -67,10 +69,34 @@ interface TokenService<T extends BasePointCommTotal, R extends BasePointCommReco
     PointCommOperationResult<T, R> modify(Long cpId, String bizId,
                                           Pair<FunctionCodeType, Trancd> bizPack, PlatformType platform,
                                           BigDecimal amount)
+    /**
+     * 消费总额并追加记录
+     * @param cpId 用户id
+     * @param bizId 业务id
+     * @param tranCode 业务code
+     * @param platform 操作平台
+     * @param amount 操作数量
+     * @return 操作结果
+     */
+    PointCommOperationResult<T, R> consume(Long cpId, String bizId, Trancd tranCode, PlatformType platform,
+                                           BigDecimal amount)
 
+    /**
+     * 增加总额并追加记录
+     * @param cpId 用户id
+     * @param bizId 业务id
+     * @param tranCode 业务code
+     * @param platform 操作平台
+     * @param amount 操作数量
+     * @return 操作结果
+     */
+    PointCommOperationResult<T, R> grant(Long cpId, String bizId, Trancd tranCode, PlatformType platform,
+                                         BigDecimal amount)
 }
 
 trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
+
+    Logger LOGGER = Logger.getLogger(TokenTrait.class.name)
 
     /**
      * 更新总额
@@ -86,6 +112,58 @@ trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
      * @return 保存结果
      */
     abstract boolean saveTotal(T total)
+
+    /**
+     * 操作总额并追加相应的记录
+     * @param cpId 用户id
+     * @param bizId 业务id
+     * @param bizPack 业务包装
+     * @param platform 操作平台
+     * @param amount 操作数量
+     * @return 操作结果
+     */
+    abstract PointCommOperationResult<T, R> modify(Long cpId, String bizId,
+                                                   Pair<FunctionCodeType, Trancd> bizPack, PlatformType platform,
+                                                   BigDecimal amount)
+
+    /**
+     * 获取当前service的转换code
+     * @return Trancd
+     */
+    abstract Trancd transferCode();
+
+    /**
+     * 消费总额并追加记录
+     * @param cpId 用户id
+     * @param bizId 业务id
+     * @param tranCode 业务code
+     * @param platform 操作平台
+     * @param amount 操作数量
+     * @return 操作结果
+     */
+    abstract PointCommOperationResult<T, R> consume(Long cpId, String bizId, Trancd tranCode, PlatformType platform,
+                                                    BigDecimal amount)
+
+    /**
+     * 从自身消费并转换到 target service中
+     * @param cpId cpId
+     * @param amount 数量
+     * @param target 目标service
+     * @return 是否成功
+     */
+    @Transactional(rollbackFor = Exception.class)
+    void transform(Long cpId, BigDecimal amount, PlatformType platform, TokenService target) {
+        def thisCode = transferCode()
+        def targetCode = target.transferCode()
+        try {
+            consume(cpId, "${StringUtils.substringBefore(getClass().name, 'Service').toLowerCase()} transfer", thisCode, platform, amount)
+            target.grant(cpId, "${StringUtils.substringBefore(target.class.name, 'Service').toLowerCase()} transfer", targetCode, platform, amount)
+            LOGGER.info("cpId: $cpId :: transfer $thisCode => $targetCode with amount $amount")
+        } catch (Exception e) {
+            LOGGER.error("cpId :$cpId :: $thisCode => $targetCode 转换失败", e)
+            throw new BizException(GlobalErrorCode.TRANSFORM_ERROR)
+        }
+    }
 
     /**
      * 保存结果

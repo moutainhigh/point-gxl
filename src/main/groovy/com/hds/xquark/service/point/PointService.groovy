@@ -92,4 +92,19 @@ class PointService implements TokenService<PointTotal, PointRecord> {
         saveRet(bizId, grade, ret, operator, PointRecord.class, TotalAuditType.API)
         ret
     }
+
+    @Override
+    PointCommOperationResult<PointTotal, PointRecord> consume(Long cpId, String bizId, Trancd tranCode, PlatformType platform, BigDecimal amount) {
+        modify(cpId, bizId, Pair.of(FunctionCodeType.CONSUME_POINT, tranCode), platform, amount)
+    }
+
+    @Override
+    PointCommOperationResult<PointTotal, PointRecord> grant(Long cpId, String bizId, Trancd tranCode, PlatformType platform, BigDecimal amount) {
+        modify(cpId, bizId, Pair.of(FunctionCodeType.GRANT_POINT, tranCode), platform, amount)
+    }
+
+    @Override
+    Trancd transferCode() {
+        Trancd.TRANSFER_P
+    }
 }

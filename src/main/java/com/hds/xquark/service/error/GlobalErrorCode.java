@@ -14,6 +14,8 @@ public enum GlobalErrorCode {
 
   COMMISSION_NOT_ENOUGH(8000003, "德分不足"),
 
+  TRANSFORM_ERROR(8000022, "德分、积分转换失败"),
+
   POINT_RECORD_NOT_FOUNT(8000004, "找不到积分记录"),
 
   COMMISSION_RECORD_NOT_FOUNT(8000005, "找不到德分记录"),

@@ -95,4 +95,19 @@ class CommissionService implements TokenService<CommissionTotal, CommissionRecor
         saveRet(bizId, grade, ret, operator, CommissionRecord.class, TotalAuditType.API)
         ret
     }
+
+    @Override
+    PointCommOperationResult<CommissionTotal, CommissionRecord> consume(Long cpId, String bizId, Trancd tranCode, PlatformType platform, BigDecimal amount) {
+        modify(cpId, bizId, Pair.of(FunctionCodeType.CONSUME_COMMISSION, tranCode), platform, amount)
+    }
+
+    @Override
+    PointCommOperationResult<CommissionTotal, CommissionRecord> grant(Long cpId, String bizId, Trancd tranCode, PlatformType platform, BigDecimal amount) {
+        modify(cpId, bizId, Pair.of(FunctionCodeType.GRANT_COMMISSION, tranCode), platform, amount)
+    }
+
+    @Override
+    Trancd transferCode() {
+        Trancd.TRANSFER_C
+    }
 }

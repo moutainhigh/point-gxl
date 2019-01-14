@@ -1,7 +1,10 @@
 package com.hds.xquark.service.point.impl;
 
 import com.hds.xquark.PointContextInitialize;
+import com.hds.xquark.dal.model.BasePointCommRecord;
+import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.service.point.PointCommService;
+import com.hds.xquark.service.point.TokenService;
 import javax.sql.DataSource;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.junit.Before;
@@ -11,7 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 /**
  * @author wangxinhua on 2018/7/27. DESC:
  */
-public abstract class BaseOperationTest {
+public abstract class BaseOperationTest<T extends TokenService> {
 
   PointCommService pointCommService;
   private PointContextInitialize initialize;
@@ -28,7 +31,13 @@ public abstract class BaseOperationTest {
     pointCommService = this.initialize.getPointService();
   }
 
+  protected abstract T getTokenService();
+
   public PointContextInitialize getInitialize() {
     return initialize;
+  }
+
+  public void testTransform() {
+
   }
 }

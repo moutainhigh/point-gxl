@@ -8,6 +8,7 @@ import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommOperationResult;
+import com.hds.xquark.service.point.PointService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -25,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author wangxinhua at 18-6-16 上午11:57
  */
 @Transactional
-public class PointOperationTest extends BaseOperationTest {
+public class PointOperationTest extends BaseOperationTest<PointService> {
 
   private final Long cpId = 3111111L;
 
@@ -34,6 +35,11 @@ public class PointOperationTest extends BaseOperationTest {
   private final TotalAuditType auditType = TotalAuditType.DTS;
 
   private final static Logger LOGGER = Logger.getLogger(PointOperationTest.class);
+
+  @Override
+  protected PointService getTokenService() {
+    return getInitialize().getPointServiceApi();
+  }
 
   @Test
   public void testBase() {
@@ -245,7 +251,6 @@ public class PointOperationTest extends BaseOperationTest {
   @Test
   public void testRollbackAsst() {
     testConsumeRollBack();
-
   }
 
   @Test
@@ -257,7 +262,7 @@ public class PointOperationTest extends BaseOperationTest {
 //    System.out.println(modify);
 //    PointTotal pointTotal = getInitialize().getPointServiceApi().loadTotal(cpId);
 
-    PointTotal forUpdate = getInitialize().getPointServiceNew().initTotal(cpId);
+    PointTotal forUpdate = getInitialize().getPointServiceApi().initTotal(cpId);
     forUpdate.setCpId(cpId);
     forUpdate.setUsablePointPacket(BigDecimal.valueOf(20000));
     getInitialize().getPointServiceApi().updateByCpId(forUpdate);
