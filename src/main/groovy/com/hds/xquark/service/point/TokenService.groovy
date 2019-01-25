@@ -17,6 +17,8 @@ import org.apache.commons.lang3.tuple.Pair
 import org.apache.log4j.Logger
 import org.springframework.transaction.annotation.Transactional
 
+import java.math.RoundingMode
+
 /**
  * @author wangxinhua.* @date 2018/12/12
  * 统一代币service, 代币可以指积分、德分等
@@ -148,21 +150,19 @@ trait TokenTrait<T extends BasePointCommTotal, R extends BasePointCommRecord> {
      * 从自身消费并转换到 target service中
      * @param cpId cpId
      * @param amount 数量
+     * @param platform 平台类型
+     * @param rate 转换倍率
      * @param target 目标service
      * @return 是否成功
      */
     @Transactional(rollbackFor = Exception.class)
-    void transform(Long cpId, BigDecimal amount, PlatformType platform, TokenService target) {
+    void transform(Long cpId, BigDecimal amount, PlatformType platform, BigDecimal rate, TokenService target) {
         def thisCode = transferCode()
         def targetCode = target.transferCode()
-        try {
-            consume(cpId, "${StringUtils.substringBefore(getClass().name, 'Service').toLowerCase()} transfer", thisCode, platform, amount)
-            target.grant(cpId, "${StringUtils.substringBefore(target.class.name, 'Service').toLowerCase()} transfer", targetCode, platform, amount)
-            LOGGER.info("cpId: $cpId :: transfer $thisCode => $targetCode with amount $amount")
-        } catch (Exception e) {
-            LOGGER.error("cpId :$cpId :: $thisCode => $targetCode 转换失败", e)
-            throw new BizException(GlobalErrorCode.TRANSFORM_ERROR)
-        }
+        consume(cpId, "${StringUtils.substringBefore(getClass().simpleName, 'Service').toLowerCase()} transfer", thisCode, platform, amount)
+        target.grant(cpId, "${StringUtils.substringBefore(target.class.simpleName, 'Service').toLowerCase()} transfer",
+                targetCode, platform, amount.divide(rate, 4, RoundingMode.HALF_EVEN))
+        LOGGER.info("cpId: $cpId :: transfer $thisCode => $targetCode with amount $amount")
     }
 
     /**

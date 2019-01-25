@@ -1,6 +1,7 @@
 package com.hds.xquark.service.point.impl;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
+import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.model.BasePointCommAsst;
 import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.model.PointTotal;
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author wangxinhua at 18-6-16 上午11:57
  */
 @Transactional
-public class PointOperationTest extends BaseOperationTest<PointService> {
+public class PointOperationTest extends BaseOperationTest {
 
   private final Long cpId = 3111111L;
 
@@ -35,11 +36,6 @@ public class PointOperationTest extends BaseOperationTest<PointService> {
   private final TotalAuditType auditType = TotalAuditType.DTS;
 
   private final static Logger LOGGER = Logger.getLogger(PointOperationTest.class);
-
-  @Override
-  protected PointService getTokenService() {
-    return getInitialize().getPointServiceApi();
-  }
 
   @Test
   public void testBase() {
@@ -266,6 +262,7 @@ public class PointOperationTest extends BaseOperationTest<PointService> {
     forUpdate.setCpId(cpId);
     forUpdate.setUsablePointPacket(BigDecimal.valueOf(20000));
     getInitialize().getPointServiceApi().updateByCpId(forUpdate);
+    System.out.println(getInitialize().getPointServiceApi().sumByTrancd(cpId, Trancd.DEDUCT_P));
     System.out.println(forUpdate);
   }
 

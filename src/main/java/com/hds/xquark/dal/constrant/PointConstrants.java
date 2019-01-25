@@ -13,6 +13,10 @@ public class PointConstrants {
 
   public static final int COMMISSION_CATEGORY = 200;
 
+  public static final BigDecimal POINT_TO_COMM_RATE = BigDecimal.valueOf(10);
+
+  public static final BigDecimal COMM_TO_POINT_RATE = BigDecimal.valueOf(0.1);
+
   /**
    * 积分提现下限
    */

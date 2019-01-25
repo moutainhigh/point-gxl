@@ -1,6 +1,7 @@
 package com.hds.xquark.dal.mapper;
 
 import com.hds.xquark.dal.model.PointTotal;
+import com.hds.xquark.dal.type.Trancd;
 import java.math.BigDecimal;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,5 +24,4 @@ public interface PointTotalMapper {
   void grantWithProcedure(
       @Param("cpId") Long cpId, @Param("source") int source, @Param("val") BigDecimal val,
       @Param("trancd") String trancd, @Param("desc") String desc);
-
 }

@@ -3,6 +3,7 @@ package com.hds.xquark.service.point.impl;
 import static com.hds.xquark.dal.type.TotalAuditType.API;
 
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
+import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.model.CommissionTotal;
 import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
@@ -24,17 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @author wangxinhua at 18-6-17 下午2:49
  */
 @Transactional
-public class CommissionOperationTest extends BaseOperationTest<CommissionService> {
+public class CommissionOperationTest extends BaseOperationTest {
 
   private final Long cpId = 3111111L;
   private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
 
   private final TotalAuditType auditType = API;
-
-  @Override
-  protected CommissionService getTokenService() {
-    return getInitialize().getCommissionServiceApi();
-  }
 
   @Test
   public void testFreezeGrantRollBack() {
@@ -207,6 +203,12 @@ public class CommissionOperationTest extends BaseOperationTest<CommissionService
     forUpdate.setUsableCommHds(BigDecimal.valueOf(20000));
     getInitialize().getCommissionServiceApi().updateByCpId(forUpdate);
     System.out.println(forUpdate);
+  }
+
+  @Test
+  public void testTransform() {
+    getCommissionServiceApi().transform(cpId, BigDecimal.valueOf(10), PlatformType.E,
+        PointConstrants.COMM_TO_POINT_RATE, getPointServiceApi());
   }
 
 }

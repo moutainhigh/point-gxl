@@ -3,7 +3,9 @@ package com.hds.xquark.service.point.impl;
 import com.hds.xquark.PointContextInitialize;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
+import com.hds.xquark.service.point.CommissionService;
 import com.hds.xquark.service.point.PointCommService;
+import com.hds.xquark.service.point.PointService;
 import com.hds.xquark.service.point.TokenService;
 import javax.sql.DataSource;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
@@ -14,10 +16,15 @@ import org.springframework.transaction.PlatformTransactionManager;
 /**
  * @author wangxinhua on 2018/7/27. DESC:
  */
-public abstract class BaseOperationTest<T extends TokenService> {
+public abstract class BaseOperationTest {
 
   PointCommService pointCommService;
+
   private PointContextInitialize initialize;
+
+  private PointService pointServiceApi;
+
+  private CommissionService commissionServiceApi;
 
   @Before
   public void init() {
@@ -29,15 +36,20 @@ public abstract class BaseOperationTest<T extends TokenService> {
     PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
     this.initialize = new PointContextInitialize(dataSource, transactionManager);
     pointCommService = this.initialize.getPointService();
-  }
 
-  protected abstract T getTokenService();
+    this.pointServiceApi = this.initialize.getPointServiceApi();
+    this.commissionServiceApi = this.initialize.getCommissionServiceApi();
+  }
 
   public PointContextInitialize getInitialize() {
     return initialize;
   }
 
-  public void testTransform() {
+  public PointService getPointServiceApi() {
+    return pointServiceApi;
+  }
 
+  public CommissionService getCommissionServiceApi() {
+    return commissionServiceApi;
   }
 }

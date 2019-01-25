@@ -110,7 +110,7 @@
       and source = #{source, jdbcType=INTEGER}
     </if>
     and isdeleted = false
-    and trancd != 'DEDUCT_C'
+    and trancd not in ('DEDUCT_C', 'TRANSFER_C')
     union
     select id,
     cpId,
@@ -131,7 +131,7 @@
       and source = #{source, jdbcType=INTEGER}
     </if>
     and isdeleted = false
-    and trancd = 'DEDUCT_C') quaComm
+    and trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
     inner join customerProfile cp on quaComm.cpId = cp.cpId
     inner join gradeCode gc on quaComm.grade_id = gc.id
     where cp.isdeleted = false

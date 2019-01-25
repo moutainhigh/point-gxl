@@ -2,6 +2,7 @@ package com.hds.xquark.service.point
 
 import com.google.common.base.Optional
 import com.hds.xquark.dal.constrant.PointConstrants
+import com.hds.xquark.dal.mapper.PointRecordMapper
 import com.hds.xquark.dal.mapper.PointTotalAuditMapper
 import com.hds.xquark.dal.mapper.PointTotalMapper
 import com.hds.xquark.dal.model.BasePointCommTotal
@@ -14,6 +15,7 @@ import com.hds.xquark.dal.util.Transformer
 import com.hds.xquark.service.point.operator.PointOperatorFactory
 import com.hds.xquark.service.point.type.FunctionCodeType
 import org.apache.commons.lang3.tuple.Pair
+import org.apache.ibatis.annotations.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -28,15 +30,19 @@ class PointService implements TokenService<PointTotal, PointRecord> {
 
     private final PointTotalMapper pointTotalMapper
 
+    private final PointRecordMapper pointRecordMapper
+
     private final PointTotalAuditMapper pointTotalAuditMapper
 
     private final PointGradeService pointGradeService
 
     @Autowired
-    PointService(PointTotalMapper pointTotalMapper, PointTotalAuditMapper pointTotalAuditMapper, PointGradeService pointGradeService) {
+    PointService(PointTotalMapper pointTotalMapper, PointTotalAuditMapper pointTotalAuditMapper,
+                 PointGradeService pointGradeService, PointRecordMapper pointRecordMapper) {
         this.pointTotalMapper = pointTotalMapper
         this.pointTotalAuditMapper = pointTotalAuditMapper
         this.pointGradeService = pointGradeService
+        this.pointRecordMapper = pointRecordMapper
     }
 
     @Override
@@ -101,6 +107,16 @@ class PointService implements TokenService<PointTotal, PointRecord> {
     @Override
     PointCommOperationResult<PointTotal, PointRecord> grant(Long cpId, String bizId, Trancd tranCode, PlatformType platform, BigDecimal amount) {
         modify(cpId, bizId, Pair.of(FunctionCodeType.GRANT_POINT, tranCode), platform, amount)
+    }
+
+    /**
+     * 查询trancd相关的总数
+     * @param cpId cpId
+     * @param trancd trancd
+     * @return 查询record总额
+     */
+    BigDecimal sumByTrancd(Long cpId, Trancd trancd) {
+        pointRecordMapper.sumByTrancd(cpId, trancd)
     }
 
     @Override

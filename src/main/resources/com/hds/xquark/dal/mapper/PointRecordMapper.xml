@@ -242,6 +242,13 @@
                and isdeleted = false
              )
   </select>
+  <select id="sumByTrancd" resultType="java.math.BigDecimal">
+    select sum(curr_point)
+    from pointsuspending
+    where cpid = #{cpId,jdbcType=BIGINT}
+    and trancd = #{trancd,jdbcType=VARCHAR}
+    and isdeleted = false
+  </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update pointsuspending
     set isdeleted = true

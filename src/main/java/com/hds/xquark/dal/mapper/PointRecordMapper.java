@@ -3,6 +3,7 @@ package com.hds.xquark.dal.mapper;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.vo.PointRecordVO;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -61,4 +62,7 @@ public interface PointRecordMapper {
   List<PointRecord> listFreezedRecordAfterDate(@Param("date") Date date);
 
   List<PointRecord> listUnFreezedRecord();
+
+  BigDecimal sumByTrancd(@Param("cpId") Long cpId, @Param("trancd") Trancd trancd);
+
 }
