@@ -243,7 +243,7 @@
              )
   </select>
   <select id="sumByTrancd" resultType="java.math.BigDecimal">
-    select sum(curr_point)
+    select sum(current_point)
     from pointsuspending
     where cpid = #{cpId,jdbcType=BIGINT}
     and trancd = #{trancd,jdbcType=VARCHAR}

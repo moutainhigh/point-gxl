@@ -116,7 +116,7 @@ class PointService implements TokenService<PointTotal, PointRecord> {
      * @return 查询record总额
      */
     BigDecimal sumByTrancd(Long cpId, Trancd trancd) {
-        pointRecordMapper.sumByTrancd(cpId, trancd)
+        Optional.fromNullable(pointRecordMapper.sumByTrancd(cpId, trancd)) | BigDecimal.ZERO
     }
 
     @Override

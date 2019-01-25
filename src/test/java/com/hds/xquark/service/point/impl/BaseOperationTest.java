@@ -30,8 +30,8 @@ public abstract class BaseOperationTest {
   public void init() {
     DataSource dataSource = new PooledDataSource(
         "com.mysql.jdbc.Driver",
-        "jdbc:mysql://rm-uf6o788t14snm5j623o.mysql.rds.aliyuncs.com:1666/hvmall?autoCommit=true&useUnicode=true&autoReconnect=true&characterEncoding=UTF-8",
-        "byyroot",
+        "jdbc:mysql://rm-uf6ll0b4hoso96m0n0o.mysql.rds.aliyuncs.com:3306/hvmall?autoCommit=true&useUnicode=true&autoReconnect=true&characterEncoding=UTF-8",
+        "devhwscrwa",
         "v7&#5efr&777");
     PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
     this.initialize = new PointContextInitialize(dataSource, transactionManager);
