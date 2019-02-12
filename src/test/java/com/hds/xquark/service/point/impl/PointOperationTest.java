@@ -262,7 +262,7 @@ public class PointOperationTest extends BaseOperationTest {
     forUpdate.setCpId(cpId);
     forUpdate.setUsablePointPacket(BigDecimal.valueOf(20000));
     getInitialize().getPointServiceApi().updateByCpId(forUpdate);
-    System.out.println(getInitialize().getPointServiceApi().sumByTrancd(cpId, Trancd.DEDUCT_P));
+    System.out.println(getInitialize().getPointServiceApi().sumByTrancd(cpId, Trancd.LOTTERY_EARN));
     System.out.println(forUpdate);
   }
 
