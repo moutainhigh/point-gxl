@@ -6,59 +6,41 @@ import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC: 积分操作计算结果
- */
+/** @author wangxinhua on 2018/5/21. DESC: 积分操作计算结果 */
 public class PointCommOperationResult<T extends BasePointCommTotal, R extends BasePointCommRecord> {
 
-  /**
-   * 规则id
-   */
+  /** 规则id */
   private Long gradeId;
 
-  /**
-   * 修改用户id
-   */
+  /** 修改用户id */
   private Long cpId;
 
-  /**
-   * 当此修改积分数量
-   */
+  /** 当此修改积分数量 */
   private BigDecimal currentModified;
 
-  /**
-   * 积分修改平台信息
-   */
+  /** 积分修改平台信息 */
   private PlatformType platform;
 
-  /**
-   * 修改后积分积分信息
-   */
+  /** 修改后积分积分信息 */
   private T infoBefore;
 
-  /**
-   * 修改后的积分信息
-   */
+  /** 修改后的积分信息 */
   private T infoAfter;
 
   private List<R> currRecords;
 
-  @JsonIgnore
-  private List<R> rollBacked;
+  @JsonIgnore private List<R> rollBacked;
 
-  @JsonIgnore
-  private Trancd trancd;
+  @JsonIgnore private Trancd trancd;
 
-  @JsonIgnore
-  private Map<PlatformType, BigDecimal> detailMap;
+  @JsonIgnore private Map<PlatformType, BigDecimal> detailMap;
 
-  /**
-   * 使用的规则类型
-   */
+  /** 使用的规则类型 */
   private CodeNameType usingGradeType;
 
   public Long getGradeId() {
@@ -137,8 +119,7 @@ public class PointCommOperationResult<T extends BasePointCommTotal, R extends Ba
     return detailMap;
   }
 
-  public void setDetailMap(
-      Map<PlatformType, BigDecimal> detailMap) {
+  public void setDetailMap(Map<PlatformType, BigDecimal> detailMap) {
     this.detailMap = detailMap;
   }
 

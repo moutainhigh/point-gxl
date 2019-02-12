@@ -2,22 +2,23 @@ package com.hds.xquark;
 
 import com.hds.xquark.config.PointDalConfig;
 import com.hds.xquark.config.PointServiceConfig;
-import com.hds.xquark.service.point.CommissionService;
+import com.hds.xquark.service.point.CommissionServiceApi;
 import com.hds.xquark.service.point.PointCommService;
-import com.hds.xquark.service.point.PointService;
-import javax.sql.DataSource;
+import com.hds.xquark.service.point.PointServiceApiApi;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
 
 /** 容器初始化类, 传入数据源供外部调用 */
 public class PointContextInitialize {
 
   private final PointCommService pointCommService;
 
-  private final PointService pointService;
+  private final PointServiceApiApi pointService;
 
-  private final CommissionService commissionService;
+  private final CommissionServiceApi commissionService;
 
   public PointContextInitialize(
       DataSource dataSource, PlatformTransactionManager transactionManager) {
@@ -35,19 +36,19 @@ public class PointContextInitialize {
     context.refresh();
 
     this.pointCommService = context.getBean("PointCommService", PointCommService.class);
-    this.pointService = context.getBean("PointService", PointService.class);
-    this.commissionService = context.getBean("CommissionService", CommissionService.class);
+    this.pointService = context.getBean("PointService", PointServiceApiApi.class);
+    this.commissionService = context.getBean("CommissionService", CommissionServiceApi.class);
   }
 
   public PointCommService getPointService() {
     return this.pointCommService;
   }
 
-  public CommissionService getCommissionServiceApi() {
+  public CommissionServiceApi getCommissionServiceApi() {
     return commissionService;
   }
 
-  public PointService getPointServiceApi() {
+  public PointServiceApiApi getPointServiceApi() {
     return pointService;
   }
 }

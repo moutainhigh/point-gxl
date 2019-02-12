@@ -1,21 +1,16 @@
 package com.hds.xquark.dal.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 
-/**
- * @author wangxinhua
- */
+/** @author wangxinhua */
 public class PointTotal extends BasePointCommTotal {
 
-  /**
-   * 汉德森可用积分
-   */
+  /** 汉德森可用积分 */
   private BigDecimal usablePointHds;
 
-  /**
-   * 汉德森冻结积分
-   */
+  /** 汉德森冻结积分 */
   private BigDecimal freezedPointHds;
 
   private BigDecimal usablePointViviLife;
@@ -137,16 +132,14 @@ public class PointTotal extends BasePointCommTotal {
     return getFreezedPointEcomm();
   }
 
-  /**
-   * 德分+红包
-   */
-  public BigDecimal getTotalUsableWithPacket() {
-    return getTotalUsable().add(getUsablePointPacket());
-  }
-
   @Override
   public void setFreezedEcomm(BigDecimal freezedEcomm) {
     setFreezedPointEcomm(freezedEcomm);
+  }
+
+  /** 德分+红包 */
+  public BigDecimal getTotalUsableWithPacket() {
+    return getTotalUsable().add(getUsablePointPacket());
   }
 
   public BigDecimal getUsablePointPacket() {
@@ -164,14 +157,21 @@ public class PointTotal extends BasePointCommTotal {
 
   @Override
   public String toString() {
-    return "PointTotal{" +
-        "usablePointHds=" + usablePointHds +
-        ", freezedPointHds=" + freezedPointHds +
-        ", usablePointViviLife=" + usablePointViviLife +
-        ", freezedPointViviLife=" + freezedPointViviLife +
-        ", usablePointEcomm=" + usablePointEcomm +
-        ", usablePointPacket=" + usablePointPacket +
-        ", freezedPointEcomm=" + freezedPointEcomm +
-        '}';
+    return "PointTotal{"
+        + "usablePointHds="
+        + usablePointHds
+        + ", freezedPointHds="
+        + freezedPointHds
+        + ", usablePointViviLife="
+        + usablePointViviLife
+        + ", freezedPointViviLife="
+        + freezedPointViviLife
+        + ", usablePointEcomm="
+        + usablePointEcomm
+        + ", usablePointPacket="
+        + usablePointPacket
+        + ", freezedPointEcomm="
+        + freezedPointEcomm
+        + '}';
   }
 }

@@ -1,33 +1,22 @@
 package com.hds.xquark.service.point.operator;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableMap;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.CommissionSuspendingAsstMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.mapper.PointSuspendingAsstMapper;
-import com.hds.xquark.dal.model.BasePointCommAsst;
-import com.hds.xquark.dal.model.BasePointCommRecord;
-import com.hds.xquark.dal.model.BasePointCommTotal;
-import com.hds.xquark.dal.model.CommissionRecord;
-import com.hds.xquark.dal.model.CommissionSuspendingAsst;
-import com.hds.xquark.dal.model.GradeCode;
-import com.hds.xquark.dal.model.PointRecord;
-import com.hds.xquark.dal.model.PointSuspendingAsst;
-import com.hds.xquark.dal.model.PointTotal;
-import com.hds.xquark.dal.type.BelongintToType;
-import com.hds.xquark.dal.type.CodeNameType;
-import com.hds.xquark.dal.type.PlatformType;
-import com.hds.xquark.dal.type.PointOperateType;
-import com.hds.xquark.dal.type.Trancd;
+import com.hds.xquark.dal.model.*;
+import com.hds.xquark.dal.type.*;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.PointCommService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,38 +24,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC: 积分修改类
- */
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/** @author wangxinhua on 2018/5/21. DESC: 积分修改类 */
 public abstract class BasePointCommOperator {
-
-  protected PointCommService pointCommService;
-
-  protected PointRecordMapper pointRecordMapper;
-
-  protected CommissionRecordMapper commissionRecordMapper;
-
-  protected PointSuspendingAsstMapper pointSuspendingAsstMapper;
-
-  protected CommissionSuspendingAsstMapper commissionSuspendingAsstMapper;
 
   static final Map<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>
       ASST_MAPPINT =
-      ImmutableMap.<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>of(
-          PointRecord.class, PointSuspendingAsst.class,
-          CommissionRecord.class, CommissionSuspendingAsst.class);
-
-  /**
-   * 积分状态字段
-   */
-  protected enum PointStatus {
-    USABLE,
-    FREEZED
-  }
+          ImmutableMap.<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>of(
+              PointRecord.class, PointSuspendingAsst.class,
+              CommissionRecord.class, CommissionSuspendingAsst.class);
+  protected PointCommService pointCommService;
+  protected PointRecordMapper pointRecordMapper;
+  protected CommissionRecordMapper commissionRecordMapper;
+  protected PointSuspendingAsstMapper pointSuspendingAsstMapper;
+  protected CommissionSuspendingAsstMapper commissionSuspendingAsstMapper;
 
   @Autowired
   public void setPointRecordMapper(PointRecordMapper pointRecordMapper) {
@@ -74,8 +48,7 @@ public abstract class BasePointCommOperator {
   }
 
   @Autowired
-  public void setCommissionRecordMapper(
-      CommissionRecordMapper commissionRecordMapper) {
+  public void setCommissionRecordMapper(CommissionRecordMapper commissionRecordMapper) {
     this.commissionRecordMapper = commissionRecordMapper;
   }
 
@@ -85,8 +58,7 @@ public abstract class BasePointCommOperator {
   }
 
   @Autowired
-  public void setPointSuspendingAsstMapper(
-      PointSuspendingAsstMapper pointSuspendingAsstMapper) {
+  public void setPointSuspendingAsstMapper(PointSuspendingAsstMapper pointSuspendingAsstMapper) {
     this.pointSuspendingAsstMapper = pointSuspendingAsstMapper;
   }
 
@@ -105,21 +77,26 @@ public abstract class BasePointCommOperator {
    * @param pointComms 动态积分/德分
    * @return 积分计算结果 {@link PointCommOperationResult}
    */
-  public PointCommOperationResult doOperation(Long cpId, String businessId, GradeCode grade,
-      PlatformType platform, BigDecimal pointComms,
-      PointOperateType operateType, Trancd trancd) {
+  public PointCommOperationResult doOperation(
+      Long cpId,
+      String businessId,
+      GradeCode grade,
+      PlatformType platform,
+      BigDecimal pointComms,
+      PointOperateType operateType,
+      Trancd trancd) {
 
     checkArgument(grade.getCodeName() == currType(), "积分规则类型不匹配");
-    BasePointCommTotal infoBefore = pointCommService
-        .loadOrBuildInfo(cpId, operateType.getTotalClazz());
+    BasePointCommTotal infoBefore =
+        pointCommService.loadOrBuildInfo(cpId, operateType.getTotalClazz());
 
     // 根据公式动态计算积分
     // modified at 2018-06-14 公式功能已被取消, 积分全都动态计算
     dynamicPoints(grade, pointComms);
     // 计算修改后的积分
-    PointCommOperatorContext context = new PointCommOperatorContext(cpId, infoBefore, grade,
-        businessId,
-        platform, operateType, trancd);
+    PointCommOperatorContext context =
+        new PointCommOperatorContext(
+            cpId, infoBefore, grade, businessId, platform, operateType, trancd);
     // 参数校验
     preCheck(context, operateType);
     PointCommCalResult calRet = calRet(context);
@@ -175,8 +152,7 @@ public abstract class BasePointCommOperator {
    *
    * @param context @throws BizException 校验有问题排除业务异常
    */
-  protected void preCheck(PointCommOperatorContext context,
-      PointOperateType operateType) {
+  protected void preCheck(PointCommOperatorContext context, PointOperateType operateType) {
     // 静态规则积分数量已定
     // 动态规则积分数量在此方法之前已经设置
     // 到这一步如果积分数还没有设置完则抛出异常
@@ -195,7 +171,9 @@ public abstract class BasePointCommOperator {
    * @param calRet 计算结果
    * @return 保存结果
    */
-  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
+  public List<? extends BasePointCommRecord> saveBackRecord(
+      String bizId,
+      GradeCode grade,
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 保存积分记录
@@ -214,7 +192,9 @@ public abstract class BasePointCommOperator {
    * @param clazz 积分记录类型
    * @return 生成的积分记录
    */
-  <T extends BasePointCommRecord> T buildRecord(String bizId, GradeCode grade,
+  <T extends BasePointCommRecord> T buildRecord(
+      String bizId,
+      GradeCode grade,
       PointCommOperationResult calRet,
       Trancd recordType,
       Class<T> clazz) {
@@ -222,17 +202,21 @@ public abstract class BasePointCommOperator {
     BasePointCommTotal infoAfter = calRet.getInfoAfter();
     PlatformType platform = calRet.getPlatform();
     Long cpId = calRet.getCpId();
-    return PointCommCalHelper
-        .buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, BelongintToType.NON,
-            recordType, clazz);
+    return PointCommCalHelper.buildRecord(
+        cpId,
+        bizId,
+        grade,
+        infoBefore,
+        infoAfter,
+        platform,
+        BelongintToType.NON,
+        recordType,
+        clazz);
   }
 
-  /**
-   * 将明细记录拆分
-   */
-  <T extends BasePointCommRecord> List<T> buildRecords(String bizId, GradeCode grade,
-      PointCommOperationResult calRet,
-      Class<T> clazz) {
+  /** 将明细记录拆分 */
+  <T extends BasePointCommRecord> List<T> buildRecords(
+      String bizId, GradeCode grade, PointCommOperationResult calRet, Class<T> clazz) {
     Trancd trancd = calRet.getTrancd();
     Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
     if (MapUtils.isEmpty(detailMap)) {
@@ -244,18 +228,25 @@ public abstract class BasePointCommOperator {
     List<T> ret = new ArrayList<>(detailMap.size());
     for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
       PlatformType platform = entry.getKey();
-      T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
-          infoAfter, platform, BelongintToType.NON, trancd, clazz);
+      T record =
+          PointCommCalHelper.buildRecord(
+              cpId,
+              bizId,
+              grade,
+              infoBefore,
+              infoAfter,
+              platform,
+              BelongintToType.NON,
+              trancd,
+              clazz);
       ret.add(record);
     }
     return ret;
   }
 
-  /**
-   * 应colson特殊要求扣减做特殊处理
-   */
-  <T extends BasePointCommRecord> List<T> buildRecordsForConsume(String bizId, GradeCode grade,
-      PointCommOperationResult calRet, Class<T> clazz) {
+  /** 应colson特殊要求扣减做特殊处理 */
+  <T extends BasePointCommRecord> List<T> buildRecordsForConsume(
+      String bizId, GradeCode grade, PointCommOperationResult calRet, Class<T> clazz) {
     Map<PlatformType, BigDecimal> detailMap = calRet.getDetailMap();
     if (MapUtils.isEmpty(detailMap)) {
       throw new BizException(GlobalErrorCode.UNKNOWN, "没有区分积分平台");
@@ -267,10 +258,17 @@ public abstract class BasePointCommOperator {
     for (Entry<PlatformType, BigDecimal> entry : detailMap.entrySet()) {
       PlatformType platform = entry.getKey();
       // 将platform
-      T record = PointCommCalHelper.buildRecord(cpId, bizId, grade, infoBefore,
-          infoAfter, calRet.getPlatform(), BelongintToType.valueOf(platform.name()),
-          calRet.getTrancd(),
-          clazz);
+      T record =
+          PointCommCalHelper.buildRecord(
+              cpId,
+              bizId,
+              grade,
+              infoBefore,
+              infoAfter,
+              calRet.getPlatform(),
+              BelongintToType.valueOf(platform.name()),
+              calRet.getTrancd(),
+              clazz);
       ret.add(record);
     }
     return ret;
@@ -284,10 +282,9 @@ public abstract class BasePointCommOperator {
    * @param status 积分状态(前缀)
    * @return 获取到的积分
    */
-  protected Long getPlatFormPoint(PointTotal pointTotal,
-      PlatformType platform, PointStatus status) {
-    String methodName = "get" + status.name().toLowerCase()
-        + "Point" + platform.getFullName();
+  protected Long getPlatFormPoint(
+      PointTotal pointTotal, PlatformType platform, PointStatus status) {
+    String methodName = "get" + status.name().toLowerCase() + "Point" + platform.getFullName();
     Method method;
     try {
       method = pointTotal.getClass().getDeclaredMethod(methodName, PointTotal.class);
@@ -305,8 +302,8 @@ public abstract class BasePointCommOperator {
    * @param platform 积分平台
    * @param status 积分状态(前缀)
    */
-  protected void setPlatFormPoint(PointTotal pointTotal, Long newPoint,
-      PlatformType platform, PointStatus status) {
+  protected void setPlatFormPoint(
+      PointTotal pointTotal, Long newPoint, PlatformType platform, PointStatus status) {
     String methodName = getMethodName("set", status, platform);
     Method method;
     try {
@@ -327,13 +324,14 @@ public abstract class BasePointCommOperator {
    */
   private String getMethodName(String prefix, PointStatus status, PlatformType platform) {
     String statusStr = status.name();
-    return prefix + statusStr.substring(0, 1) + statusStr.substring(1)
-        .toLowerCase() + "Point" + platform.getFullName();
+    return prefix
+        + statusStr.substring(0, 1)
+        + statusStr.substring(1).toLowerCase()
+        + "Point"
+        + platform.getFullName();
   }
 
-  /**
-   * 保存积分/德分记录
-   */
+  /** 保存积分/德分记录 */
   <T extends BasePointCommRecord> boolean saveRecord(T record) {
     if (record instanceof PointRecord) {
       return pointRecordMapper.insert((PointRecord) record) > 0;
@@ -344,9 +342,7 @@ public abstract class BasePointCommOperator {
     }
   }
 
-  /**
-   * 更新积分/德分记录
-   */
+  /** 更新积分/德分记录 */
   <T extends BasePointCommRecord> boolean updateRecord(T record) {
     if (record instanceof PointRecord) {
       return pointRecordMapper.updateByPrimaryKeySelective((PointRecord) record) > 0;
@@ -357,9 +353,7 @@ public abstract class BasePointCommOperator {
     }
   }
 
-  /**
-   * 根据不同类型保存asst
-   */
+  /** 根据不同类型保存asst */
   protected boolean saveAsst(BasePointCommAsst asst) {
     checkNotNull(asst);
     if (asst instanceof PointSuspendingAsst) {
@@ -376,11 +370,17 @@ public abstract class BasePointCommOperator {
     if (asst instanceof PointSuspendingAsst) {
       return pointSuspendingAsstMapper.updateByPrimaryKeySelective((PointSuspendingAsst) asst) > 0;
     } else if (asst instanceof CommissionSuspendingAsst) {
-      return commissionSuspendingAsstMapper
-          .updateByPrimaryKeySelective((CommissionSuspendingAsst) asst) > 0;
+      return commissionSuspendingAsstMapper.updateByPrimaryKeySelective(
+              (CommissionSuspendingAsst) asst)
+          > 0;
     } else {
       throw new IllegalStateException("asst type not allowed");
     }
   }
 
+  /** 积分状态字段 */
+  protected enum PointStatus {
+    USABLE,
+    FREEZED
+  }
 }

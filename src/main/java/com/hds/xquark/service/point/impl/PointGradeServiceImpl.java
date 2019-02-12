@@ -5,13 +5,12 @@ import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointGradeService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @author wangxinhua on 2018/5/18. DESC:
- */
+import java.util.List;
+
+/** @author wangxinhua on 2018/5/18. DESC: */
 @Service
 public class PointGradeServiceImpl implements PointGradeService {
 

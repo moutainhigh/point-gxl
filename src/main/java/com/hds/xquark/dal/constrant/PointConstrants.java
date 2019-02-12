@@ -17,9 +17,6 @@ public class PointConstrants {
 
   public static final BigDecimal COMM_TO_POINT_RATE = BigDecimal.valueOf(0.1);
 
-  /**
-   * 积分提现下限
-   */
+  /** 积分提现下限 */
   public static final BigDecimal WITH_DRAW_LIMIT = BigDecimal.valueOf(200);
-
 }

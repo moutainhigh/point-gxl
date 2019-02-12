@@ -10,14 +10,13 @@ import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
 import com.hds.xquark.utils.DateUtils;
+import org.springframework.stereotype.Component;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.springframework.stereotype.Component;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC: 增加积分并立即冻结
- */
+/** @author wangxinhua on 2018/5/21. DESC: 增加积分并立即冻结 */
 @Component
 public class FreezeGrantPointCommOperator extends BasePointCommOperator {
 
@@ -37,12 +36,13 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
   }
 
   @Override
-  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
+  public List<? extends BasePointCommRecord> saveBackRecord(
+      String bizId,
+      GradeCode grade,
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 将积分记录设置为已冻结
-    BasePointCommRecord record = buildRecord(bizId, grade, calRet,
-        calRet.getTrancd(), clazz);
+    BasePointCommRecord record = buildRecord(bizId, grade, calRet, calRet.getTrancd(), clazz);
 
     // 将冻结积分数目保存到本次冻结字段
     // 以免统计时将冻结积分统计到总积分
@@ -59,5 +59,4 @@ public class FreezeGrantPointCommOperator extends BasePointCommOperator {
     saveRecord(record);
     return Collections.singletonList(record);
   }
-
 }

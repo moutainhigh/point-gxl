@@ -6,7 +6,6 @@ package com.hds.xquark.dal.type;
  * @author wangxinhua at 18-6-15 上午10:26
  */
 public enum Trancd {
-
   DF("德分"),
   CPCA("零售提成"),
   CNRA("零售提成(级差)"),

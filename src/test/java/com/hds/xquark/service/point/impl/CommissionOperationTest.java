@@ -1,23 +1,20 @@
 package com.hds.xquark.service.point.impl;
 
-import static com.hds.xquark.dal.type.TotalAuditType.API;
-
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.constrant.PointConstrants;
 import com.hds.xquark.dal.model.CommissionTotal;
-import com.hds.xquark.dal.model.PointTotal;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
-import com.hds.xquark.service.point.CommissionService;
-import com.hds.xquark.service.point.PointService;
-import com.hds.xquark.service.point.TokenService;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import java.math.BigDecimal;
-import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import static com.hds.xquark.dal.type.TotalAuditType.API;
 
 /**
  * created by
@@ -40,18 +37,10 @@ public class CommissionOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.VF3;
 
     pointCommService.modifyCommission(
-        cpId,
-        bizId,
-        "1003",
-        PlatformType.H,
-        modifyPoints, trancd, auditType);
+        cpId, bizId, "1003", PlatformType.H, modifyPoints, trancd, auditType);
 
     pointCommService.modifyCommission(
-        cpId,
-        bizId,
-        "1004",
-        PlatformType.H,
-        modifyPoints, trancd, auditType);
+        cpId, bizId, "1004", PlatformType.H, modifyPoints, trancd, auditType);
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getFreezedHds(), rollbackAfter.getFreezedHds());
@@ -63,15 +52,12 @@ public class CommissionOperationTest extends BaseOperationTest {
     PlatformType platform = PlatformType.E;
 
     pointCommService.modifyCommission(
-        cpId,
-        getBizId(),
-        "2003",
-        platform,
-        modifyPoints, Trancd.ROYA, auditType);
+        cpId, getBizId(), "2003", platform, modifyPoints, Trancd.ROYA, auditType);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
 
-    Assert.assertEquals(PointCommCalHelper.getFreezed(totalBefore, platform),
+    Assert.assertEquals(
+        PointCommCalHelper.getFreezed(totalBefore, platform),
         PointCommCalHelper.getFreezed(totalAfter, platform).subtract(modifyPoints));
   }
 
@@ -85,29 +71,33 @@ public class CommissionOperationTest extends BaseOperationTest {
         getBizId(),
         GradeCodeConstrants.GRANT_COMMISSION_CODE,
         PlatformType.E,
-        modifyPoints, trancd, auditType);
+        modifyPoints,
+        trancd,
+        auditType);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
     // 未初始化
     if (totalBefore == null) {
       Assert.assertEquals(totalAfter.getUsableEcomm(), modifyPoints);
     } else {
-      Assert
-          .assertEquals(totalBefore.getUsableEcomm(),
-              totalAfter.getUsableEcomm().subtract(modifyPoints));
+      Assert.assertEquals(
+          totalBefore.getUsableEcomm(), totalAfter.getUsableEcomm().subtract(modifyPoints));
     }
   }
 
   @Test
   public void testWithdraw() {
     CommissionTotal totalBefore = pointCommService.loadCommByCpId(cpId);
-    pointCommService
-        .modifyCommission(cpId, "withdraw", GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE,
-            PlatformType.V,
-            modifyPoints, Trancd.WITHDRAW_C, API);
+    pointCommService.modifyCommission(
+        cpId,
+        "withdraw",
+        GradeCodeConstrants.WITH_DRAW_COMMISSION_CODE,
+        PlatformType.V,
+        modifyPoints,
+        Trancd.WITHDRAW_C,
+        API);
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
-    Assert
-        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
+    Assert.assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test
@@ -120,11 +110,12 @@ public class CommissionOperationTest extends BaseOperationTest {
         getBizId(),
         GradeCodeConstrants.CONSUME_COMMISSION_CODE,
         PlatformType.H,
-        modifyPoints, Trancd.ROYA, auditType);
+        modifyPoints,
+        Trancd.ROYA,
+        auditType);
 
     CommissionTotal totalAfter = pointCommService.loadCommByCpId(cpId);
-    Assert
-        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
+    Assert.assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test
@@ -139,14 +130,18 @@ public class CommissionOperationTest extends BaseOperationTest {
         bizId,
         GradeCodeConstrants.CONSUME_COMMISSION_CODE,
         PlatformType.H,
-        modifyPoints, trancd, auditType);
+        modifyPoints,
+        trancd,
+        auditType);
 
     pointCommService.modifyCommission(
         cpId,
         bizId,
         GradeCodeConstrants.CANCEL_COMMISSION_CODE,
         PlatformType.H,
-        modifyPoints, trancd, auditType);
+        modifyPoints,
+        trancd,
+        auditType);
 
     CommissionTotal rollbackAfter = pointCommService.loadCommByCpId(cpId);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
@@ -163,8 +158,8 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void grantByProcedure() {
-    pointCommService.grantCommissionWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200),
-        Trancd.DEPOSIT_C);
+    pointCommService.grantCommissionWithProcedure(
+        cpId, PlatformType.E, BigDecimal.valueOf(200), Trancd.DEPOSIT_C);
   }
 
   @Test
@@ -179,8 +174,11 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testSumTotal() {
-    System.out.println(pointCommService
-        .sumTotal(GradeCodeConstrants.GRANT_COMMISSION_CODE, cpId, Trancd.REWARD_C,
+    System.out.println(
+        pointCommService.sumTotal(
+            GradeCodeConstrants.GRANT_COMMISSION_CODE,
+            cpId,
+            Trancd.REWARD_C,
             CommissionTotal.class));
   }
 
@@ -191,12 +189,13 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testPointNew() {
-//    getInitialize().getPointService().loadByCpId(cpId);
-//    PointCommOperationResult<PointTotal, PointRecord> modify = getInitialize().getPointServiceNew()
-//        .modify(cpId, getBizId(), FunctionCodeType.getPacketSend(), PlatformType.E,
-//            BigDecimal.valueOf(10));
-//    System.out.println(modify);
-//    PointTotal pointTotal = getInitialize().getPointServiceNew().loadTotal(cpId);
+    //    getInitialize().getPointService().loadByCpId(cpId);
+    //    PointCommOperationResult<PointTotal, PointRecord> modify =
+    // getInitialize().getPointServiceNew()
+    //        .modify(cpId, getBizId(), FunctionCodeType.getPacketSend(), PlatformType.E,
+    //            BigDecimal.valueOf(10));
+    //    System.out.println(modify);
+    //    PointTotal pointTotal = getInitialize().getPointServiceNew().loadTotal(cpId);
 
     CommissionTotal forUpdate = getInitialize().getCommissionServiceApi().initTotal(cpId);
     forUpdate.setCpId(cpId);
@@ -207,8 +206,12 @@ public class CommissionOperationTest extends BaseOperationTest {
 
   @Test
   public void testTransform() {
-    getCommissionServiceApi().transform(cpId, BigDecimal.valueOf(10), PlatformType.E,
-        PointConstrants.COMM_TO_POINT_RATE, getPointServiceApi());
+    getCommissionServiceApi()
+        .transform(
+            cpId,
+            BigDecimal.valueOf(10),
+            PlatformType.E,
+            PointConstrants.COMM_TO_POINT_RATE,
+            getPointServiceApi());
   }
-
 }

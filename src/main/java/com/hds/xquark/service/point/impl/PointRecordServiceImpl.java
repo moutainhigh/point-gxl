@@ -3,13 +3,12 @@ package com.hds.xquark.service.point.impl;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
 import com.hds.xquark.dal.model.PointRecord;
 import com.hds.xquark.service.point.PointRecordService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC: 积分记录service
- */
+import java.util.List;
+
+/** @author wangxinhua on 2018/5/21. DESC: 积分记录service */
 @Service
 public class PointRecordServiceImpl implements PointRecordService {
 
@@ -34,5 +33,4 @@ public class PointRecordServiceImpl implements PointRecordService {
   public List<PointRecord> listByCpId(Long cpId, String direction) {
     return pointRecordMapper.listByCpId(cpId, direction);
   }
-
 }

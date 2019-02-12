@@ -1,10 +1,11 @@
 package com.hds.xquark.dal.util;
 
 import com.google.common.base.Function;
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.beans.BeanUtils;
 
 /**
  * Created by
@@ -101,5 +102,4 @@ public class Transformer {
       }
     };
   }
-
 }

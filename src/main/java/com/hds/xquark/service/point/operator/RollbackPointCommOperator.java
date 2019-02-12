@@ -4,14 +4,7 @@ import com.google.common.base.Preconditions;
 import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import com.hds.xquark.dal.mapper.CommissionRecordMapper;
 import com.hds.xquark.dal.mapper.PointRecordMapper;
-import com.hds.xquark.dal.model.BasePointCommAsst;
-import com.hds.xquark.dal.model.BasePointCommRecord;
-import com.hds.xquark.dal.model.BasePointCommTotal;
-import com.hds.xquark.dal.model.CommissionRecord;
-import com.hds.xquark.dal.model.CommissionSuspendingAsst;
-import com.hds.xquark.dal.model.GradeCode;
-import com.hds.xquark.dal.model.PointRecord;
-import com.hds.xquark.dal.model.PointSuspendingAsst;
+import com.hds.xquark.dal.model.*;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
@@ -22,19 +15,18 @@ import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC:
- */
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/** @author wangxinhua on 2018/5/21. DESC: */
 @Component
 public class RollbackPointCommOperator extends BasePointCommOperator {
 
@@ -43,8 +35,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
   private final CommissionRecordMapper commissionRecordMapper;
 
   @Autowired
-  public RollbackPointCommOperator(PointRecordMapper pointRecordMapper,
-      CommissionRecordMapper commissionRecordMapper) {
+  public RollbackPointCommOperator(
+      PointRecordMapper pointRecordMapper, CommissionRecordMapper commissionRecordMapper) {
     this.pointRecordMapper = pointRecordMapper;
     this.commissionRecordMapper = commissionRecordMapper;
   }
@@ -61,8 +53,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     BasePointCommTotal infoAfter = BasePointCommTotal.copy(infoBefore);
 
     // 同一业务id只会回退最后一次操作
-    List<? extends BasePointCommRecord> records = findUnRollBackedList(businessId, cpId, trancd,
-        context.getOperateType().getRecordClazz());
+    List<? extends BasePointCommRecord> records =
+        findUnRollBackedList(businessId, cpId, trancd, context.getOperateType().getRecordClazz());
     if (CollectionUtils.isEmpty(records)) {
       throw new BizException(GlobalErrorCode.POINT_RECORD_NOT_FOUNT);
     }
@@ -82,8 +74,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       BigDecimal negateUsable = record.getCurrent().negate();
       BigDecimal negateFreeze = record.getCurrentFreezed().negate();
       PointCommCalHelper.plus(infoAfter, platform, negateUsable);
-      PointCommCalHelper
-          .plusFreeze(infoAfter, platform, negateFreeze);
+      PointCommCalHelper.plusFreeze(infoAfter, platform, negateFreeze);
       // TODO map中的value没有使用意义
       detailMap.put(platform, record.getCurrent());
     }
@@ -96,8 +87,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
   }
 
   @Override
-  protected void preCheck(PointCommOperatorContext context,
-      PointOperateType operateType) {
+  protected void preCheck(PointCommOperatorContext context, PointOperateType operateType) {
     // do nothing
   }
 
@@ -110,12 +100,13 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
    * @return 保存结果
    */
   @Override
-  public List<? extends BasePointCommRecord> saveBackRecord(String bizId, GradeCode grade,
+  public List<? extends BasePointCommRecord> saveBackRecord(
+      String bizId,
+      GradeCode grade,
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 找出回滚了多少积分
-    List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade,
-        calRet, clazz);
+    List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade, calRet, clazz);
     for (BasePointCommRecord record : rollBackRecords) {
       record.setRollbacked(false);
       saveRecord(record);
@@ -132,8 +123,8 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       for (BasePointCommRecord backedRec : rollBackRecords) {
         boolean condition;
         if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)
-            || StringUtils
-            .equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
+            || StringUtils.equals(
+                record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
           condition = Objects.equals(backedRec.getSource(), record.getBelongingTo());
         } else {
           condition = Objects.equals(backedRec.getSource(), record.getSource());
@@ -145,11 +136,11 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
 
           // 更新回滚记录与原纪录一致 shit~~~~
           if (StringUtils.equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_POINT_CODE)
-              || StringUtils
-              .equals(record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
+              || StringUtils.equals(
+                  record.getCodeNumber(), GradeCodeConstrants.CONSUME_COMMISSION_CODE)) {
             // 不能修改原纪录, 会破坏循环条件
-            BasePointCommRecord recordToUpdate = Transformer
-                .fromBean(backedRec, backedRec.getClass());
+            BasePointCommRecord recordToUpdate =
+                Transformer.fromBean(backedRec, backedRec.getClass());
             recordToUpdate.setSource(record.getSource());
             recordToUpdate.setBelongingTo(record.getBelongingTo());
             updateRecord(recordToUpdate);
@@ -181,9 +172,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     return rollBackRecords;
   }
 
-  /**
-   * 判断记录是否是已回滚记录
-   */
+  /** 判断记录是否是已回滚记录 */
   private boolean isRecordRollbacked(BasePointCommRecord record) {
     String codeNumber = record.getCodeNumber();
     return codeNumber.equals(GradeCodeConstrants.CANCEL_COMMISSION_CODE)
@@ -195,15 +184,14 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
   }
 
   @SuppressWarnings("unchecked")
-  private <T extends BasePointCommRecord> List<T> findUnRollBackedList(String bizId,
-      Long cpId, Trancd recordType,
-      Class<T> clazz) {
+  private <T extends BasePointCommRecord> List<T> findUnRollBackedList(
+      String bizId, Long cpId, Trancd recordType, Class<T> clazz) {
     if (clazz == PointRecord.class) {
-      return (List<T>) pointRecordMapper
-          .listUnRollBackedByCpIdWithBizIdAndType(bizId, cpId, recordType);
+      return (List<T>)
+          pointRecordMapper.listUnRollBackedByCpIdWithBizIdAndType(bizId, cpId, recordType);
     } else if (clazz == CommissionRecord.class) {
-      return (List<T>) commissionRecordMapper
-          .listUnRollBackedByCpIdWithBizIdAndType(bizId, cpId, recordType);
+      return (List<T>)
+          commissionRecordMapper.listUnRollBackedByCpIdWithBizIdAndType(bizId, cpId, recordType);
     } else {
       throw new BizException(GlobalErrorCode.POINT_NOT_SUPPORT);
     }

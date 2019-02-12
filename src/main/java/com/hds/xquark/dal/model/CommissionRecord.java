@@ -1,6 +1,7 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.type.Trancd;
+
 import java.math.BigDecimal;
 
 /**
@@ -10,14 +11,10 @@ import java.math.BigDecimal;
  */
 public class CommissionRecord extends BasePointCommRecord {
 
-  /**
-   * 本次佣金
-   */
+  /** 本次佣金 */
   private BigDecimal currentComm;
 
-  /**
-   * 本次冻结佣金
-   */
+  /** 本次冻结佣金 */
   private BigDecimal currentFreezedComm;
 
   private Trancd trancd;
@@ -52,13 +49,13 @@ public class CommissionRecord extends BasePointCommRecord {
   }
 
   @Override
-  public BigDecimal getCurrentFreezed() {
-    return getCurrentFreezedComm();
+  public void setCurrent(BigDecimal current) {
+    setCurrentComm(current);
   }
 
   @Override
-  public void setCurrent(BigDecimal current) {
-    setCurrentComm(current);
+  public BigDecimal getCurrentFreezed() {
+    return getCurrentFreezedComm();
   }
 
   @Override

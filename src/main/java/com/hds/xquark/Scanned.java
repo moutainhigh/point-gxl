@@ -1,5 +1,3 @@
 package com.hds.xquark;
 
-public interface Scanned {
-
-}
+public interface Scanned {}
