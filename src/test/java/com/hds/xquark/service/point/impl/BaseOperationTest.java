@@ -3,7 +3,7 @@ package com.hds.xquark.service.point.impl;
 import com.hds.xquark.PointContextInitialize;
 import com.hds.xquark.service.point.CommissionServiceApi;
 import com.hds.xquark.service.point.PointCommService;
-import com.hds.xquark.service.point.PointServiceApiApi;
+import com.hds.xquark.service.point.PointServiceApi;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.junit.Before;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -18,7 +18,7 @@ public abstract class BaseOperationTest {
 
   private PointContextInitialize initialize;
 
-  private PointServiceApiApi pointServiceApi;
+  private PointServiceApi pointServiceApi;
 
   private CommissionServiceApi commissionServiceApi;
 
@@ -42,7 +42,7 @@ public abstract class BaseOperationTest {
     return initialize;
   }
 
-  public PointServiceApiApi getPointServiceApi() {
+  public PointServiceApi getPointServiceApi() {
     return pointServiceApi;
   }
 

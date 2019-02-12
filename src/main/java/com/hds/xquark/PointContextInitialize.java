@@ -4,7 +4,7 @@ import com.hds.xquark.config.PointDalConfig;
 import com.hds.xquark.config.PointServiceConfig;
 import com.hds.xquark.service.point.CommissionServiceApi;
 import com.hds.xquark.service.point.PointCommService;
-import com.hds.xquark.service.point.PointServiceApiApi;
+import com.hds.xquark.service.point.PointServiceApi;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -16,7 +16,7 @@ public class PointContextInitialize {
 
   private final PointCommService pointCommService;
 
-  private final PointServiceApiApi pointService;
+  private final PointServiceApi pointService;
 
   private final CommissionServiceApi commissionService;
 
@@ -36,7 +36,7 @@ public class PointContextInitialize {
     context.refresh();
 
     this.pointCommService = context.getBean("PointCommService", PointCommService.class);
-    this.pointService = context.getBean("PointService", PointServiceApiApi.class);
+    this.pointService = context.getBean("PointService", PointServiceApi.class);
     this.commissionService = context.getBean("CommissionService", CommissionServiceApi.class);
   }
 
@@ -48,7 +48,7 @@ public class PointContextInitialize {
     return commissionService;
   }
 
-  public PointServiceApiApi getPointServiceApi() {
+  public PointServiceApi getPointServiceApi() {
     return pointService;
   }
 }

@@ -13,7 +13,6 @@ import com.hds.xquark.service.point.operator.BasePointCommOperator;
 import com.hds.xquark.service.point.operator.PointOperatorFactory;
 import com.hds.xquark.service.point.type.FunctionCodeType;
 import org.apache.commons.lang3.tuple.Pair;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import java.math.BigDecimal;
 
 /** @author wangxinhua.* @date 2018/12/12 */
 @Service("PointService")
-public class PointServiceApiApi implements TokenServiceApi<PointTotal, PointRecord> {
+public class PointServiceApi implements TokenServiceApi<PointTotal, PointRecord> {
 
   private final PointTotalMapper pointTotalMapper;
   private final PointRecordMapper pointRecordMapper;
@@ -29,7 +28,7 @@ public class PointServiceApiApi implements TokenServiceApi<PointTotal, PointReco
   private final PointGradeService pointGradeService;
 
   @Autowired
-  public PointServiceApiApi(
+  public PointServiceApi(
       PointTotalMapper pointTotalMapper,
       PointTotalAuditMapper pointTotalAuditMapper,
       PointGradeService pointGradeService,
@@ -94,9 +93,7 @@ public class PointServiceApiApi implements TokenServiceApi<PointTotal, PointReco
     GradeCode grade = pointGradeService.loadByFunctionCode(funcCodeType.getCode());
     Preconditions.checkNotNull(grade, "规则代码无效");
     Preconditions.checkArgument(
-        grade
-            .getCodeNumber()
-            .startsWith(DefaultGroovyMethods.asType(PointConstrants.POINT_CATEGORY, String.class)),
+        grade.getCodeNumber().startsWith(String.valueOf(PointConstrants.POINT_CATEGORY)),
         "规则代码不匹配");
     BasePointCommOperator operator = PointOperatorFactory.getOperator(grade.getCodeName());
     PointCommOperationResult ret =

@@ -40,31 +40,6 @@ public class PointOperationTest extends BaseOperationTest {
   }
 
   @Test
-  public void testRepeatConsume() {
-    // TODO assertException
-    //    PointTotal totalBefore = pointCommService.loadByCpId(cpId);
-    //    String bizId = getBizId();
-    //
-    //    pointCommService.modifyPoint(
-    //        cpId,
-    //        bizId,
-    //        "1002",
-    //        PlatformType.H,
-    //        modifyPoints, Trancd.ROYA, auditType);
-    //
-    //    pointCommService.modifyPoint(
-    //        cpId,
-    //        bizId,
-    //        "1002",
-    //        PlatformType.H,
-    //        modifyPoints, Trancd.ROYA, auditType);
-    //
-    //    PointTotal totalAfter = pointCommService.loadByCpId(cpId);
-    //    Assert
-    //        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
-  }
-
-  @Test
   public void testConsumeRollBack() {
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
     String bizId = getBizId();
