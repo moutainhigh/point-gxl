@@ -9,15 +9,16 @@ import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * created by
@@ -27,13 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PointOperationTest extends BaseOperationTest {
 
-  private final Long cpId = 3000000L;
-
+  private static final Logger LOGGER = Logger.getLogger(PointOperationTest.class);
+  private final Long cpId = 3111111L;
   private final BigDecimal modifyPoints = BigDecimal.valueOf(50);
-
   private final TotalAuditType auditType = TotalAuditType.DTS;
-
-  private final static Logger LOGGER = Logger.getLogger(PointOperationTest.class);
 
   @Test
   public void testBase() {
@@ -44,26 +42,26 @@ public class PointOperationTest extends BaseOperationTest {
   @Test
   public void testRepeatConsume() {
     // TODO assertException
-//    PointTotal totalBefore = pointCommService.loadByCpId(cpId);
-//    String bizId = getBizId();
-//
-//    pointCommService.modifyPoint(
-//        cpId,
-//        bizId,
-//        "1002",
-//        PlatformType.H,
-//        modifyPoints, Trancd.ROYA, auditType);
-//
-//    pointCommService.modifyPoint(
-//        cpId,
-//        bizId,
-//        "1002",
-//        PlatformType.H,
-//        modifyPoints, Trancd.ROYA, auditType);
-//
-//    PointTotal totalAfter = pointCommService.loadByCpId(cpId);
-//    Assert
-//        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
+    //    PointTotal totalBefore = pointCommService.loadByCpId(cpId);
+    //    String bizId = getBizId();
+    //
+    //    pointCommService.modifyPoint(
+    //        cpId,
+    //        bizId,
+    //        "1002",
+    //        PlatformType.H,
+    //        modifyPoints, Trancd.ROYA, auditType);
+    //
+    //    pointCommService.modifyPoint(
+    //        cpId,
+    //        bizId,
+    //        "1002",
+    //        PlatformType.H,
+    //        modifyPoints, Trancd.ROYA, auditType);
+    //
+    //    PointTotal totalAfter = pointCommService.loadByCpId(cpId);
+    //    Assert
+    //        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test
@@ -74,23 +72,15 @@ public class PointOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.ACHA;
 
     pointCommService.modifyPoint(
-        cpId,
-        bizId,
-        "1002",
-        PlatformType.H,
-        modifyPoints, trancd, auditType);
+        cpId, bizId, "1002", PlatformType.H, modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
-        cpId,
-        bizId,
-        "1004",
-        PlatformType.H,
-        modifyPoints, trancd, auditType);
+        cpId, bizId, "1004", PlatformType.H, modifyPoints, trancd, auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
 
-    List<? extends BasePointCommAsst> assts = pointCommService.listAsst(bizId, cpId, trancd,
-        PointSuspendingAsst.class);
+    List<? extends BasePointCommAsst> assts =
+        pointCommService.listAsst(bizId, cpId, trancd, PointSuspendingAsst.class);
     Assert.assertEquals(totalBefore.getTotal(), rollbackAfter.getTotal());
     Assert.assertTrue(CollectionUtils.isNotEmpty(assts));
 
@@ -107,24 +97,14 @@ public class PointOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.VF3;
 
     pointCommService.modifyPoint(
-        cpId,
-        bizId,
-        100,
-        1,
-        PlatformType.H,
-        modifyPoints, trancd, auditType);
+        cpId, bizId, 100, 1, PlatformType.H, modifyPoints, trancd, auditType);
 
     pointCommService.modifyPoint(
-        cpId,
-        bizId,
-        "1004",
-        PlatformType.H,
-        modifyPoints, trancd, auditType);
+        cpId, bizId, "1004", PlatformType.H, modifyPoints, trancd, auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
     Assert.assertEquals(totalBefore.getFreezedHds(), rollbackAfter.getFreezedHds());
   }
-
 
   @Test
   public void testGrantRollBack() {
@@ -136,21 +116,24 @@ public class PointOperationTest extends BaseOperationTest {
         bizId,
         GradeCodeConstrants.GRANT_POINT_CODE,
         PlatformType.H,
-        modifyPoints, Trancd.PRBA, auditType);
+        modifyPoints,
+        Trancd.PRBA,
+        auditType);
 
-//    Assert.assertEquals(totalBefore.getFreezedHds(),
-//        totalAfter.getFreezedHds().subtract(modifyPoints));
+    //    Assert.assertEquals(totalBefore.getFreezedHds(),
+    //        totalAfter.getFreezedHds().subtract(modifyPoints));
 
     pointCommService.modifyPoint(
         cpId,
         bizId,
         GradeCodeConstrants.CANCEL_POINT_CODE,
         PlatformType.H,
-        modifyPoints, Trancd.PRBA, auditType);
+        modifyPoints,
+        Trancd.PRBA,
+        auditType);
 
     PointTotal rollbackAfter = pointCommService.loadByCpId(cpId);
     Assert.assertEquals(totalBefore.getUsableHds(), rollbackAfter.getUsableHds());
-
   }
 
   @Test
@@ -159,15 +142,12 @@ public class PointOperationTest extends BaseOperationTest {
     PlatformType platform = PlatformType.E;
 
     pointCommService.modifyPoint(
-        cpId,
-        getBizId(),
-        "1003",
-        platform,
-        modifyPoints, Trancd.ROYA, auditType);
+        cpId, getBizId(), "1003", platform, modifyPoints, Trancd.ROYA, auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
 
-    Assert.assertEquals(PointCommCalHelper.getFreezed(totalBefore, platform),
+    Assert.assertEquals(
+        PointCommCalHelper.getFreezed(totalBefore, platform),
         PointCommCalHelper.getFreezed(totalAfter, platform).subtract(modifyPoints));
   }
 
@@ -177,16 +157,11 @@ public class PointOperationTest extends BaseOperationTest {
     Trancd trancd = Trancd.PRBA;
 
     pointCommService.modifyPoint(
-        cpId,
-        getBizId(),
-        "1001",
-        PlatformType.V,
-        modifyPoints, trancd, auditType);
+        cpId, getBizId(), "1001", PlatformType.V, modifyPoints, trancd, auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
-    Assert
-        .assertEquals(totalBefore.getUsableViviLife(),
-            totalAfter.getUsableViviLife().subtract(modifyPoints));
+    Assert.assertEquals(
+        totalBefore.getUsableViviLife(), totalAfter.getUsableViviLife().subtract(modifyPoints));
   }
 
   @Test
@@ -194,16 +169,18 @@ public class PointOperationTest extends BaseOperationTest {
 
     PointTotal totalBefore = pointCommService.loadByCpId(cpId);
 
-    PointCommOperationResult pointCommOperationResult = pointCommService.modifyPoint(
-        cpId,
-        getBizId(),
-        "1002",
-        PlatformType.H,
-        BigDecimal.valueOf(50), Trancd.ROYA, auditType);
+    PointCommOperationResult pointCommOperationResult =
+        pointCommService.modifyPoint(
+            cpId,
+            getBizId(),
+            "1002",
+            PlatformType.H,
+            BigDecimal.valueOf(50),
+            Trancd.ROYA,
+            auditType);
 
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
-    Assert
-        .assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
+    Assert.assertEquals(totalBefore.getTotal(), totalAfter.getTotal().add(modifyPoints));
   }
 
   @Test
@@ -212,29 +189,25 @@ public class PointOperationTest extends BaseOperationTest {
     PlatformType platform = PlatformType.E;
 
     pointCommService.modifyPoint(
-        cpId,
-        getBizId(),
-        "1003",
-        platform,
-        modifyPoints, Trancd.ROYA, auditType);
+        cpId, getBizId(), "1003", platform, modifyPoints, Trancd.ROYA, auditType);
 
     pointCommService.releasePoints(auditType);
     PointTotal totalAfter = pointCommService.loadByCpId(cpId);
-//    Assert
-//        .assertEquals(totalBefore.getUsableEcomm(),
-//            totalAfter.getUsableEcomm().subtract(modifyPoints));
+    //    Assert
+    //        .assertEquals(totalBefore.getUsableEcomm(),
+    //            totalAfter.getUsableEcomm().subtract(modifyPoints));
   }
 
   @Test
   public void testLog() {
-    LOGGER.info(MessageFormat.format("---- test log {0} ---", "haha"),
-        new RuntimeException("run time"));
+    LOGGER.info(
+        MessageFormat.format("---- test log {0} ---", "haha"), new RuntimeException("run time"));
   }
 
   @Test
   public void grantByProcedure() {
-    pointCommService
-        .grantPointWithProcedure(cpId, PlatformType.E, BigDecimal.valueOf(200), Trancd.REWARD_P);
+    pointCommService.grantPointWithProcedure(
+        cpId, PlatformType.E, BigDecimal.valueOf(200), Trancd.REWARD_P);
   }
 
   @Test
@@ -245,11 +218,27 @@ public class PointOperationTest extends BaseOperationTest {
   @Test
   public void testRollbackAsst() {
     testConsumeRollBack();
+  }
 
+  @Test
+  public void testPointNew() {
+    //    getInitialize().getPointService().loadByCpId(cpId);
+    //    PointCommOperationResult<PointTotal, PointRecord> modify =
+    // getInitialize().getPointServiceApi()
+    //        .modify(cpId, getBizId(), FunctionCodeType.getPacketSend(), PlatformType.E,
+    //            BigDecimal.valueOf(10));
+    //    System.out.println(modify);
+    //    PointTotal pointTotal = getInitialize().getPointServiceApi().loadTotal(cpId);
+
+    PointTotal forUpdate = getInitialize().getPointServiceApi().initTotal(cpId);
+    forUpdate.setCpId(cpId);
+    forUpdate.setUsablePointPacket(BigDecimal.valueOf(20000));
+    getInitialize().getPointServiceApi().updateByCpId(forUpdate);
+    System.out.println(getInitialize().getPointServiceApi().sumByTrancd(cpId, Trancd.LOTTERY_EARN));
+    System.out.println(forUpdate);
   }
 
   private String getBizId() {
     return String.valueOf(new Date().getTime());
   }
-
 }

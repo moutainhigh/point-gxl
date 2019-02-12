@@ -1,6 +1,7 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.status.PointInfoStatus;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,54 +14,35 @@ import java.util.Date;
 public class PointTotalAudit implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  /**
-   * auditId
-   */
+  /** auditId */
   private Long auditId;
+
   private Long id;
-  /**
-   * 用户id
-   */
+  /** 用户id */
   private Long cpId;
-  /**
-   * hds总积分
-   */
+  /** hds总积分 */
   private BigDecimal usablePointHds;
-  /**
-   * 已冻结积分
-   */
+  /** 已冻结积分 */
   private BigDecimal freezedPointHds;
-  /**
-   * viviLife总积分
-   */
+  /** viviLife总积分 */
   private BigDecimal usablePointViviLife;
-  /**
-   * 已冻结积分
-   */
+  /** 已冻结积分 */
   private BigDecimal freezedPointViviLife;
-  /**
-   * 汉薇商城总积分
-   */
+  /** 汉薇商城总积分 */
   private BigDecimal usablePointEcomm;
-  /**
-   * 已冻结积分
-   */
+  /** 已冻结积分 */
   private BigDecimal freezedPointEcomm;
-  /**
-   * 积分状态
-   */
+  /** 积分状态 */
   private PointInfoStatus status;
+
   private Date createdAt;
   private Date updatedAt;
   private Boolean archive;
-  /**
-   * 1 insert, 2 update, 3 delete
-   */
+  /** 1 insert, 2 update, 3 delete */
   private Integer auditType;
-  /**
-   * H -> HDS, V -> vivilife, E -> ecommerce, S -> system
-   */
+  /** H -> HDS, V -> vivilife, E -> ecommerce, S -> system */
   private String auditUser;
+
   private Date auditDate;
 
   public Long getAuditId() {

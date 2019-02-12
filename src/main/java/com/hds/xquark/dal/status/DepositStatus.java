@@ -18,5 +18,4 @@ public enum DepositStatus {
   public int getCode() {
     return code;
   }
-
 }

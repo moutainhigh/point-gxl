@@ -1,8 +1,9 @@
 package com.hds.xquark.dal.mapper;
 
 import com.hds.xquark.dal.model.CommissionTotal;
-import java.math.BigDecimal;
 import org.apache.ibatis.annotations.Param;
+
+import java.math.BigDecimal;
 
 public interface CommissionTotalMapper {
 
@@ -18,7 +19,14 @@ public interface CommissionTotalMapper {
 
   int updateByPrimaryKey(CommissionTotal record);
 
+  int updateByCpId(CommissionTotal record);
+
+  boolean selectTotalExists(Long cpId);
+
   void grantWithProcedure(
-      @Param("cpId") Long cpId, @Param("source") int source, @Param("val") BigDecimal val,
-      @Param("trancd") String trancd, @Param("desc") String desc);
+      @Param("cpId") Long cpId,
+      @Param("source") int source,
+      @Param("val") BigDecimal val,
+      @Param("trancd") String trancd,
+      @Param("desc") String desc);
 }

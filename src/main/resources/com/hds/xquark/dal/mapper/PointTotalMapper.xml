@@ -8,6 +8,7 @@
     <result column="usable_point_hds" jdbcType="DECIMAL" property="usablePointHds"/>
     <result column="usable_point_vivilife" jdbcType="DECIMAL" property="usablePointViviLife"/>
     <result column="usable_point_ecomm" jdbcType="DECIMAL" property="usablePointEcomm"/>
+    <result column="usable_point_packet" jdbcType="DECIMAL" property="usablePointPacket"/>
     <result column="freezed_point_hds" jdbcType="DECIMAL" property="freezedPointHds"/>
     <result column="freezed_point_vivilife" jdbcType="DECIMAL" property="freezedPointViviLife"/>
     <result column="freezed_point_ecomm" jdbcType="DECIMAL" property="freezedPointEcomm"/>
@@ -16,11 +17,18 @@
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, cpId,
-    usable_point_hds, usable_point_vivilife, usable_point_ecomm,
-    freezed_point_hds, freezed_point_vivilife, freezed_point_ecomm,
+    id,
+    cpId,
+    usable_point_hds,
+    usable_point_vivilife,
+    usable_point_ecomm,
+    usable_point_packet,
+    freezed_point_hds,
+    freezed_point_vivilife,
+    freezed_point_ecomm,
     status,
-    created_at, updated_at
+    created_at,
+    updated_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -38,27 +46,32 @@
     CALL GrantPoint(#{cpId,jdbcType=BIGINT}, #{source,jdbcType=INTEGER}, #{val,jdbcType=DECIMAL},
                     #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
   </select>
+  <select id="selectTotalExists" resultType="java.lang.Boolean">
+    select exists(
+      select 1 from pointTotal where cpId = #{cpId}
+             )
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from pointTotal
+    delete
+    from pointTotal
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.PointTotal">
-    insert into pointTotal (
-      id, cpId,
-      usable_point_hds, usable_point_vivilife, usable_point_ecomm,
-      freezed_point_hds, freezed_point_vivilife, freezed_point_ecomm,
-      status,
-      created_at, updated_at
-    )
+    insert into pointTotal (id, cpId,
+                            usable_point_hds, usable_point_vivilife, usable_point_ecomm,
+                            usable_point_packet,
+                            freezed_point_hds, freezed_point_vivilife, freezed_point_ecomm,
+                            status,
+                            created_at, updated_at)
     values
-      (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT},
-        #{usablePointHds,jdbcType=DECIMAL}, #{usablePointViviLife,jdbcType=DECIMAL},
-        #{usablePointEcomm,jdbcType=DECIMAL},
-        #{freezedPointHds,jdbcType=DECIMAL}, #{freezedPointViviLife,jdbcType=DECIMAL},
-        #{freezedPointEcomm,jdbcType=DECIMAL},
-        #{status,jdbcType=VARCHAR}, NOW(), NOW()
-      )
+    (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT},
+     #{usablePointHds,jdbcType=DECIMAL}, #{usablePointViviLife,jdbcType=DECIMAL},
+     #{usablePointEcomm,jdbcType=DECIMAL},
+     #{usablePointPacket,jdbcType=DECIMAL},
+     #{freezedPointHds,jdbcType=DECIMAL}, #{freezedPointViviLife,jdbcType=DECIMAL},
+     #{freezedPointEcomm,jdbcType=DECIMAL},
+     #{status,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.hds.xquark.dal.model.PointTotal">
     update pointtotal
@@ -75,6 +88,9 @@
       <if test="usablePointEcomm != null">
         usable_point_ecomm = #{usablePointEcomm,jdbcType=DECIMAL},
       </if>
+      <if test="usablePointPacket != null">
+        usable_point_packet = #{usablePointPacket,jdbcType=DECIMAL},
+      </if>
       <if test="freezedPointHds != null">
         freezed_point_hds = #{freezedPointHds,jdbcType=DECIMAL},
       </if>
@@ -90,5 +106,36 @@
       updated_at = NOW()
     </set>
     where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByCpId" parameterType="com.hds.xquark.dal.model.PointTotal">
+    update pointtotal
+    <set>
+      <if test="usablePointHds != null">
+        usable_point_hds = #{usablePointHds,jdbcType=DECIMAL},
+      </if>
+      <if test="usablePointViviLife != null">
+        usable_point_vivilife = #{usablePointViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="usablePointEcomm != null">
+        usable_point_ecomm = #{usablePointEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="usablePointPacket != null">
+        usable_point_packet = #{usablePointPacket,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedPointHds != null">
+        freezed_point_hds = #{freezedPointHds,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedPointViviLife != null">
+        freezed_point_vivilife = #{freezedPointViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedPointEcomm != null">
+        freezed_point_ecomm = #{freezedPointEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      updated_at = NOW()
+    </set>
+    where cpId = #{cpId,jdbcType=BIGINT}
   </update>
 </mapper>

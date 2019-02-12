@@ -1,6 +1,7 @@
 package com.hds.xquark.dal.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 
 /**
@@ -10,14 +11,10 @@ import java.math.BigDecimal;
  */
 public class CommissionTotal extends BasePointCommTotal {
 
-  /**
-   * 汉德森可用积分
-   */
+  /** 汉德森可用积分 */
   private BigDecimal usableCommHds;
 
-  /**
-   * 汉德森冻结积分
-   */
+  /** 汉德森冻结积分 */
   private BigDecimal freezedCommHds;
 
   private BigDecimal usableCommViviLife;
@@ -149,13 +146,19 @@ public class CommissionTotal extends BasePointCommTotal {
 
   @Override
   public String toString() {
-    return "CommissionTotal{" +
-        "usableCommHds=" + usableCommHds +
-        ", freezedCommHds=" + freezedCommHds +
-        ", usableCommViviLife=" + usableCommViviLife +
-        ", freezedCommViviLife=" + freezedCommViviLife +
-        ", usableCommEcomm=" + usableCommEcomm +
-        ", freezedCommEcomm=" + freezedCommEcomm +
-        '}';
+    return "CommissionTotal{"
+        + "usableCommHds="
+        + usableCommHds
+        + ", freezedCommHds="
+        + freezedCommHds
+        + ", usableCommViviLife="
+        + usableCommViviLife
+        + ", freezedCommViviLife="
+        + freezedCommViviLife
+        + ", usableCommEcomm="
+        + usableCommEcomm
+        + ", freezedCommEcomm="
+        + freezedCommEcomm
+        + '}';
   }
 }

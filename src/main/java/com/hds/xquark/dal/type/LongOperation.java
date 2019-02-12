@@ -1,13 +1,9 @@
 package com.hds.xquark.dal.type;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC:
- */
+/** @author wangxinhua on 2018/5/21. DESC: */
 public enum LongOperation implements Operation<Long> {
 
-  /**
-   * 加法
-   */
+  /** 加法 */
   PLUS("+") {
     @Override
     public Long apply(Long x1, Long x2) {
@@ -16,9 +12,7 @@ public enum LongOperation implements Operation<Long> {
     }
   },
 
-  /**
-   * 减法
-   */
+  /** 减法 */
   MINUS("-") {
     @Override
     public Long apply(Long x1, Long x2) {
@@ -37,5 +31,4 @@ public enum LongOperation implements Operation<Long> {
   public String getSymbol() {
     return symbol;
   }
-
 }

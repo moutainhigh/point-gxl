@@ -1,45 +1,28 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.type.CodeNameType;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * @author wangxinhua
- */
+/** @author wangxinhua */
 public class GradeCode implements Serializable {
 
-  /**
-   * id
-   */
+  private static final long serialVersionUID = 1L;
+  /** id */
   private Long id;
-
-  /**
-   * 功能类型,比如message/point/commission
-   */
+  /** 功能类型,比如message/point/commission */
   private Long categoryId;
-
-  /**
-   * 原functionCode
-   */
+  /** 原functionCode */
   private String codeNumber;
-
-  /**
-   * 积分类型 GRANT - 发放, CONSUME - 消费, ROLLBACK - 回退, FREEZE - 冻结
-   */
+  /** 积分类型 GRANT - 发放, CONSUME - 消费, ROLLBACK - 回退, FREEZE - 冻结 */
   private CodeNameType codeName;
 
   private BigDecimal point;
-
   private Date createdDate;
-
-  /**
-   * 描述
-   */
+  /** 描述 */
   private String description;
-
-  private static final long serialVersionUID = 1L;
 
   public Long getId() {
     return id;

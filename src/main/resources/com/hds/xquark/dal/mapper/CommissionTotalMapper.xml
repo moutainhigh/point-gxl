@@ -16,8 +16,17 @@
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, cpId, usable_comm_hds, freezed_comm_hds, usable_comm_vivilife, freezed_comm_vivilife,
-    usable_comm_ecomm, freezed_comm_ecomm, status, created_at, updated_at
+    id,
+    cpId,
+    usable_comm_hds,
+    freezed_comm_hds,
+    usable_comm_vivilife,
+    freezed_comm_vivilife,
+    usable_comm_ecomm,
+    freezed_comm_ecomm,
+    status,
+    created_at,
+    updated_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -36,8 +45,14 @@
                          #{val,jdbcType=DECIMAL},
                          #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
   </select>
+  <select id="selectTotalExists" resultType="java.lang.Boolean">
+    select exists(
+      select 1 from commissionTotal where cpId = #{cpId}
+             )
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from commissionTotal
+    delete
+    from commissionTotal
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.CommissionTotal">
@@ -46,11 +61,11 @@
                                  usable_comm_ecomm, freezed_comm_ecomm, status,
                                  created_at, updated_at)
     values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{usableCommHds,jdbcType=DECIMAL},
-      #{freezedCommHds,jdbcType=DECIMAL}, #{usableCommViviLife,jdbcType=DECIMAL},
-      #{freezedCommViviLife,jdbcType=DECIMAL},
-      #{usableCommEcomm,jdbcType=DECIMAL}, #{freezedCommEcomm,jdbcType=DECIMAL},
-      #{status,jdbcType=VARCHAR},
-      NOW(), NOW())
+            #{freezedCommHds,jdbcType=DECIMAL}, #{usableCommViviLife,jdbcType=DECIMAL},
+            #{freezedCommViviLife,jdbcType=DECIMAL},
+            #{usableCommEcomm,jdbcType=DECIMAL}, #{freezedCommEcomm,jdbcType=DECIMAL},
+            #{status,jdbcType=VARCHAR},
+            NOW(), NOW())
   </insert>
   <update id="updateByPrimaryKeySelective"
     parameterType="com.hds.xquark.dal.model.CommissionTotal">
@@ -86,15 +101,43 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.CommissionTotal">
     update commissionTotal
-    set cpId                = #{cpId,jdbcType=BIGINT},
-      usable_comm_hds       = #{usableCommHds,jdbcType=DECIMAL},
-      freezed_comm_hds      = #{freezedCommHds,jdbcType=DECIMAL},
-      usable_comm_vivilife  = #{usableCommViviLife,jdbcType=DECIMAL},
-      freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
-      usable_comm_ecomm     = #{usableCommEcomm,jdbcType=DECIMAL},
-      freezed_comm_ecomm    = #{freezedCommEcomm,jdbcType=DECIMAL},
-      status                = #{status,jdbcType=VARCHAR},
-      updated_at            = NOW()
+    set cpId                  = #{cpId,jdbcType=BIGINT},
+        usable_comm_hds       = #{usableCommHds,jdbcType=DECIMAL},
+        freezed_comm_hds      = #{freezedCommHds,jdbcType=DECIMAL},
+        usable_comm_vivilife  = #{usableCommViviLife,jdbcType=DECIMAL},
+        freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
+        usable_comm_ecomm     = #{usableCommEcomm,jdbcType=DECIMAL},
+        freezed_comm_ecomm    = #{freezedCommEcomm,jdbcType=DECIMAL},
+        status                = #{status,jdbcType=VARCHAR},
+        updated_at            = NOW()
     where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByCpId" parameterType="com.hds.xquark.dal.model.CommissionTotal">
+    update commissionTotal
+    <set>
+      <if test="usableCommHds != null">
+        usable_comm_hds = #{usableCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommHds != null">
+        freezed_comm_hds = #{freezedCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="usableCommViviLife != null">
+        usable_comm_vivilife = #{usableCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommViviLife != null">
+        freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="usableCommEcomm != null">
+        usable_comm_ecomm = #{usableCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommEcomm != null">
+        freezed_comm_ecomm = #{freezedCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      updated_at = NOW()
+    </set>
+    where cpId = #{cpId,jdbcType=BIGINT}
   </update>
 </mapper>

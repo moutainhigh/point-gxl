@@ -9,15 +9,10 @@ import java.math.BigDecimal;
  */
 public class CommissionRecordVO extends PointCommRecordVO {
 
-
-  /**
-   * 本次积分
-   */
+  /** 本次积分 */
   private BigDecimal currentCommission;
 
-  /**
-   * 本次冻结积分
-   */
+  /** 本次冻结积分 */
   private BigDecimal currentFreezedCommission;
 
   public BigDecimal getCurrentCommission() {

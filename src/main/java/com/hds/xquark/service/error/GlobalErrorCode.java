@@ -7,12 +7,14 @@ public enum GlobalErrorCode {
   //
   SUCESS(200, "Success"),
 
-  //访问权限
+  // 访问权限
   POINT_NOT_SUPPORT(8000000, "积分形式不支持"),
 
   POINT_NOT_ENOUGH(8000002, "积分不足"),
 
   COMMISSION_NOT_ENOUGH(8000003, "德分不足"),
+
+  TRANSFORM_ERROR(8000022, "德分、积分转换失败"),
 
   POINT_RECORD_NOT_FOUNT(8000004, "找不到积分记录"),
 
@@ -39,7 +41,7 @@ public enum GlobalErrorCode {
 
   //
   INVALID_ARGUMENT(11001, "Invalid argument"),
-  //错误的参数，原参数已修改， 页面需重新刷新
+  // 错误的参数，原参数已修改， 页面需重新刷新
   INVALID_ARGUMENT_2(11002, "Invalid argument"),
   //
   THIRDPLANT_BUZERROR(700, "Business error"),
@@ -47,7 +49,8 @@ public enum GlobalErrorCode {
   //
   UNKNOWN(-1, "Unknown error");
 
-  private static final Map<Integer, GlobalErrorCode> values = new HashMap<Integer, GlobalErrorCode>();
+  private static final Map<Integer, GlobalErrorCode> values =
+      new HashMap<Integer, GlobalErrorCode>();
 
   static {
     for (GlobalErrorCode ec : GlobalErrorCode.values()) {
@@ -82,5 +85,4 @@ public enum GlobalErrorCode {
   public String render() {
     return errorCode + ":" + error;
   }
-
 }

@@ -2,8 +2,9 @@ package com.hds.xquark.dal.mapper;
 
 import com.hds.xquark.dal.model.PointSuspendingAsst;
 import com.hds.xquark.dal.type.Trancd;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface PointSuspendingAsstMapper {
 

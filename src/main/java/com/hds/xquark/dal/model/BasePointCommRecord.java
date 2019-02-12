@@ -3,6 +3,7 @@ package com.hds.xquark.dal.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -15,61 +16,40 @@ public abstract class BasePointCommRecord {
 
   private Long id;
 
-  /**
-   * 用户id
-   */
+  /** 用户id */
   private Long cpId;
 
-  /**
-   * 规则id
-   */
+  /** 规则id */
   private Long gradeId;
 
-  /**
-   * 功能代码
-   */
+  /** 功能代码 */
   private String codeNumber;
 
-  /**
-   * 业务id
-   */
+  /** 业务id */
   private String businessId;
 
-  /**
-   * 积分来源平台
-   */
+  /** 积分来源平台 */
   private Integer source;
 
   private Integer belongingTo;
 
   private Boolean rollbacked;
 
-  /**
-   * 解冻记录id
-   */
+  /** 解冻记录id */
   private Long unFreezeId;
 
-  /**
-   * 回滚记录id
-   */
+  /** 回滚记录id */
   private Long rollbackId;
 
-  /**
-   * 冻结时间开始时间
-   */
-  @JsonIgnore
-  private Date freezedAt;
+  /** 冻结时间开始时间 */
+  @JsonIgnore private Date freezedAt;
 
-  /**
-   * 冻结结束时间
-   */
-  @JsonIgnore
-  private Date freezedTo;
+  /** 冻结结束时间 */
+  @JsonIgnore private Date freezedTo;
 
   private Date createdAt;
 
-  @JsonIgnore
-  private Date updatedAt;
+  @JsonIgnore private Date updatedAt;
 
   public Long getId() {
     return id;
@@ -108,24 +88,24 @@ public abstract class BasePointCommRecord {
     return businessId;
   }
 
-  public String getOrderId() {
-    return businessId;
-  }
-
   public void setBusinessId(String businessId) {
     this.businessId = businessId;
+  }
+
+  public String getOrderId() {
+    return businessId;
   }
 
   public Integer getSource() {
     return source;
   }
 
-  public PlatformType getPlatForm() {
-    return PlatformType.fromCode(source);
-  }
-
   public void setSource(Integer source) {
     this.source = source;
+  }
+
+  public PlatformType getPlatForm() {
+    return PlatformType.fromCode(source);
   }
 
   public Integer getBelongingTo() {
@@ -192,28 +172,19 @@ public abstract class BasePointCommRecord {
     this.updatedAt = updatedAt;
   }
 
-  /**
-   * 本次操作积分/德分
-   */
+  /** 本次操作积分/德分 */
   public abstract BigDecimal getCurrent();
 
-  /**
-   * 本次操作冻结积分/德分
-   */
-  public abstract BigDecimal getCurrentFreezed();
-
-  /**
-   * 设置积分/德分
-   */
+  /** 设置积分/德分 */
   public abstract void setCurrent(BigDecimal current);
 
-  /**
-   * 设置冻结积分/德分
-   */
+  /** 本次操作冻结积分/德分 */
+  public abstract BigDecimal getCurrentFreezed();
+
+  /** 设置冻结积分/德分 */
   public abstract void setCurrentFreezed(BigDecimal currentFreezed);
 
   public abstract Trancd getType();
 
   public abstract void setType(Trancd type);
-
 }

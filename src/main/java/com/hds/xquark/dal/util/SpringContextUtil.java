@@ -6,20 +6,13 @@ import org.springframework.context.ApplicationContextAware;
 
 public class SpringContextUtil implements ApplicationContextAware {
 
-  private static ApplicationContext context;// 声明一个静态变量保存
-
-  @Override
-  public void setApplicationContext(ApplicationContext contex) throws BeansException {
-    context = contex;
-  }
+  private static ApplicationContext context; // 声明一个静态变量保存
 
   public static ApplicationContext getContext() {
     return context;
   }
 
-  /**
-   * 直接获取bean
-   */
+  /** 直接获取bean */
   public static Object getBean(String beanName) {
     return context.getBean(beanName);
   }
@@ -31,5 +24,9 @@ public class SpringContextUtil implements ApplicationContextAware {
   public static <T> T getBean(String beanName, Class<T> requiredType) {
     return context.getBean(beanName, requiredType);
   }
-}
 
+  @Override
+  public void setApplicationContext(ApplicationContext contex) throws BeansException {
+    context = contex;
+  }
+}

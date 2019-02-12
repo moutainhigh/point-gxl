@@ -14,17 +14,12 @@ import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.PointCommOperationResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import org.springframework.stereotype.Component;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC:
- */
+import java.math.BigDecimal;
+import java.util.*;
+
+/** @author wangxinhua on 2018/5/21. DESC: */
 @Component
 public class ConsumePointCommOperator extends BasePointCommOperator {
 
@@ -50,8 +45,8 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
       PointCommOperationResult calRet,
       Class<? extends BasePointCommRecord> clazz) {
     // 扣减需要保存多条积分记录
-    List<? extends BasePointCommRecord> records = buildRecordsForConsume(bizId, grade, calRet,
-        clazz);
+    List<? extends BasePointCommRecord> records =
+        buildRecordsForConsume(bizId, grade, calRet, clazz);
     Iterator<? extends BasePointCommRecord> iterator = records.iterator();
 
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
@@ -68,9 +63,8 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     boolean isConsume = GradeCodeConstrants.CONSUME_CODE.contains(grade.getCodeNumber());
     if (isConsume) {
       BasePointCommAsst asst =
-          BasePointCommAsst
-              .empty(asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(),
-                  calRet.getTrancd());
+          BasePointCommAsst.empty(
+              asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(), calRet.getTrancd());
       for (BasePointCommRecord record : records) {
         asst.addRecord(record);
       }
@@ -111,5 +105,4 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
       }
     }
   }
-
 }

@@ -1,16 +1,6 @@
 package com.hds.xquark.config;
 
-import com.hds.xquark.dal.mapper.CommissionRecordMapper;
-import com.hds.xquark.dal.mapper.CommissionSuspendingAsstMapper;
-import com.hds.xquark.dal.mapper.CommissionTotalAuditMapper;
-import com.hds.xquark.dal.mapper.CommissionTotalMapper;
-import com.hds.xquark.dal.mapper.CustomerWithdrawalMapper;
-import com.hds.xquark.dal.mapper.GradeCodeMapper;
-import com.hds.xquark.dal.mapper.PointRecordMapper;
-import com.hds.xquark.dal.mapper.PointSuspendingAsstMapper;
-import com.hds.xquark.dal.mapper.PointTotalAuditMapper;
-import com.hds.xquark.dal.mapper.PointTotalMapper;
-import javax.sql.DataSource;
+import com.hds.xquark.dal.mapper.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -21,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.Resource;
 
+import javax.sql.DataSource;
 
 @Configuration
 @ImportResource("classpath:/META-INF/app-context-dal.xml")
@@ -29,8 +20,7 @@ public class PointDalConfig {
   @Value("classpath:config/MapperPointConfig.xml")
   Resource mybatisMapperConfig;
 
-  @Autowired
-  DataSource dataSource;
+  @Autowired DataSource dataSource;
 
   @Bean
   public GradeCodeMapper pointGradeMapper() throws Exception {
@@ -97,8 +87,8 @@ public class PointDalConfig {
     fb.setConfigLocation(mybatisMapperConfig);
     fb.setDataSource(dataSource);
     // env.acceptsProfiles("prod") ? IdTypeHandler.class : IdTypeNullHandler.class
-//    fb.setTypeAliases(new Class<?>[]{IdTypeHandler.class, ObjectRangeHandler.class,
-//            PromotionActionTypeHandler.class, DomainTypeHandler.class});
+    //    fb.setTypeAliases(new Class<?>[]{IdTypeHandler.class, ObjectRangeHandler.class,
+    //            PromotionActionTypeHandler.class, DomainTypeHandler.class});
     return fb.getObject();
   }
 }

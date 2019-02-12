@@ -8,6 +8,7 @@ package com.hds.xquark.dal.type;
 public enum TotalAuditType {
 
   // 调用类型
-  DTS, JOB, API
-
+  DTS,
+  JOB,
+  API
 }

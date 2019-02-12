@@ -1,26 +1,21 @@
 package com.hds.xquark.service.point.helper;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.hds.xquark.dal.type.PlatformType.E;
-import static com.hds.xquark.dal.type.PlatformType.H;
-import static com.hds.xquark.dal.type.PlatformType.V;
-import static org.springframework.util.ReflectionUtils.invokeMethod;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.hds.xquark.dal.model.BasePointCommRecord;
-import com.hds.xquark.dal.model.BasePointCommTotal;
-import com.hds.xquark.dal.model.CommissionTotal;
-import com.hds.xquark.dal.model.GradeCode;
-import com.hds.xquark.dal.model.PointTotal;
+import com.hds.xquark.dal.model.*;
 import com.hds.xquark.dal.type.BelongintToType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.hds.xquark.dal.type.PlatformType.*;
+import static org.springframework.util.ReflectionUtils.invokeMethod;
 
 /**
  * created by
@@ -29,73 +24,40 @@ import java.util.Map;
  */
 public class PointCommCalHelper {
 
-  private final static Map<PlatformType, PointCommMinusChain> POINT_PLATFORM_CHAIN_MAP;
+  private static final Map<PlatformType, PointCommMinusChain> POINT_PLATFORM_CHAIN_MAP;
 
-  private final static Map<PlatformType, PointCommMinusChain> COMM_PLATFORM_CHAIN_MAP;
+  private static final Map<PlatformType, PointCommMinusChain> COMM_PLATFORM_CHAIN_MAP;
 
   static {
     // HDS扣减顺序 - HDS -> HV_MALL -> VIVI_LIFE
     PointCommMinusChain HDS_CHAIN = new PointCommMinusChain(H);
-    HDS_CHAIN.setNext(new PointCommMinusChain(E))
-        .setNext(new PointCommMinusChain(V));
+    HDS_CHAIN.setNext(new PointCommMinusChain(E)).setNext(new PointCommMinusChain(V));
 
     // HV 扣减顺序 - HV_MALL -> HDS -> VIVI_LIFE
     PointCommMinusChain HV_CHAIN = new PointCommMinusChain(E);
-    HV_CHAIN.setNext(new PointCommMinusChain(H))
-        .setNext(new PointCommMinusChain(V));
+    HV_CHAIN.setNext(new PointCommMinusChain(H)).setNext(new PointCommMinusChain(V));
 
     // 德分 VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HV_MALL -> HDS
     PointCommMinusChain VIVI_POINT_CHAIN = new PointCommMinusChain(V);
-    VIVI_POINT_CHAIN.setNext(new PointCommMinusChain(E))
-        .setNext(new PointCommMinusChain(H));
+    VIVI_POINT_CHAIN.setNext(new PointCommMinusChain(E)).setNext(new PointCommMinusChain(H));
 
     // 积分 VIVI_LIFE 扣减顺序 - VIVI_LIFE -> HDS -> HV_MALL
     PointCommMinusChain VIVI_COMM_CHAIN = new PointCommMinusChain(V);
-    VIVI_COMM_CHAIN.setNext(new PointCommMinusChain(H))
-        .setNext(new PointCommMinusChain(E));
+    VIVI_COMM_CHAIN.setNext(new PointCommMinusChain(H)).setNext(new PointCommMinusChain(E));
 
     // 配置德分扣减顺序map
-    POINT_PLATFORM_CHAIN_MAP = ImmutableMap.of(
-        H, HDS_CHAIN,
-        E, HV_CHAIN,
-        V, VIVI_POINT_CHAIN);
+    POINT_PLATFORM_CHAIN_MAP =
+        ImmutableMap.of(
+            H, HDS_CHAIN,
+            E, HV_CHAIN,
+            V, VIVI_POINT_CHAIN);
 
     // 配置积分扣减顺序map
-    COMM_PLATFORM_CHAIN_MAP = ImmutableMap.of(
-        H, HDS_CHAIN,
-        E, HV_CHAIN,
-        V, VIVI_COMM_CHAIN
-    );
-  }
-
-  /**
-   * 平台积分扣减顺序链
-   */
-  private static class PointCommMinusChain {
-
-    final PlatformType type;
-    PointCommMinusChain next = null;
-
-    PointCommMinusChain(PlatformType type) {
-      this.type = type;
-    }
-
-    public PlatformType getType() {
-      return type;
-    }
-
-    public PointCommMinusChain getNext() {
-      return next;
-    }
-
-    public PointCommMinusChain setNext(PointCommMinusChain next) {
-      this.next = next;
-      return next;
-    }
-
-    public boolean hasNext() {
-      return next != null;
-    }
+    COMM_PLATFORM_CHAIN_MAP =
+        ImmutableMap.of(
+            H, HDS_CHAIN,
+            E, HV_CHAIN,
+            V, VIVI_COMM_CHAIN);
   }
 
   /**
@@ -105,8 +67,7 @@ public class PointCommCalHelper {
    * @param platform 当前操作平台
    * @param target 待增加积分
    */
-  public static void plus(BasePointCommTotal pointComm, PlatformType platform,
-      BigDecimal target) {
+  public static void plus(BasePointCommTotal pointComm, PlatformType platform, BigDecimal target) {
     BigDecimal oldVal = getUsable(pointComm, platform);
     setUsable(pointComm, platform, oldVal.add(target));
   }
@@ -118,8 +79,8 @@ public class PointCommCalHelper {
    * @param platform 当前操作平台
    * @param target 待增加积分
    */
-  public static void plusFreeze(BasePointCommTotal pointComm, PlatformType platform,
-      BigDecimal target) {
+  public static void plusFreeze(
+      BasePointCommTotal pointComm, PlatformType platform, BigDecimal target) {
     BigDecimal oldVal = getFreezed(pointComm, platform);
     setFreezed(pointComm, platform, oldVal.add(target));
   }
@@ -135,7 +96,9 @@ public class PointCommCalHelper {
    * @throws com.hds.xquark.service.error.BizException 当前三个平台账户积分/德分不够都扣减
    * @throws RuntimeException 反射找不到方法名
    */
-  public static boolean minus(BasePointCommTotal pointComm, PlatformType platform,
+  public static boolean minus(
+      BasePointCommTotal pointComm,
+      PlatformType platform,
       BigDecimal target,
       Map<PlatformType, BigDecimal> detailMap) {
     checkNotNull(target);
@@ -146,8 +109,11 @@ public class PointCommCalHelper {
     return minus(pointComm, chain, target, detailMap);
   }
 
-  private static boolean minus(BasePointCommTotal pointComm, PointCommMinusChain chain,
-      BigDecimal target, Map<PlatformType, BigDecimal> detailMap) {
+  private static boolean minus(
+      BasePointCommTotal pointComm,
+      PointCommMinusChain chain,
+      BigDecimal target,
+      Map<PlatformType, BigDecimal> detailMap) {
     // 当前平台可用分
     PlatformType platform = chain.getType();
     BigDecimal currPlatformVal = getUsable(pointComm, platform);
@@ -240,8 +206,8 @@ public class PointCommCalHelper {
    * @param platform 平台类型
    * @param val 设置值
    */
-  public static void setUsable(BasePointCommTotal pointComm, PlatformType platform,
-      BigDecimal val) {
+  public static void setUsable(
+      BasePointCommTotal pointComm, PlatformType platform, BigDecimal val) {
     String methodPostfix = platform.getFullName();
     String setMethodName = "setUsable" + methodPostfix;
     setVal(setMethodName, pointComm, val);
@@ -254,8 +220,8 @@ public class PointCommCalHelper {
    * @param platform 平台
    * @param val 新的值
    */
-  public static void setFreezed(BasePointCommTotal pointComm, PlatformType platform,
-      BigDecimal val) {
+  public static void setFreezed(
+      BasePointCommTotal pointComm, PlatformType platform, BigDecimal val) {
     String methodPostfix = platform.getFullName();
     String setMethodName = "setFreezed" + methodPostfix;
     setVal(setMethodName, pointComm, val);
@@ -281,9 +247,7 @@ public class PointCommCalHelper {
     invokeMethod(setMethod, pointComm, val);
   }
 
-  /**
-   * 积分、德分返回不同的扣减链
-   */
+  /** 积分、德分返回不同的扣减链 */
   private static PointCommMinusChain getPlatFormChainMap(
       BasePointCommTotal pointComm, PlatformType platformType) {
     if (pointComm == null) {
@@ -298,36 +262,51 @@ public class PointCommCalHelper {
   }
 
   public static <T extends BasePointCommRecord, S extends BasePointCommTotal> T buildRecord(
-      Long cpId, String bizId, GradeCode grade,
-      S infoBefore, S infoAfter, PlatformType platform,
+      Long cpId,
+      String bizId,
+      GradeCode grade,
+      S infoBefore,
+      S infoAfter,
+      PlatformType platform,
       Trancd recordType,
       Class<T> clazz) {
-    return buildRecord(cpId, bizId, grade, infoBefore, infoAfter, platform, BelongintToType.NON,
-        recordType, clazz);
+    return buildRecord(
+        cpId,
+        bizId,
+        grade,
+        infoBefore,
+        infoAfter,
+        platform,
+        BelongintToType.NON,
+        recordType,
+        clazz);
   }
 
-  /**
-   * 通过详细参数构造记录对象
-   */
+  /** 通过详细参数构造记录对象 */
   public static <T extends BasePointCommRecord, S extends BasePointCommTotal> T buildRecord(
-      Long cpId, String bizId, GradeCode grade,
-      S infoBefore, S infoAfter, PlatformType platform,
-      BelongintToType belongingTo, Trancd recordType,
+      Long cpId,
+      String bizId,
+      GradeCode grade,
+      S infoBefore,
+      S infoAfter,
+      PlatformType platform,
+      BelongintToType belongingTo,
+      Trancd recordType,
       Class<T> clazz) {
-    Preconditions.checkArgument(infoBefore != null && infoAfter != null,
-        "积分计算错误");
-    PlatformType realPlatform = belongingTo == BelongintToType.NON ? platform
-        : PlatformType.fromCode(belongingTo.getCode());
-    BigDecimal modified = getUsable(infoAfter, realPlatform)
-        .subtract(getUsable(infoBefore, realPlatform));
-    BigDecimal modifiedFreezed = getFreezed(infoAfter, realPlatform)
-        .subtract(getFreezed(infoBefore, realPlatform));
+    Preconditions.checkArgument(infoBefore != null && infoAfter != null, "积分计算错误");
+    PlatformType realPlatform =
+        belongingTo == BelongintToType.NON
+            ? platform
+            : PlatformType.fromCode(belongingTo.getCode());
+    BigDecimal modified =
+        getUsable(infoAfter, realPlatform).subtract(getUsable(infoBefore, realPlatform));
+    BigDecimal modifiedFreezed =
+        getFreezed(infoAfter, realPlatform).subtract(getFreezed(infoBefore, realPlatform));
     T record;
     try {
       record = clazz.newInstance();
     } catch (InstantiationException | IllegalAccessException e) {
-      throw new RuntimeException("积分记录构造失败, 请确保class不是是抽象父类"
-          + "且有默认构造函数", e);
+      throw new RuntimeException("积分记录构造失败, 请确保class不是是抽象父类" + "且有默认构造函数", e);
     }
     record.setBusinessId(bizId);
     record.setCurrent(modified);
@@ -352,4 +331,31 @@ public class PointCommCalHelper {
     System.out.println(pointTotal);
   }
 
+  /** 平台积分扣减顺序链 */
+  private static class PointCommMinusChain {
+
+    final PlatformType type;
+    PointCommMinusChain next = null;
+
+    PointCommMinusChain(PlatformType type) {
+      this.type = type;
+    }
+
+    public PlatformType getType() {
+      return type;
+    }
+
+    public PointCommMinusChain getNext() {
+      return next;
+    }
+
+    public PointCommMinusChain setNext(PointCommMinusChain next) {
+      this.next = next;
+      return next;
+    }
+
+    public boolean hasNext() {
+      return next != null;
+    }
+  }
 }
