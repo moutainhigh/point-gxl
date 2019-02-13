@@ -11,10 +11,10 @@
 主要的Service实现类有:
 
 * PointCommService 最原始的实现, 可以同时提供积分、德分的操作， 目前仅用于DTS包，汉薇商城已经不再使用
-* PointServiceApi 实现自 `TokenService`，德分操作实现类
-* CommissionServiceApi 实现自 `TokenService`，积分操作实现类
+* PointServiceApi 实现自 `TokenServiceApi`，德分操作实现类
+* CommissionServiceApi 实现自 `TokenServiceApi`，积分操作实现类
 
-各个实现方法文档请查看 `TokenService` 注释
+各个实现方法文档请查看 `TokenServiceApi` 注释
 
 基础的业务操作封装到 `modify` 方法中
 
@@ -23,6 +23,7 @@
 * cpId 三网唯一用户Id
 * bizId 积分、德分业务操作Id, 大部分情况下为订单Id
 * FunctionCode 对应 `gradecode` 表, 实现业务操作
+* Trancd 业务描述, 见 `Trancd` 枚举
 
 #### 基本操作
 
