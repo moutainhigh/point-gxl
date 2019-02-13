@@ -42,7 +42,7 @@ GradeNumber 目前总共有5种基本操作，分别为 **GRANT**, **CONSUME**, 
 | ROLLBACK     | 回退     | RollbackPointCommOperator      |
 | RELEASE      | 解冻     | FreezeReleasePointCommOperator |
 
-**** 由于历史原因, 实现类实现不区分德分积分, 都可以支持****
+**由于历史原因, 实现类实现不区分德分积分, 都可以支持**
 
 #### 扣减实现
 
