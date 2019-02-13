@@ -23,6 +23,7 @@
 * cpId 三网唯一用户Id
 * bizId 积分、德分业务操作Id, 大部分情况下为订单Id
 * FunctionCode 对应 `gradecode` 表, 实现业务操作
+* Trancd 业务描述, 见 `Trancd` 枚举
 
 #### 基本操作
 
