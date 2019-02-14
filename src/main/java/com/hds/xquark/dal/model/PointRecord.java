@@ -61,6 +61,16 @@ public class PointRecord extends BasePointCommRecord {
   }
 
   @Override
+  public BigDecimal getCurrentNowithdrawal() {
+    return null;
+  }
+
+  @Override
+  public void setCurrentNowithdrawal(BigDecimal currentNowithdrawal) {
+
+  }
+
+  @Override
   public Trancd getType() {
     return getTrancd();
   }

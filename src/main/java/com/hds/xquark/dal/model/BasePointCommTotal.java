@@ -109,6 +109,22 @@ public abstract class BasePointCommTotal {
 
   public abstract void setFreezedEcomm(BigDecimal freezedEcomm);
 
+  public abstract BigDecimal getNowithdrawalHds();
+
+  public abstract void setNowithdrawalHds(BigDecimal nowithdrawalHds);
+
+  public abstract BigDecimal getNowithdrawalViviLife();
+
+  public abstract void setNowithdrawalViviLife(BigDecimal nowithdrawalViviLife);
+
+  public abstract BigDecimal getNowithdrawalEcomm();
+
+  public abstract void setNowithdrawalEcomm(BigDecimal nowithdrawalEcomm);
+
+  public abstract Integer getUsedTypeC();
+
+  public abstract void setUsedTypeC(Integer usedType);
+
   public PointInfoStatus getStatus() {
     return status;
   }

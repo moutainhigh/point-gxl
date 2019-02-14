@@ -223,7 +223,7 @@
     </selectKey>
     insert into commissionsuspending (id, cpId, grade_Id,
     gradeNumber, orderid, current_comm,
-    current_freezed_comm, trancd, source, belongingTo,
+    current_freezed_comm, trancd, source, belongingTo, usedType,
     rollbacked, un_freeze_id, rollback_id,
     created_at, updated_at, freezed_at,
     freezed_to)
@@ -232,7 +232,7 @@
     #{currentComm,jdbcType=DECIMAL},
     #{currentFreezedComm,jdbcType=DECIMAL},
     #{trancd,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT}, #{belongingTo,jdbcType=TINYINT},
-    #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
+    #{usedType,jdbcType=TINYINT}, #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
     #{rollbackId,jdbcType=BIGINT},
     NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
     #{freezedTo,jdbcType=TIMESTAMP})

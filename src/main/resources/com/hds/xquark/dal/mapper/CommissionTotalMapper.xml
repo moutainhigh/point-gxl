@@ -20,10 +20,13 @@
     cpId,
     usable_comm_hds,
     freezed_comm_hds,
+    nowithdrawal_comm_hds,
     usable_comm_vivilife,
     freezed_comm_vivilife,
+    nowithdrawal_comm_vivilife,
     usable_comm_ecomm,
     freezed_comm_ecomm,
+    nowithdrawal_comm_ecomm,
     status,
     created_at,
     updated_at
@@ -56,16 +59,16 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.hds.xquark.dal.model.CommissionTotal">
-    insert into commissionTotal (id, cpId, usable_comm_hds,
-                                 freezed_comm_hds, usable_comm_vivilife, freezed_comm_vivilife,
-                                 usable_comm_ecomm, freezed_comm_ecomm, status,
-                                 created_at, updated_at)
+    insert into commissionTotal (id, cpId, usable_comm_hds, freezed_comm_hds, nowithdrawal_comm_hds,
+                                 usable_comm_vivilife, freezed_comm_vivilife, nowithdrawal_comm_vivilife,
+                                 usable_comm_ecomm, freezed_comm_ecomm, nowithdrawal_comm_ecomm,
+                                 status, created_at, updated_at)
     values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{usableCommHds,jdbcType=DECIMAL},
-            #{freezedCommHds,jdbcType=DECIMAL}, #{usableCommViviLife,jdbcType=DECIMAL},
-            #{freezedCommViviLife,jdbcType=DECIMAL},
-            #{usableCommEcomm,jdbcType=DECIMAL}, #{freezedCommEcomm,jdbcType=DECIMAL},
-            #{status,jdbcType=VARCHAR},
-            NOW(), NOW())
+            #{freezedCommHds,jdbcType=DECIMAL}, #{nowithdrawalCommHds,jdbcType=DECIMAL},
+            #{usableCommViviLife,jdbcType=DECIMAL}, #{freezedCommViviLife,jdbcType=DECIMAL},
+            #{nowithdrawalCommVivilife,jdbcType=DECIMAL}, #{usableCommEcomm,jdbcType=DECIMAL},
+            #{freezedCommEcomm,jdbcType=DECIMAL}, #{nowithdrawalCommEcomm,jdbcType=DECIMAL},
+            #{status,jdbcType=VARCHAR}, NOW(), NOW())
   </insert>
   <update id="updateByPrimaryKeySelective"
     parameterType="com.hds.xquark.dal.model.CommissionTotal">
@@ -80,17 +83,26 @@
       <if test="freezedCommHds != null">
         freezed_comm_hds = #{freezedCommHds,jdbcType=DECIMAL},
       </if>
+      <if test="nowithdrawalCommHds != null">
+        nowithdrawal_comm_hds = #{nowithdrawalCommHds,jdbcType=DECIMAL},
+      </if>
       <if test="usableCommViviLife != null">
         usable_comm_vivilife = #{usableCommViviLife,jdbcType=DECIMAL},
       </if>
       <if test="freezedCommViviLife != null">
         freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
       </if>
+      <if test="nowithdrawalCommVivilife != null">
+        nowithdrawal_comm_vivilife = #{nowithdrawalCommVivilife,jdbcType=DECIMAL},
+      </if>
       <if test="usableCommEcomm != null">
         usable_comm_ecomm = #{usableCommEcomm,jdbcType=DECIMAL},
       </if>
       <if test="freezedCommEcomm != null">
         freezed_comm_ecomm = #{freezedCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="nowithdrawalCommEcomm != null">
+        nowithdrawal_comm_ecomm = #{nowithdrawalCommEcomm,jdbcType=DECIMAL},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},

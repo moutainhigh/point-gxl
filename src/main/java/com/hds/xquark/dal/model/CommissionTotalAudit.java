@@ -24,14 +24,20 @@ public class CommissionTotalAudit implements Serializable {
   private BigDecimal usableCommHds;
   /** 已冻结佣金 */
   private BigDecimal freezedCommHds;
+  /** 汉德森不可提现积分 */
+  private BigDecimal nowithdrawalCommHds;
   /** viviLife总佣金 */
   private BigDecimal usableCommViviLife;
   /** 已冻结佣金 */
   private BigDecimal freezedCommViviLife;
+  /** viviLife不可提现积分 */
+  private BigDecimal nowithdrawalCommViviLife;
   /** 汉薇商城总佣金 */
   private BigDecimal usableCommEcomm;
   /** 已冻结佣金 */
   private BigDecimal freezedCommEcomm;
+  /** 汉薇商城不可提现积分 */
+  private BigDecimal nowithdrawalCommEcomm;
   /** 佣金状态 */
   private PointInfoStatus status;
 
@@ -115,6 +121,30 @@ public class CommissionTotalAudit implements Serializable {
 
   public void setFreezedCommEcomm(BigDecimal freezedCommEcomm) {
     this.freezedCommEcomm = freezedCommEcomm;
+  }
+
+  public BigDecimal getNowithdrawalCommHds() {
+    return nowithdrawalCommHds;
+  }
+
+  public void setNowithdrawalCommHds(BigDecimal nowithdrawalCommHds) {
+    this.nowithdrawalCommHds = nowithdrawalCommHds;
+  }
+
+  public BigDecimal getNowithdrawalCommViviLife() {
+    return nowithdrawalCommViviLife;
+  }
+
+  public void setNowithdrawalCommViviLife(BigDecimal nowithdrawalCommViviLife) {
+    this.nowithdrawalCommViviLife = nowithdrawalCommViviLife;
+  }
+
+  public BigDecimal getNowithdrawalCommEcomm() {
+    return nowithdrawalCommEcomm;
+  }
+
+  public void setNowithdrawalCommEcomm(BigDecimal nowithdrawalCommEcomm) {
+    this.nowithdrawalCommEcomm = nowithdrawalCommEcomm;
   }
 
   public PointInfoStatus getStatus() {

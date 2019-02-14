@@ -17,6 +17,9 @@ public class CommissionRecord extends BasePointCommRecord {
   /** 本次冻结佣金 */
   private BigDecimal currentFreezedComm;
 
+  /** 本次不可提现佣金 */
+  private BigDecimal currentNowithdrawalComm;
+
   private Trancd trancd;
 
   public BigDecimal getCurrentComm() {
@@ -33,6 +36,14 @@ public class CommissionRecord extends BasePointCommRecord {
 
   public void setCurrentFreezedComm(BigDecimal currentFreezedComm) {
     this.currentFreezedComm = currentFreezedComm;
+  }
+
+  public BigDecimal getCurrentNowithdrawalComm() {
+    return currentNowithdrawalComm;
+  }
+
+  public void setCurrentNowithdrawalComm(BigDecimal currentNowithdrawalComm) {
+    this.currentNowithdrawalComm = currentNowithdrawalComm;
   }
 
   public Trancd getTrancd() {
@@ -61,6 +72,16 @@ public class CommissionRecord extends BasePointCommRecord {
   @Override
   public void setCurrentFreezed(BigDecimal currentFreezed) {
     setCurrentFreezedComm(currentFreezed);
+  }
+
+  @Override
+  public BigDecimal getCurrentNowithdrawal() {
+    return getCurrentNowithdrawalComm();
+  }
+
+  @Override
+  public void setCurrentNowithdrawal(BigDecimal currentNowithdrawal) {
+    setCurrentNowithdrawalComm(currentNowithdrawal);
   }
 
   @Override
