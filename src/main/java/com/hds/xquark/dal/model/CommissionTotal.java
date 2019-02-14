@@ -212,7 +212,7 @@ public class CommissionTotal extends BasePointCommTotal {
 
   @Override
   public void setNowithdrawalViviLife(BigDecimal nowithdrawalViviLife) {
-    setFreezedCommViviLife(nowithdrawalViviLife);
+    setNowithdrawalCommViviLife(nowithdrawalViviLife);
   }
 
   @Override

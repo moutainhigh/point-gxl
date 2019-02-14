@@ -550,12 +550,13 @@ public class PointCommServiceImpl implements PointCommService {
 
   @Override
   public void grantCommissionWithProcedure(
-      Long cpId, PlatformType platform, BigDecimal val, Trancd trancd) {
+      Long cpId, PlatformType platform, BigDecimal val, Integer usedType, Trancd trancd) {
     checkArgument(trancd == REWARD_C || trancd == DEPOSIT_C || trancd == MIGRATE_C, "新增积分Trancd错误");
     commissionTotalMapper.grantWithProcedure(
         cpId,
         platform.getCode(),
         val,
+        usedType,
         trancd.name(),
         StringUtils.substringBefore(trancd.name().toLowerCase(), "_"));
   }

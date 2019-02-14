@@ -13,15 +13,25 @@ public class PointTotal extends BasePointCommTotal {
   /** 汉德森冻结积分 */
   private BigDecimal freezedPointHds;
 
+  /** 汉德森不可提现积分 */
+  private BigDecimal nowithdrawalCommHds;
+
   private BigDecimal usablePointViviLife;
 
   private BigDecimal freezedPointViviLife;
+
+  private BigDecimal nowithdrawalCommViviLife;
 
   private BigDecimal usablePointEcomm;
 
   private BigDecimal usablePointPacket = BigDecimal.ZERO;
 
   private BigDecimal freezedPointEcomm;
+
+  private BigDecimal nowithdrawalCommEcomm;
+
+  /** 是否可提现 */
+  private Integer usedType;
 
   @JsonIgnore
   public BigDecimal getUsablePointHds() {
@@ -75,6 +85,52 @@ public class PointTotal extends BasePointCommTotal {
 
   public void setFreezedPointEcomm(BigDecimal freezedPointEcomm) {
     this.freezedPointEcomm = freezedPointEcomm;
+  }
+
+  @JsonIgnore
+  public BigDecimal getNowithdrawalCommHds() {
+    return nowithdrawalCommHds;
+  }
+
+  public void setNowithdrawalCommHds(BigDecimal nowithdrawalCommHds) {
+    this.nowithdrawalCommHds = nowithdrawalCommHds;
+  }
+
+  @JsonIgnore
+  public BigDecimal getNowithdrawalCommViviLife() {
+    return nowithdrawalCommViviLife;
+  }
+
+  public void setNowithdrawalCommViviLife(BigDecimal nowithdrawalCommViviLife) {
+    this.nowithdrawalCommViviLife = nowithdrawalCommViviLife;
+  }
+
+  @JsonIgnore
+  public BigDecimal getNowithdrawalCommEcomm() {
+    return nowithdrawalCommEcomm;
+  }
+
+  public void setNowithdrawalCommEcomm(BigDecimal nowithdrawalCommEcomm) {
+    this.nowithdrawalCommEcomm = nowithdrawalCommEcomm;
+  }
+
+  @JsonIgnore
+  public Integer getUsedType() {
+    return usedType;
+  }
+
+  public void setUsedType(Integer usedType) {
+    this.usedType = usedType;
+  }
+
+  @Override
+  public Integer getUsedTypeC() {
+    return getUsedType();
+  }
+
+  @Override
+  public void setUsedTypeC(Integer usedType) {
+    setUsedType(usedType);
   }
 
   @Override
@@ -135,6 +191,36 @@ public class PointTotal extends BasePointCommTotal {
   @Override
   public void setFreezedEcomm(BigDecimal freezedEcomm) {
     setFreezedPointEcomm(freezedEcomm);
+  }
+
+  @Override
+  public BigDecimal getNowithdrawalHds() {
+    return getNowithdrawalCommHds();
+  }
+
+  @Override
+  public void setNowithdrawalHds(BigDecimal nowithdrawalHds) {
+    setNowithdrawalCommHds(nowithdrawalHds);
+  }
+
+  @Override
+  public BigDecimal getNowithdrawalViviLife() {
+    return getNowithdrawalCommViviLife();
+  }
+
+  @Override
+  public void setNowithdrawalViviLife(BigDecimal nowithdrawalViviLife) {
+    setNowithdrawalCommViviLife(nowithdrawalViviLife);
+  }
+
+  @Override
+  public BigDecimal getNowithdrawalEcomm() {
+    return getNowithdrawalCommEcomm();
+  }
+
+  @Override
+  public void setNowithdrawalEcomm(BigDecimal nowithdrawalEcomm) {
+    setNowithdrawalCommEcomm(nowithdrawalEcomm);
   }
 
   /** 德分+红包 */

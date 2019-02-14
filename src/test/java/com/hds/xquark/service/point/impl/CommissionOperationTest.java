@@ -159,7 +159,7 @@ public class CommissionOperationTest extends BaseOperationTest {
   @Test
   public void grantByProcedure() {
     pointCommService.grantCommissionWithProcedure(
-        cpId, PlatformType.E, BigDecimal.valueOf(200), Trancd.DEPOSIT_C);
+        cpId, PlatformType.E, BigDecimal.valueOf(200), 2, Trancd.DEPOSIT_C);
   }
 
   @Test

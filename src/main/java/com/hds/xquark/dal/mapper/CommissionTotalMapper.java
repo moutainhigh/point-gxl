@@ -27,6 +27,7 @@ public interface CommissionTotalMapper {
       @Param("cpId") Long cpId,
       @Param("source") int source,
       @Param("val") BigDecimal val,
+      @Param("usedType") Integer usedType,
       @Param("trancd") String trancd,
       @Param("desc") String desc);
 }

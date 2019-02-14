@@ -13,6 +13,7 @@
     <result column="trancd" jdbcType="VARCHAR" property="trancd"/>
     <result column="source" jdbcType="TINYINT" property="source"/>
     <result column="belongingTo" jdbcType="INTEGER" property="belongingTo"/>
+    <result column="usedType" jdbcType="INTEGER" property="usedType"/>
     <result column="rollbacked" jdbcType="TINYINT" property="rollbacked"/>
     <result column="un_freeze_id" jdbcType="BIGINT" property="unFreezeId"/>
     <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
@@ -40,13 +41,14 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, cpId, grade_Id, gradeNumber, orderid, current_comm, current_freezed_comm, trancd,
-    source, belongingTo, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
+    source, belongingTo, usedType, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
     freezed_to
   </sql>
   <sql id="Join_Column_List">
     record.id, record.cpId, record.grade_id, record.gradeNumber,
     record.orderid, record.current_comm, record.current_freezed_comm,
-    record.trancd, record.source, record.belongingTo, record.rollbacked, record.rollback_id, record.un_freeze_id,
+    record.trancd, record.source, record.belongingTo, record.usedType,
+    record.rollbacked, record.rollback_id, record.un_freeze_id,
     record.created_at, record.updated_at, record.freezed_at, record.freezed_to
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -268,6 +270,9 @@
       <if test="belongingTo != null">
         belongingTo = #{belongingTo,jdbcType=TINYINT},
       </if>
+      <if test="usedType != null">
+        usedType = #{usedType,jdbcType=TINYINT},
+      </if>
       <if test="rollbacked != null">
         rollbacked = #{rollbacked,jdbcType=TINYINT},
       </if>
@@ -298,6 +303,7 @@
         trancd               = #{trancd,jdbcType=VARCHAR},
         source               = #{source,jdbcType=TINYINT},
         belongingTo          = #{belongingTo,jdbcType=TINYINT},
+        usedType             = #{usedType,jdbcType=TINYINT},
         rollbacked           = #{rollbacked,jdbcType=TINYINT},
         un_freeze_id         = #{unFreezeId,jdbcType=BIGINT},
         rollback_id          = #{rollbackId,jdbcType=BIGINT},

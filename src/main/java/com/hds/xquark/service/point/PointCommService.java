@@ -124,7 +124,7 @@ public interface PointCommService {
   void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
 
   void grantCommissionWithProcedure(
-      Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
+      Long cpId, PlatformType platform, BigDecimal val, Integer usedType, Trancd trancd);
 
   List<CommissionRecord> listRecordByTime(Date start, Date end, String grade, Integer source);
 
