@@ -51,6 +51,11 @@
                          #{val,jdbcType=DECIMAL},
                          #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
   </select>
+  <select id="grantNoWithdrawal">
+    CALL GrantCommissionNoWithdrawal(#{cpId,jdbcType=BIGINT}, #{source,jdbcType=INTEGER},
+                         #{val,jdbcType=DECIMAL},
+                         #{trancd,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR});
+  </select>
   <select id="selectTotalExists" resultType="java.lang.Boolean">
     select exists(
       select 1 from commissionTotal where cpId = #{cpId}

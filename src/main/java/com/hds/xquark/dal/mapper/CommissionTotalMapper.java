@@ -27,7 +27,21 @@ public interface CommissionTotalMapper {
       @Param("cpId") Long cpId,
       @Param("source") int source,
       @Param("val") BigDecimal val,
-      @Param("usedType") Integer usedType,
       @Param("trancd") String trancd,
       @Param("desc") String desc);
+
+  /**
+   * 新增不可提现积分
+   * @param cpId cpId
+   * @param source source
+   * @param val val
+   * @param trancd trancd
+   * @param desc desc
+   */
+  void grantNoWithdrawal(
+          @Param("cpId") Long cpId,
+          @Param("source") int source,
+          @Param("val") BigDecimal val,
+          @Param("trancd") String trancd,
+          @Param("desc") String desc);
 }
