@@ -117,9 +117,41 @@ public class PointCommCalHelper {
     // 当前平台可用分
     PlatformType platform = chain.getType();
     BigDecimal currPlatformVal = getUsable(pointComm, platform);
+    //当前平台可用不可提现积分
+    BigDecimal noWithdrawal = getNoWithdrawal(pointComm, platform);
 
-    BigDecimal afterMinusVal = currPlatformVal.subtract(target);
-    BigDecimal afterMinusAbs = afterMinusVal.abs();
+    if (noWithdrawal.signum() < 0){
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "不可提现积分为负数，请检查数据");
+    }
+
+    BigDecimal afterMinusVal;
+    BigDecimal afterMinusAbs;
+
+    if (noWithdrawal.signum() == 0){
+      afterMinusVal = currPlatformVal.subtract(target);
+      afterMinusAbs = afterMinusVal.abs();
+      //TODO 需要记录在commissionSuspending表记录usedType=1
+    } else {
+      BigDecimal after1MinusVal = noWithdrawal.subtract(target);
+      BigDecimal after1MinusAbs = after1MinusVal.abs();
+      if (after1MinusVal.signum() < 0){
+        afterMinusVal = currPlatformVal.add(after1MinusVal);
+        afterMinusAbs = afterMinusVal.abs();
+        //当前平台的不可提现积分不足，先扣除掉所有的不可提现积分
+        setNoWithdrawal(pointComm, platform, BigDecimal.ZERO);
+        //TODO 需要记录在commissionSuspending表记录usedType=2 and usedType=1
+      } else {
+        afterMinusVal = after1MinusVal;
+        //当前平台的不可提现积分充足，无需往下走
+        setNoWithdrawal(pointComm, platform, afterMinusVal);
+        //TODO 需要记录在commissionSuspending表记录usedType=2
+        if (currPlatformVal.signum() != 0) {
+          detailMap.put(platform, target);
+        }
+        return true;
+      }
+    }
+
     // 已经到最后的平台还是不够减
     if (afterMinusVal.signum() < 0 && !chain.hasNext()) {
       return false;
@@ -223,6 +255,20 @@ public class PointCommCalHelper {
       BasePointCommTotal pointComm, PlatformType platform, BigDecimal val) {
     String methodPostfix = platform.getFullName();
     String setMethodName = "setUsable" + methodPostfix;
+    setVal(setMethodName, pointComm, val);
+  }
+
+  /**
+   * 反射设置平台不可提现积分
+   *
+   * @param pointComm 当积分对象
+   * @param platform 平台类型
+   * @param val 设置值
+   */
+  public static void setNoWithdrawal(
+          BasePointCommTotal pointComm, PlatformType platform, BigDecimal val) {
+    String methodPostfix = platform.getFullName();
+    String setMethodName = "setNoWithdrawal" + methodPostfix;
     setVal(setMethodName, pointComm, val);
   }
 
