@@ -33,9 +33,6 @@ public abstract class BasePointCommRecord {
 
   private Integer belongingTo;
 
-  /** 积分是否可提现 */
-  private Integer usedType;
-
   private Boolean rollbacked;
 
   /** 解冻记录id */
@@ -119,14 +116,6 @@ public abstract class BasePointCommRecord {
     this.belongingTo = belongingTo;
   }
 
-  public Integer getUsedType() {
-    return usedType;
-  }
-
-  public void setUsedType(Integer usedType) {
-    this.usedType = usedType;
-  }
-
   public Boolean getRollbacked() {
     return rollbacked;
   }
@@ -196,10 +185,10 @@ public abstract class BasePointCommRecord {
   public abstract void setCurrentFreezed(BigDecimal currentFreezed);
 
   /** 本次操作不可提现积分 */
-  public abstract BigDecimal getCurrentNowithdrawal();
+  public abstract BigDecimal getCurrentNoWithdrawal();
 
   /** 设置不可提现积分 */
-  public abstract void setCurrentNowithdrawal(BigDecimal currentNowithdrawal);
+  public abstract void setCurrentNoWithdrawal(BigDecimal currentNoWithdrawal);
 
   public abstract Trancd getType();
 

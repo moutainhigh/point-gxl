@@ -14,7 +14,7 @@ public class PointRecord extends BasePointCommRecord {
   private BigDecimal currentFreezedPoint;
 
   /** 本次不可提现积分 */
-  private BigDecimal currentNowithdrawalComm;
+  private BigDecimal currentNoWithdrawalComm;
 
   /** 收入类型 */
   private Trancd trancd;
@@ -35,12 +35,12 @@ public class PointRecord extends BasePointCommRecord {
     this.currentFreezedPoint = currentFreezedPoint;
   }
 
-  public BigDecimal getCurrentNowithdrawalComm() {
-    return currentNowithdrawalComm;
+  public BigDecimal getCurrentNoWithdrawalComm() {
+    return currentNoWithdrawalComm;
   }
 
-  public void setCurrentNowithdrawalComm(BigDecimal currentNowithdrawalComm) {
-    this.currentNowithdrawalComm = currentNowithdrawalComm;
+  public void setCurrentNoWithdrawalComm(BigDecimal currentNoWithdrawalComm) {
+    this.currentNoWithdrawalComm = currentNoWithdrawalComm;
   }
 
   public Trancd getTrancd() {
@@ -72,13 +72,13 @@ public class PointRecord extends BasePointCommRecord {
   }
 
   @Override
-  public BigDecimal getCurrentNowithdrawal() {
-    return getCurrentNowithdrawalComm();
+  public BigDecimal getCurrentNoWithdrawal() {
+    return getCurrentNoWithdrawalComm();
   }
 
   @Override
-  public void setCurrentNowithdrawal(BigDecimal currentNowithdrawal) {
-    setCurrentNowithdrawalComm(currentNowithdrawal);
+  public void setCurrentNoWithdrawal(BigDecimal currentNoWithdrawal) {
+    setCurrentNoWithdrawalComm(currentNoWithdrawal);
   }
 
   @Override

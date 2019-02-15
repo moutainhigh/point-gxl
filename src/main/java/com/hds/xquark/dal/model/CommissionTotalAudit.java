@@ -25,19 +25,19 @@ public class CommissionTotalAudit implements Serializable {
   /** 已冻结佣金 */
   private BigDecimal freezedCommHds;
   /** 汉德森不可提现积分 */
-  private BigDecimal nowithdrawalCommHds;
+  private BigDecimal noWithdrawalCommHds;
   /** viviLife总佣金 */
   private BigDecimal usableCommViviLife;
   /** 已冻结佣金 */
   private BigDecimal freezedCommViviLife;
   /** viviLife不可提现积分 */
-  private BigDecimal nowithdrawalCommViviLife;
+  private BigDecimal noWithdrawalCommViviLife;
   /** 汉薇商城总佣金 */
   private BigDecimal usableCommEcomm;
   /** 已冻结佣金 */
   private BigDecimal freezedCommEcomm;
   /** 汉薇商城不可提现积分 */
-  private BigDecimal nowithdrawalCommEcomm;
+  private BigDecimal noWithdrawalCommEcomm;
   /** 佣金状态 */
   private PointInfoStatus status;
 
@@ -123,28 +123,28 @@ public class CommissionTotalAudit implements Serializable {
     this.freezedCommEcomm = freezedCommEcomm;
   }
 
-  public BigDecimal getNowithdrawalCommHds() {
-    return nowithdrawalCommHds;
+  public BigDecimal getNoWithdrawalCommHds() {
+    return noWithdrawalCommHds;
   }
 
-  public void setNowithdrawalCommHds(BigDecimal nowithdrawalCommHds) {
-    this.nowithdrawalCommHds = nowithdrawalCommHds;
+  public void setNoWithdrawalCommHds(BigDecimal noWithdrawalCommHds) {
+    this.noWithdrawalCommHds = noWithdrawalCommHds;
   }
 
-  public BigDecimal getNowithdrawalCommViviLife() {
-    return nowithdrawalCommViviLife;
+  public BigDecimal getNoWithdrawalCommViviLife() {
+    return noWithdrawalCommViviLife;
   }
 
-  public void setNowithdrawalCommViviLife(BigDecimal nowithdrawalCommViviLife) {
-    this.nowithdrawalCommViviLife = nowithdrawalCommViviLife;
+  public void setNoWithdrawalCommViviLife(BigDecimal noWithdrawalCommViviLife) {
+    this.noWithdrawalCommViviLife = noWithdrawalCommViviLife;
   }
 
-  public BigDecimal getNowithdrawalCommEcomm() {
-    return nowithdrawalCommEcomm;
+  public BigDecimal getNoWithdrawalCommEcomm() {
+    return noWithdrawalCommEcomm;
   }
 
-  public void setNowithdrawalCommEcomm(BigDecimal nowithdrawalCommEcomm) {
-    this.nowithdrawalCommEcomm = nowithdrawalCommEcomm;
+  public void setNoWithdrawalCommEcomm(BigDecimal noWithdrawalCommEcomm) {
+    this.noWithdrawalCommEcomm = noWithdrawalCommEcomm;
   }
 
   public PointInfoStatus getStatus() {

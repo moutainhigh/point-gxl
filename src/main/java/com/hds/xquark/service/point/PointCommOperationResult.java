@@ -43,9 +43,6 @@ public class PointCommOperationResult<T extends BasePointCommTotal, R extends Ba
   /** 使用的规则类型 */
   private CodeNameType usingGradeType;
 
-  /** 是否可提现 */
-  private Integer usedType;
-
   public Long getGradeId() {
     return gradeId;
   }
@@ -132,13 +129,5 @@ public class PointCommOperationResult<T extends BasePointCommTotal, R extends Ba
 
   public void setUsingGradeType(CodeNameType usingGradeType) {
     this.usingGradeType = usingGradeType;
-  }
-
-  public Integer getUsedType() {
-    return usedType;
-  }
-
-  public void setUsedType(Integer usedType) {
-    this.usedType = usedType;
   }
 }

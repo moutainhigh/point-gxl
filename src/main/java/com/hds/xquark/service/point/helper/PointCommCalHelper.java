@@ -186,9 +186,9 @@ public class PointCommCalHelper {
    * @param platform 平台类型
    * @return 平台对应积分
    */
-  public static BigDecimal getNowithdrawal(BasePointCommTotal pointComm, PlatformType platform) {
+  public static BigDecimal getNoWithdrawal(BasePointCommTotal pointComm, PlatformType platform) {
     String methodPostfix = platform.getFullName();
-    String getMethodName = "getNowithdrawal" + methodPostfix;
+    String getMethodName = "getNoWithdrawal" + methodPostfix;
     return getVal(getMethodName, pointComm);
   }
 
@@ -315,8 +315,8 @@ public class PointCommCalHelper {
         getUsable(infoAfter, realPlatform).subtract(getUsable(infoBefore, realPlatform));
     BigDecimal modifiedFreezed =
         getFreezed(infoAfter, realPlatform).subtract(getFreezed(infoBefore, realPlatform));
-    BigDecimal modifiedNowithdrawal =
-        getNowithdrawal(infoAfter, realPlatform).subtract(getFreezed(infoBefore, realPlatform));
+    BigDecimal modifiedNoWithdrawal =
+        getNoWithdrawal(infoAfter, realPlatform).subtract(getFreezed(infoBefore, realPlatform));
     T record;
     try {
       record = clazz.newInstance();
@@ -326,7 +326,7 @@ public class PointCommCalHelper {
     record.setBusinessId(bizId);
     record.setCurrent(modified);
     record.setCurrentFreezed(modifiedFreezed);
-    record.setCurrentNowithdrawal(modifiedNowithdrawal);
+    record.setCurrentNoWithdrawal(modifiedNoWithdrawal);
     record.setCodeNumber(grade.getCodeNumber());
     record.setSource(platform.getCode());
     record.setBelongingTo(belongingTo.getCode());

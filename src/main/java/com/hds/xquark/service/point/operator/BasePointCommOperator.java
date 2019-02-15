@@ -119,7 +119,6 @@ public abstract class BasePointCommOperator {
     ret.setUsingGradeType(currType());
     ret.setDetailMap(calRet.getDetailMap());
     ret.setTrancd(trancd);
-    ret.setUsedType(infoAfter.getUsedTypeC());
     return ret;
   }
 
@@ -180,7 +179,6 @@ public abstract class BasePointCommOperator {
     // 保存积分记录
     BasePointCommRecord record = buildRecord(bizId, grade, calRet, calRet.getTrancd(), clazz);
     record.setRollbacked(false);
-    record.setUsedType(calRet.getUsedType());
     saveRecord(record);
     return Collections.singletonList(record);
   }

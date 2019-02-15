@@ -13,25 +13,15 @@ public class PointTotal extends BasePointCommTotal {
   /** 汉德森冻结积分 */
   private BigDecimal freezedPointHds;
 
-  /** 汉德森不可提现积分 */
-  private BigDecimal nowithdrawalCommHds;
-
   private BigDecimal usablePointViviLife;
 
   private BigDecimal freezedPointViviLife;
-
-  private BigDecimal nowithdrawalCommViviLife;
 
   private BigDecimal usablePointEcomm;
 
   private BigDecimal usablePointPacket = BigDecimal.ZERO;
 
   private BigDecimal freezedPointEcomm;
-
-  private BigDecimal nowithdrawalCommEcomm;
-
-  /** 是否可提现 */
-  private Integer usedType;
 
   @JsonIgnore
   public BigDecimal getUsablePointHds() {
@@ -85,52 +75,6 @@ public class PointTotal extends BasePointCommTotal {
 
   public void setFreezedPointEcomm(BigDecimal freezedPointEcomm) {
     this.freezedPointEcomm = freezedPointEcomm;
-  }
-
-  @JsonIgnore
-  public BigDecimal getNowithdrawalCommHds() {
-    return nowithdrawalCommHds;
-  }
-
-  public void setNowithdrawalCommHds(BigDecimal nowithdrawalCommHds) {
-    this.nowithdrawalCommHds = nowithdrawalCommHds;
-  }
-
-  @JsonIgnore
-  public BigDecimal getNowithdrawalCommViviLife() {
-    return nowithdrawalCommViviLife;
-  }
-
-  public void setNowithdrawalCommViviLife(BigDecimal nowithdrawalCommViviLife) {
-    this.nowithdrawalCommViviLife = nowithdrawalCommViviLife;
-  }
-
-  @JsonIgnore
-  public BigDecimal getNowithdrawalCommEcomm() {
-    return nowithdrawalCommEcomm;
-  }
-
-  public void setNowithdrawalCommEcomm(BigDecimal nowithdrawalCommEcomm) {
-    this.nowithdrawalCommEcomm = nowithdrawalCommEcomm;
-  }
-
-  @JsonIgnore
-  public Integer getUsedType() {
-    return usedType;
-  }
-
-  public void setUsedType(Integer usedType) {
-    this.usedType = usedType;
-  }
-
-  @Override
-  public Integer getUsedTypeC() {
-    return getUsedType();
-  }
-
-  @Override
-  public void setUsedTypeC(Integer usedType) {
-    setUsedType(usedType);
   }
 
   @Override
@@ -194,33 +138,33 @@ public class PointTotal extends BasePointCommTotal {
   }
 
   @Override
-  public BigDecimal getNowithdrawalHds() {
-    return getNowithdrawalCommHds();
+  public BigDecimal getNoWithdrawalHds() {
+    return BigDecimal.ZERO;
   }
 
   @Override
-  public void setNowithdrawalHds(BigDecimal nowithdrawalHds) {
-    setNowithdrawalCommHds(nowithdrawalHds);
+  public void setNoWithdrawalHds(BigDecimal noWithdrawalHds) {
+
   }
 
   @Override
-  public BigDecimal getNowithdrawalViviLife() {
-    return getNowithdrawalCommViviLife();
+  public BigDecimal getNoWithdrawalViviLife() {
+    return BigDecimal.ZERO;
   }
 
   @Override
-  public void setNowithdrawalViviLife(BigDecimal nowithdrawalViviLife) {
-    setNowithdrawalCommViviLife(nowithdrawalViviLife);
+  public void setNoWithdrawalViviLife(BigDecimal noWithdrawalViviLife) {
+
   }
 
   @Override
-  public BigDecimal getNowithdrawalEcomm() {
-    return getNowithdrawalCommEcomm();
+  public BigDecimal getNoWithdrawalEcomm() {
+    return BigDecimal.ZERO;
   }
 
   @Override
-  public void setNowithdrawalEcomm(BigDecimal nowithdrawalEcomm) {
-    setNowithdrawalCommEcomm(nowithdrawalEcomm);
+  public void setNoWithdrawalEcomm(BigDecimal noWithdrawalEcomm) {
+
   }
 
   /** 德分+红包 */

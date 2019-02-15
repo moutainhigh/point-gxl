@@ -65,6 +65,9 @@ public abstract class BasePointCommTotal {
     info.setFreezedHds(ZERO);
     info.setFreezedViviLife(ZERO);
     info.setFreezedEcomm(ZERO);
+    info.setNoWithdrawalHds(ZERO);
+    info.setNoWithdrawalViviLife(ZERO);
+    info.setNoWithdrawalEcomm(ZERO);
     info.setStatus(PointInfoStatus.ACTIVE);
     return info;
   }
@@ -109,21 +112,17 @@ public abstract class BasePointCommTotal {
 
   public abstract void setFreezedEcomm(BigDecimal freezedEcomm);
 
-  public abstract BigDecimal getNowithdrawalHds();
+  public abstract BigDecimal getNoWithdrawalHds();
 
-  public abstract void setNowithdrawalHds(BigDecimal nowithdrawalHds);
+  public abstract void setNoWithdrawalHds(BigDecimal noWithdrawalHds);
 
-  public abstract BigDecimal getNowithdrawalViviLife();
+  public abstract BigDecimal getNoWithdrawalViviLife();
 
-  public abstract void setNowithdrawalViviLife(BigDecimal nowithdrawalViviLife);
+  public abstract void setNoWithdrawalViviLife(BigDecimal noWithdrawalViviLife);
 
-  public abstract BigDecimal getNowithdrawalEcomm();
+  public abstract BigDecimal getNoWithdrawalEcomm();
 
-  public abstract void setNowithdrawalEcomm(BigDecimal nowithdrawalEcomm);
-
-  public abstract Integer getUsedTypeC();
-
-  public abstract void setUsedTypeC(Integer usedType);
+  public abstract void setNoWithdrawalEcomm(BigDecimal noWithdrawalEcomm);
 
   public PointInfoStatus getStatus() {
     return status;
@@ -157,7 +156,7 @@ public abstract class BasePointCommTotal {
    * @return 三网总积分
    */
   public BigDecimal getTotal() {
-    return getTotalUsable().add(getTotalFreeze());
+    return getTotalUsable().add(getTotalFreeze()).add(getTotalNoWithdrawal());
   }
 
   public BigDecimal getTotalUsable() {
@@ -166,6 +165,10 @@ public abstract class BasePointCommTotal {
 
   public BigDecimal getTotalFreeze() {
     return getFreezedHds().add(getFreezedViviLife()).add(getFreezedEcomm());
+  }
+
+  public BigDecimal getTotalNoWithdrawal() {
+    return getNoWithdrawalHds().add(getNoWithdrawalViviLife()).add(getNoWithdrawalEcomm());
   }
 
   @Override

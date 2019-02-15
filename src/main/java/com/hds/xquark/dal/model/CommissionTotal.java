@@ -18,22 +18,19 @@ public class CommissionTotal extends BasePointCommTotal {
   private BigDecimal freezedCommHds;
 
   /** 汉德森不可提现积分 */
-  private BigDecimal nowithdrawalCommHds;
+  private BigDecimal noWithdrawalCommHds;
 
   private BigDecimal usableCommViviLife;
 
   private BigDecimal freezedCommViviLife;
 
-  private BigDecimal nowithdrawalCommViviLife;
+  private BigDecimal noWithdrawalCommViviLife;
 
   private BigDecimal usableCommEcomm;
 
   private BigDecimal freezedCommEcomm;
 
-  private BigDecimal nowithdrawalCommEcomm;
-
-  /** 是否可提现 */
-  private Integer usedType;
+  private BigDecimal noWithdrawalCommEcomm;
 
   @JsonIgnore
   public BigDecimal getUsableCommHds() {
@@ -90,49 +87,30 @@ public class CommissionTotal extends BasePointCommTotal {
   }
 
   @JsonIgnore
-  public BigDecimal getNowithdrawalCommHds() {
-    return nowithdrawalCommHds;
+  public BigDecimal getNoWithdrawalCommHds() {
+    return noWithdrawalCommHds;
   }
 
-  public void setNowithdrawalCommHds(BigDecimal nowithdrawalCommHds) {
-    this.nowithdrawalCommHds = nowithdrawalCommHds;
-  }
-
-  @JsonIgnore
-  public BigDecimal getNowithdrawalCommViviLife() {
-    return nowithdrawalCommViviLife;
-  }
-
-  public void setNowithdrawalCommViviLife(BigDecimal nowithdrawalCommViviLife) {
-    this.nowithdrawalCommViviLife = nowithdrawalCommViviLife;
+  public void setNoWithdrawalCommHds(BigDecimal noWithdrawalCommHds) {
+    this.noWithdrawalCommHds = noWithdrawalCommHds;
   }
 
   @JsonIgnore
-  public BigDecimal getNowithdrawalCommEcomm() {
-    return nowithdrawalCommEcomm;
+  public BigDecimal getNoWithdrawalCommViviLife() {
+    return noWithdrawalCommViviLife;
   }
 
-  public void setNowithdrawalCommEcomm(BigDecimal nowithdrawalCommEcomm) {
-    this.nowithdrawalCommEcomm = nowithdrawalCommEcomm;
+  public void setNoWithdrawalCommViviLife(BigDecimal noWithdrawalCommViviLife) {
+    this.noWithdrawalCommViviLife = noWithdrawalCommViviLife;
   }
 
   @JsonIgnore
-  public Integer getUsedType() {
-    return usedType;
+  public BigDecimal getNoWithdrawalCommEcomm() {
+    return noWithdrawalCommEcomm;
   }
 
-  public void setUsedType(Integer usedType) {
-    this.usedType = usedType;
-  }
-
-  @Override
-  public Integer getUsedTypeC() {
-    return getUsedType();
-  }
-
-  @Override
-  public void setUsedTypeC(Integer usedType) {
-    setUsedType(usedType);
+  public void setNoWithdrawalCommEcomm(BigDecimal noWithdrawalCommEcomm) {
+    this.noWithdrawalCommEcomm = noWithdrawalCommEcomm;
   }
 
   @Override
@@ -196,33 +174,33 @@ public class CommissionTotal extends BasePointCommTotal {
   }
 
   @Override
-  public BigDecimal getNowithdrawalHds() {
-    return getNowithdrawalCommHds();
+  public BigDecimal getNoWithdrawalHds() {
+    return getNoWithdrawalCommHds();
   }
 
   @Override
-  public void setNowithdrawalHds(BigDecimal nowithdrawalHds) {
-    setNowithdrawalCommHds(nowithdrawalHds);
+  public void setNoWithdrawalHds(BigDecimal noWithdrawalHds) {
+    setNoWithdrawalCommHds(noWithdrawalHds);
   }
 
   @Override
-  public BigDecimal getNowithdrawalViviLife() {
-    return getNowithdrawalCommViviLife();
+  public BigDecimal getNoWithdrawalViviLife() {
+    return getNoWithdrawalCommViviLife();
   }
 
   @Override
-  public void setNowithdrawalViviLife(BigDecimal nowithdrawalViviLife) {
-    setNowithdrawalCommViviLife(nowithdrawalViviLife);
+  public void setNoWithdrawalViviLife(BigDecimal noWithdrawalViviLife) {
+    setNoWithdrawalCommViviLife(noWithdrawalViviLife);
   }
 
   @Override
-  public BigDecimal getNowithdrawalEcomm() {
-    return getNowithdrawalCommEcomm();
+  public BigDecimal getNoWithdrawalEcomm() {
+    return getNoWithdrawalCommEcomm();
   }
 
   @Override
-  public void setNowithdrawalEcomm(BigDecimal nowithdrawalEcomm) {
-    setNowithdrawalCommEcomm(nowithdrawalEcomm);
+  public void setNoWithdrawalEcomm(BigDecimal noWithdrawalEcomm) {
+    setNoWithdrawalCommEcomm(noWithdrawalEcomm);
   }
 
   @Override
@@ -237,14 +215,20 @@ public class CommissionTotal extends BasePointCommTotal {
         + usableCommHds
         + ", freezedCommHds="
         + freezedCommHds
+        + ", noWithdrawalCommHds="
+        + noWithdrawalCommHds
         + ", usableCommViviLife="
         + usableCommViviLife
         + ", freezedCommViviLife="
         + freezedCommViviLife
+        + ", noWithdrawalCommViviLife="
+        + noWithdrawalCommViviLife
         + ", usableCommEcomm="
         + usableCommEcomm
         + ", freezedCommEcomm="
         + freezedCommEcomm
+        + ", noWithdrawalCommEcomm="
+        + noWithdrawalCommEcomm
         + '}';
   }
 }
