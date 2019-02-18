@@ -133,7 +133,6 @@ public class PointCommCalHelper {
       //TODO 需要记录在commissionSuspending表记录usedType=1
     } else {
       BigDecimal after1MinusVal = noWithdrawal.subtract(target);
-      BigDecimal after1MinusAbs = after1MinusVal.abs();
       if (after1MinusVal.signum() < 0){
         afterMinusVal = currPlatformVal.add(after1MinusVal);
         afterMinusAbs = afterMinusVal.abs();
