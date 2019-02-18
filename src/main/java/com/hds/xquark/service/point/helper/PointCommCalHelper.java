@@ -86,6 +86,19 @@ public class PointCommCalHelper {
   }
 
   /**
+   * 增加不可提现积分
+   *
+   * @param pointComm 当前积分/德分
+   * @param platform 当前操作平台
+   * @param target 待增加积分
+   */
+  public static void plusNoWithdrawal(
+          BasePointCommTotal pointComm, PlatformType platform, BigDecimal target) {
+    BigDecimal oldVal = getNoWithdrawal(pointComm, platform);
+    setNoWithdrawal(pointComm, platform, oldVal.add(target));
+  }
+
+  /**
    * 根据当前使用积分平台按顺序递归扣减积分/德分 该方法会直接修改源对象属性
    *
    * @param pointComm 当前积分/德分
