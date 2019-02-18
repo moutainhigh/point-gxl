@@ -73,10 +73,12 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       // 修改记录
       BigDecimal negateUsable = record.getCurrent().negate();
       BigDecimal negateFreeze = record.getCurrentFreezed().negate();
-      BigDecimal negateNoWithdrawal = record.getCurrentNoWithdrawal().negate();
-      PointCommCalHelper.plus(infoAfter, platform, negateUsable);
+      if (record.getUsedType() == 1) {
+        PointCommCalHelper.plus(infoAfter, platform, negateUsable);
+      } else if (record.getUsedType() == 2) {
+        PointCommCalHelper.plusNoWithdrawal(infoAfter, platform, negateUsable);
+      }
       PointCommCalHelper.plusFreeze(infoAfter, platform, negateFreeze);
-      PointCommCalHelper.plusNoWithdrawal(infoAfter, platform, negateNoWithdrawal);
       // TODO map中的value没有使用意义
       detailMap.put(platform, record.getCurrent());
     }
@@ -111,7 +113,14 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade, calRet, clazz);
     for (BasePointCommRecord record : rollBackRecords) {
       record.setRollbacked(false);
-      saveRecord(record);
+      if (record.getCurrentNoWithdrawal().signum() != 0) {
+        record.setUsedType(2);
+        record.setCurrent(record.getCurrentNoWithdrawal());
+        saveRecord(record);
+      } else if (record.getCurrent().signum() != 0) {
+        record.setUsedType(1);
+        saveRecord(record);
+      }
     }
 
     // 更新原记录为已回滚

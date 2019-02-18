@@ -52,12 +52,19 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     Class<? extends BasePointCommAsst> asstClazz = ASST_MAPPINT.get(clazz);
     while (iterator.hasNext()) {
       BasePointCommRecord record = iterator.next();
-      if (record.getCurrent().signum() == 0) {
+      if (record.getCurrent().signum() == 0 && record.getCurrentNoWithdrawal().signum() == 0) {
         iterator.remove();
         continue;
       }
       record.setRollbacked(false);
-      saveRecord(record);
+      if (record.getCurrentNoWithdrawal().signum() != 0) {
+        record.setUsedType(2);
+        record.setCurrent(record.getCurrentNoWithdrawal());
+        saveRecord(record);
+      } else if (record.getCurrent().signum() != 0) {
+        record.setUsedType(1);
+        saveRecord(record);
+      }
       // only consume operations
     }
     boolean isConsume = GradeCodeConstrants.CONSUME_CODE.contains(grade.getCodeNumber());

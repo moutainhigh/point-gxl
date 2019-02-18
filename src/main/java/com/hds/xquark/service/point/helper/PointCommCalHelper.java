@@ -143,7 +143,6 @@ public class PointCommCalHelper {
     if (noWithdrawal.signum() == 0){
       afterMinusVal = currPlatformVal.subtract(target);
       afterMinusAbs = afterMinusVal.abs();
-      //TODO 需要记录在commissionSuspending表记录usedType=1
     } else {
       BigDecimal after1MinusVal = noWithdrawal.subtract(target);
       if (after1MinusVal.signum() < 0){
@@ -151,12 +150,10 @@ public class PointCommCalHelper {
         afterMinusAbs = afterMinusVal.abs();
         //当前平台的不可提现积分不足，先扣除掉所有的不可提现积分
         setNoWithdrawal(pointComm, platform, BigDecimal.ZERO);
-        //TODO 需要记录在commissionSuspending表记录usedType=2 and usedType=1
       } else {
         afterMinusVal = after1MinusVal;
         //当前平台的不可提现积分充足，无需往下走
         setNoWithdrawal(pointComm, platform, afterMinusVal);
-        //TODO 需要记录在commissionSuspending表记录usedType=2
         if (currPlatformVal.signum() != 0) {
           detailMap.put(platform, target);
         }
@@ -374,7 +371,7 @@ public class PointCommCalHelper {
     BigDecimal modifiedFreezed =
         getFreezed(infoAfter, realPlatform).subtract(getFreezed(infoBefore, realPlatform));
     BigDecimal modifiedNoWithdrawal =
-        getNoWithdrawal(infoAfter, realPlatform).subtract(getFreezed(infoBefore, realPlatform));
+        getNoWithdrawal(infoAfter, realPlatform).subtract(getNoWithdrawal(infoBefore, realPlatform));
     T record;
     try {
       record = clazz.newInstance();

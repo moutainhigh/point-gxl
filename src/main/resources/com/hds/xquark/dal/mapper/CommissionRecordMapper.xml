@@ -20,6 +20,7 @@
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
     <result column="freezed_at" jdbcType="TIMESTAMP" property="freezedAt"/>
     <result column="freezed_to" jdbcType="TIMESTAMP" property="freezedTo"/>
+    <result column="usedType" jdbcType="INTEGER" property="usedType"/>
   </resultMap>
   <resultMap id="VOResultMap" type="com.hds.xquark.dal.vo.CommissionRecordVO">
     <id column="id" jdbcType="BIGINT" property="id"/>
@@ -41,7 +42,7 @@
   <sql id="Base_Column_List">
     id, cpId, grade_Id, gradeNumber, orderid, current_comm, current_freezed_comm, trancd,
     source, belongingTo, rollbacked, un_freeze_id, rollback_id, created_at, updated_at, freezed_at,
-    freezed_to
+    freezed_to, usedType
   </sql>
   <sql id="Join_Column_List">
     record.id, record.cpId, record.grade_id, record.gradeNumber,
@@ -227,7 +228,7 @@
     current_freezed_comm, trancd, source, belongingTo,
     rollbacked, un_freeze_id, rollback_id,
     created_at, updated_at, freezed_at,
-    freezed_to)
+    freezed_to, usedType)
     values (#{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT},
     #{codeNumber,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR},
     #{currentComm,jdbcType=DECIMAL},
@@ -236,7 +237,7 @@
     #{rollbacked,jdbcType=TINYINT}, #{unFreezeId,jdbcType=BIGINT},
     #{rollbackId,jdbcType=BIGINT},
     NOW(), NOW(), #{freezedAt,jdbcType=TIMESTAMP},
-    #{freezedTo,jdbcType=TIMESTAMP})
+    #{freezedTo,jdbcType=TIMESTAMP}, #{usedType,jdbcType=TINYINT})
   </insert>
   <update id="updateByPrimaryKeySelective"
     parameterType="com.hds.xquark.dal.model.CommissionRecord">

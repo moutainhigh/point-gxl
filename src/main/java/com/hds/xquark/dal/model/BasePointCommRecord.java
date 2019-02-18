@@ -33,6 +33,9 @@ public abstract class BasePointCommRecord {
 
   private Integer belongingTo;
 
+  /** 是否可提现类型 */
+  private Integer usedType;
+
   private Boolean rollbacked;
 
   /** 解冻记录id */
@@ -124,6 +127,14 @@ public abstract class BasePointCommRecord {
     this.rollbacked = rollbacked;
   }
 
+  public Integer getUsedType() {
+    return usedType;
+  }
+
+  public void setUsedType(Integer usedType) {
+    this.usedType = usedType;
+  }
+
   public Long getUnFreezeId() {
     return unFreezeId;
   }
@@ -189,6 +200,12 @@ public abstract class BasePointCommRecord {
 
   /** 设置不可提现积分 */
   public abstract void setCurrentNoWithdrawal(BigDecimal currentNoWithdrawal);
+
+/*  *//** 获取提现状态 *//*
+  public abstract Integer getUsedTypeC();
+
+  *//** 设置提现状态 *//*
+  public abstract void setUsedTypeC(Integer usedType);*/
 
   public abstract Trancd getType();
 
