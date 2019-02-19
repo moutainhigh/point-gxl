@@ -389,6 +389,16 @@ public class PointCommCalHelper {
     record.setGradeId(grade.getId());
     // TODO 类型需要修改
     record.setType(recordType);
+    int temp;
+    if (modifiedNoWithdrawal.compareTo(BigDecimal.ZERO) != 0){
+      temp = 2;
+      if (modified.compareTo(BigDecimal.ZERO) != 0) {
+        temp = 0;
+      }
+    } else {
+      temp = 1;
+    }
+    record.setUsedType(temp);
     return record;
   }
 

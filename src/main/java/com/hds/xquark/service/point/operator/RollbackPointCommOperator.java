@@ -113,13 +113,24 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade, calRet, clazz);
     for (BasePointCommRecord record : rollBackRecords) {
       record.setRollbacked(false);
-      if (record.getCurrentNoWithdrawal().signum() != 0) {
-        record.setUsedType(2);
-        record.setCurrent(record.getCurrentNoWithdrawal());
-        saveRecord(record);
-      } else if (record.getCurrent().signum() != 0) {
-        record.setUsedType(1);
-        saveRecord(record);
+      switch (record.getUsedType()) {
+        case 0:
+          record.setUsedType(1);
+          saveRecord(record);
+          record.setId(null);
+          record.setUsedType(2);
+          record.setCurrent(record.getCurrentNoWithdrawal());
+          saveRecord(record);
+          break;
+        case 1:
+          saveRecord(record);
+          break;
+        case 2:
+          record.setCurrent(record.getCurrentNoWithdrawal());
+          saveRecord(record);
+          break;
+        default:
+          break;
       }
     }
 

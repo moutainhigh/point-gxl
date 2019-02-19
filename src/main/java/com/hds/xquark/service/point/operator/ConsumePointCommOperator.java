@@ -57,13 +57,25 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
         continue;
       }
       record.setRollbacked(false);
-      if (record.getCurrentNoWithdrawal().signum() != 0) {
-        record.setUsedType(2);
-        record.setCurrent(record.getCurrentNoWithdrawal());
-        saveRecord(record);
-      } else if (record.getCurrent().signum() != 0) {
-        record.setUsedType(1);
-        saveRecord(record);
+      switch (record.getUsedType()) {
+        case 0:
+          record.setUsedType(1);
+          saveRecord(record);
+          record.setId(null);   //usedType为0表示可提现与不可提现积分混合使用，需要添加两条记录
+          record.setUsedType(2);
+          record.setCurrent(record.getCurrentNoWithdrawal());
+          saveRecord(record);
+          break;
+        case 1:
+          saveRecord(record);
+          break;
+        case 2:
+          record.setCurrent(record.getCurrentNoWithdrawal());
+          saveRecord(record);
+          break;
+        default:
+          System.out.println("积分提现类型错误");
+          break;
       }
       // only consume operations
     }
