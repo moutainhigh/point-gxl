@@ -156,11 +156,11 @@ public abstract class BasePointCommTotal {
    * @return 三网总积分
    */
   public BigDecimal getTotal() {
-    return getTotalUsable().add(getTotalFreeze()).add(getTotalNoWithdrawal());
+    return getTotalUsable().add(getTotalFreeze());
   }
 
   public BigDecimal getTotalUsable() {
-    return getUsableHds().add(getUsableViviLife()).add(getUsableEcomm());
+    return getUsableHds().add(getUsableViviLife()).add(getUsableEcomm()).add(getTotalNoWithdrawal());
   }
 
   public BigDecimal getTotalFreeze() {
