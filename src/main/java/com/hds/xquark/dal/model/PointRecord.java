@@ -13,8 +13,8 @@ public class PointRecord extends BasePointCommRecord {
   /** 本次冻结积分 */
   private BigDecimal currentFreezedPoint;
 
-  /** 本次不可提现积分 */
-  private BigDecimal currentNoWithdrawalComm;
+  /** 本次不可提现积分，由于德分无法提现，此字段仅作为适配当前代码使用 */
+  private BigDecimal currentNoWithdrawalComm = BigDecimal.ZERO;
 
   /** 收入类型 */
   private Trancd trancd;

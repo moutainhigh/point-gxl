@@ -3,9 +3,12 @@ package com.hds.xquark.dal.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 /** @author wangxinhua */
 public class PointTotal extends BasePointCommTotal {
+
+  private static final Logger logger = Logger.getLogger(PointTotal.class.getName());
 
   /** 汉德森可用积分 */
   private BigDecimal usablePointHds;
@@ -142,9 +145,13 @@ public class PointTotal extends BasePointCommTotal {
     return BigDecimal.ZERO;
   }
 
+  /**
+   * 由于积分/德分共用一套逻辑，德分不能提现，所以为空实现
+   * @param noWithdrawalHds 不可提现积分
+   */
   @Override
   public void setNoWithdrawalHds(BigDecimal noWithdrawalHds) {
-
+    logger.warning("不支持的德分形式");
   }
 
   @Override
@@ -154,7 +161,7 @@ public class PointTotal extends BasePointCommTotal {
 
   @Override
   public void setNoWithdrawalViviLife(BigDecimal noWithdrawalViviLife) {
-
+    logger.warning("不支持的德分形式");
   }
 
   @Override
@@ -164,7 +171,7 @@ public class PointTotal extends BasePointCommTotal {
 
   @Override
   public void setNoWithdrawalEcomm(BigDecimal noWithdrawalEcomm) {
-
+    logger.warning("不支持的德分形式");
   }
 
   /** 德分+红包 */

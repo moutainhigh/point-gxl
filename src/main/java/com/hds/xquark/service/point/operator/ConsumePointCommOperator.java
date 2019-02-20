@@ -56,27 +56,7 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
         iterator.remove();
         continue;
       }
-      record.setRollbacked(false);
-      switch (record.getUsedType()) {
-        case 0:
-          record.setUsedType(1);
-          saveRecord(record);
-          record.setId(null);   //usedType为0表示可提现与不可提现积分混合使用，需要添加两条记录
-          record.setUsedType(2);
-          record.setCurrent(record.getCurrentNoWithdrawal());
-          saveRecord(record);
-          break;
-        case 1:
-          saveRecord(record);
-          break;
-        case 2:
-          record.setCurrent(record.getCurrentNoWithdrawal());
-          saveRecord(record);
-          break;
-        default:
-          System.out.println("积分提现类型错误");
-          break;
-      }
+      addRecord(record);
       // only consume operations
     }
     boolean isConsume = GradeCodeConstrants.CONSUME_CODE.contains(grade.getCodeNumber());

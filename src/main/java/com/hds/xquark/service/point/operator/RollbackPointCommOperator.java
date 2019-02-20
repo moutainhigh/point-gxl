@@ -76,9 +76,9 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       if(record.getUsedType() == null){
         PointCommCalHelper.plus(infoAfter, platform, negateUsable);
       } else {
-        if (record.getUsedType() == 1) {
+        if (record.getUsedType() == WITHDRAWALUSEDTYPE) {
           PointCommCalHelper.plus(infoAfter, platform, negateUsable);
-        } else if (record.getUsedType() == 2) {
+        } else if (record.getUsedType() == NOWITHDRAWALUSEDTYPE) {
           PointCommCalHelper.plusNoWithdrawal(infoAfter, platform, negateUsable);
         }
       }
@@ -116,26 +116,7 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
     // 找出回滚了多少积分
     List<? extends BasePointCommRecord> rollBackRecords = buildRecords(bizId, grade, calRet, clazz);
     for (BasePointCommRecord record : rollBackRecords) {
-      record.setRollbacked(false);
-      switch (record.getUsedType()) {
-        case 0:
-          record.setUsedType(1);
-          saveRecord(record);
-          record.setId(null);
-          record.setUsedType(2);
-          record.setCurrent(record.getCurrentNoWithdrawal());
-          saveRecord(record);
-          break;
-        case 1:
-          saveRecord(record);
-          break;
-        case 2:
-          record.setCurrent(record.getCurrentNoWithdrawal());
-          saveRecord(record);
-          break;
-        default:
-          break;
-      }
+      addRecord(record);
     }
 
     // 更新原记录为已回滚

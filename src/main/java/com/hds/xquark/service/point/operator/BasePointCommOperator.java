@@ -24,12 +24,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /** @author wangxinhua on 2018/5/21. DESC: 积分修改类 */
 public abstract class BasePointCommOperator {
+
+  /** 混合使用类型 */
+  public static final int FIXUSEDTYPE = 0;
+  /** 可提现类型 */
+  public static final int WITHDRAWALUSEDTYPE = 1;
+  /** 不可提现类型 */
+  public static final int NOWITHDRAWALUSEDTYPE = 2;
+
+  public static final Logger logger = Logger.getLogger(BasePointCommOperator.class.getName());
 
   static final Map<Class<? extends BasePointCommRecord>, Class<? extends BasePointCommAsst>>
       ASST_MAPPINT =
@@ -383,4 +393,33 @@ public abstract class BasePointCommOperator {
     USABLE,
     FREEZED
   }
+
+  void addRecord(BasePointCommRecord record){
+    record.setRollbacked(false);
+    if (record.getUsedType() == null) {
+      saveRecord(record);
+    } else {
+      switch (record.getUsedType()) {
+        case FIXUSEDTYPE:
+          record.setUsedType(WITHDRAWALUSEDTYPE);
+          saveRecord(record);
+          record.setId(null);   //usedType为0表示可提现与不可提现积分混合使用，需要添加两条记录
+          record.setUsedType(NOWITHDRAWALUSEDTYPE);
+          record.setCurrent(record.getCurrentNoWithdrawal());
+          saveRecord(record);
+          break;
+        case WITHDRAWALUSEDTYPE:
+          saveRecord(record);
+          break;
+        case NOWITHDRAWALUSEDTYPE:
+          record.setCurrent(record.getCurrentNoWithdrawal());
+          saveRecord(record);
+          break;
+        default:
+          logger.warning("积分提现类型错误");
+          break;
+      }
+    }
+  }
+
 }
