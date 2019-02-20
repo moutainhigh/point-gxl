@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author wangxinhua.
  * @date 2018/12/12 积分操作类
  */
-@Service("CommissionService")
+@Service("CommissionServiceApi")
 public class CommissionServiceApi implements TokenServiceApi<CommissionTotal, CommissionRecord> {
 
   private final CommissionTotalMapper commissionTotalMapper;

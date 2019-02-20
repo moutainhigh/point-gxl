@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 /** @author wangxinhua.* @date 2018/12/12 */
-@Service("PointService")
+@Service("PointServiceApi")
 public class PointServiceApi implements TokenServiceApi<PointTotal, PointRecord> {
 
   private final PointTotalMapper pointTotalMapper;

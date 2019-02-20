@@ -36,8 +36,8 @@ public class PointContextInitialize {
     context.refresh();
 
     this.pointCommService = context.getBean("PointCommService", PointCommService.class);
-    this.pointService = context.getBean("PointService", PointServiceApi.class);
-    this.commissionService = context.getBean("CommissionService", CommissionServiceApi.class);
+    this.pointService = context.getBean("PointServiceApi", PointServiceApi.class);
+    this.commissionService = context.getBean("CommissionServiceApi", CommissionServiceApi.class);
   }
 
   public PointCommService getPointService() {

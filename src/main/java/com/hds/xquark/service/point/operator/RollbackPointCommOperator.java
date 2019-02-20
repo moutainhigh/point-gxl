@@ -73,10 +73,14 @@ public class RollbackPointCommOperator extends BasePointCommOperator {
       // 修改记录
       BigDecimal negateUsable = record.getCurrent().negate();
       BigDecimal negateFreeze = record.getCurrentFreezed().negate();
-      if (record.getUsedType() == 1) {
+      if(record.getUsedType() == null){
         PointCommCalHelper.plus(infoAfter, platform, negateUsable);
-      } else if (record.getUsedType() == 2) {
-        PointCommCalHelper.plusNoWithdrawal(infoAfter, platform, negateUsable);
+      } else {
+        if (record.getUsedType() == 1) {
+          PointCommCalHelper.plus(infoAfter, platform, negateUsable);
+        } else if (record.getUsedType() == 2) {
+          PointCommCalHelper.plusNoWithdrawal(infoAfter, platform, negateUsable);
+        }
       }
       PointCommCalHelper.plusFreeze(infoAfter, platform, negateFreeze);
       // TODO map中的value没有使用意义
