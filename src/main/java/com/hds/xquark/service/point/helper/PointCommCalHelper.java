@@ -8,6 +8,7 @@ import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
+import com.hds.xquark.service.point.operator.PointCommOperatorContext;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -113,20 +114,22 @@ public class PointCommCalHelper {
       BasePointCommTotal pointComm,
       PlatformType platform,
       BigDecimal target,
-      Map<PlatformType, BigDecimal> detailMap) {
+      Map<PlatformType, BigDecimal> detailMap,
+      PointCommOperatorContext context) {
     checkNotNull(target);
     PointCommMinusChain chain = getPlatFormChainMap(pointComm, platform);
     if (chain == null) {
       throw new RuntimeException("积分扣减关系未配置");
     }
-    return minus(pointComm, chain, target, detailMap);
+    return minus(pointComm, chain, target, detailMap, context);
   }
 
   private static boolean minus(
       BasePointCommTotal pointComm,
       PointCommMinusChain chain,
       BigDecimal target,
-      Map<PlatformType, BigDecimal> detailMap) {
+      Map<PlatformType, BigDecimal> detailMap,
+      PointCommOperatorContext context) {
     // 当前平台可用分
     PlatformType platform = chain.getType();
     BigDecimal currPlatformVal = getUsable(pointComm, platform);
@@ -140,7 +143,11 @@ public class PointCommCalHelper {
     BigDecimal afterMinusVal;
     BigDecimal afterMinusAbs;
 
-    if (noWithdrawal.signum() == 0){
+    if (context.getBusinessId() == null) {
+      throw new BizException(GlobalErrorCode.INVALID_ARGUMENT, "消费业务类型为空");
+    }
+
+    if (noWithdrawal.signum() == 0 || "withdraw".equals(context.getBusinessId())){
       afterMinusVal = currPlatformVal.subtract(target);
       afterMinusAbs = afterMinusVal.abs();
     } else {
@@ -171,7 +178,7 @@ public class PointCommCalHelper {
     if (afterMinusVal.signum() < 0) {
       setUsable(pointComm, platform, BigDecimal.ZERO);
       // 只是当前平台不够减, 再由下一个平台继续扣减
-      return minus(pointComm, chain.getNext(), afterMinusAbs, detailMap);
+      return minus(pointComm, chain.getNext(), afterMinusAbs, detailMap, context);
     }
     // 当前平台积分充足, 无需再扣减下一平台
     setUsable(pointComm, platform, afterMinusVal);
@@ -406,7 +413,7 @@ public class PointCommCalHelper {
     PointTotal pointTotal = BasePointCommTotal.emptyInfo(0L, PointTotal.class);
     pointTotal.setUsablePointHds(BigDecimal.valueOf(1000));
     pointTotal.setUsablePointViviLife(BigDecimal.valueOf(1000));
-    boolean ret = PointCommCalHelper.minus(pointTotal, H, BigDecimal.valueOf(1999), null);
+    boolean ret = PointCommCalHelper.minus(pointTotal, H, BigDecimal.valueOf(1999), null, null);
     System.out.println(ret);
 
     System.out.println(pointTotal);

@@ -395,25 +395,26 @@ public abstract class BasePointCommOperator {
   }
 
   void addRecord(BasePointCommRecord record){
-    record.setRollbacked(false);
-    if (record.getUsedType() == null) {
-      saveRecord(record);
+    BasePointCommRecord newRecord = BasePointCommRecord.copy(record);
+    newRecord.setRollbacked(false);
+    if (newRecord.getUsedType() == null) {
+      saveRecord(newRecord);
     } else {
-      switch (record.getUsedType()) {
+      switch (newRecord.getUsedType()) {
         case FIXUSEDTYPE:
-          record.setUsedType(WITHDRAWALUSEDTYPE);
-          saveRecord(record);
-          record.setId(null);   //usedType为0表示可提现与不可提现积分混合使用，需要添加两条记录
-          record.setUsedType(NOWITHDRAWALUSEDTYPE);
-          record.setCurrent(record.getCurrentNoWithdrawal());
-          saveRecord(record);
+          newRecord.setUsedType(WITHDRAWALUSEDTYPE);
+          saveRecord(newRecord);
+          newRecord.setId(null);   //usedType为0表示可提现与不可提现积分混合使用，需要添加两条记录
+          newRecord.setUsedType(NOWITHDRAWALUSEDTYPE);
+          newRecord.setCurrent(newRecord.getCurrentNoWithdrawal());
+          saveRecord(newRecord);
           break;
         case WITHDRAWALUSEDTYPE:
-          saveRecord(record);
+          saveRecord(newRecord);
           break;
         case NOWITHDRAWALUSEDTYPE:
-          record.setCurrent(record.getCurrentNoWithdrawal());
-          saveRecord(record);
+          newRecord.setCurrent(newRecord.getCurrentNoWithdrawal());
+          saveRecord(newRecord);
           break;
         default:
           logger.warning("积分提现类型错误");

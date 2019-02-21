@@ -3,6 +3,7 @@ package com.hds.xquark.dal.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -210,4 +211,28 @@ public abstract class BasePointCommRecord {
   public abstract Trancd getType();
 
   public abstract void setType(Trancd type);
+
+  /**
+   * 从旧的积分信息上构造一个一样的对象
+   *
+   * @param oldInfo 旧的数据对象
+   * @return 新的积分信息
+   */
+  public static <T extends BasePointCommRecord> T copy(T oldInfo) {
+    @SuppressWarnings("unchecked")
+    T newInstance = (T) getInstance(oldInfo.getClass());
+    BeanUtils.copyProperties(oldInfo, newInstance);
+    return newInstance;
+  }
+
+  private static <T extends BasePointCommRecord> T getInstance(Class<T> clazz) {
+    T info;
+    try {
+      info = clazz.newInstance();
+    } catch (InstantiationException | IllegalAccessException e) {
+      // class是抽象父类无法实例化或者缺少默认构造函数
+      throw new RuntimeException("积分信息构造失败, 请确保class不是是抽象父类" + "且有默认构造函数", e);
+    }
+    return info;
+  }
 }

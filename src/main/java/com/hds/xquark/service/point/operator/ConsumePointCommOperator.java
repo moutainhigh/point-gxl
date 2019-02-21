@@ -31,7 +31,7 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
     BigDecimal consumePoint = context.getGradeCode().getPoint();
     Map<PlatformType, BigDecimal> detailMap = new HashMap<>();
     boolean consumeRet =
-        PointCommCalHelper.minus(infoAfter, context.getPlatform(), consumePoint, detailMap);
+        PointCommCalHelper.minus(infoAfter, context.getPlatform(), consumePoint, detailMap, context);
     if (!consumeRet) {
       throw new BizException(GlobalErrorCode.UNKNOWN, "积分不足, 无法扣减");
     }
@@ -65,7 +65,28 @@ public class ConsumePointCommOperator extends BasePointCommOperator {
           BasePointCommAsst.empty(
               asstClazz, bizId, calRet.getCpId(), grade, calRet.getPlatform(), calRet.getTrancd());
       for (BasePointCommRecord record : records) {
-        asst.addRecord(record);
+        BasePointCommRecord newRecord = BasePointCommRecord.copy(record);
+        if (newRecord.getUsedType() == null) {
+          asst.addRecord(newRecord);
+        } else {
+          switch (newRecord.getUsedType()) {
+            case FIXUSEDTYPE:
+              asst.addRecord(newRecord);
+              newRecord.setCurrent(newRecord.getCurrentNoWithdrawal());
+              asst.addRecord(newRecord);
+              break;
+            case WITHDRAWALUSEDTYPE:
+              asst.addRecord(newRecord);
+              break;
+            case NOWITHDRAWALUSEDTYPE:
+              newRecord.setCurrent(newRecord.getCurrentNoWithdrawal());
+              asst.addRecord(newRecord);
+              break;
+            default:
+              logger.warning("积分提现类型错误");
+              break;
+          }
+        }
       }
       saveAsst(asst);
     }
