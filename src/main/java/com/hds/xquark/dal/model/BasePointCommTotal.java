@@ -171,6 +171,10 @@ public abstract class BasePointCommTotal {
     return getNoWithdrawalHds().add(getNoWithdrawalViviLife()).add(getNoWithdrawalEcomm());
   }
 
+  public BigDecimal getTotalWithdrawal() {
+    return getUsableHds().add(getUsableViviLife()).add(getUsableEcomm());
+  }
+
   @Override
   public String toString() {
     return "BasePointCommTotal{"
