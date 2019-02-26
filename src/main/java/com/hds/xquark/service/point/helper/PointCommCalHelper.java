@@ -161,7 +161,7 @@ public class PointCommCalHelper {
         afterMinusVal = after1MinusVal;
         //当前平台的不可提现积分充足，无需往下走
         setNoWithdrawal(pointComm, platform, afterMinusVal);
-        if (currPlatformVal.signum() != 0) {
+        if (currPlatformVal.signum() != 0 || noWithdrawal.signum() != 0) {
           detailMap.put(platform, target);
         }
         return true;
