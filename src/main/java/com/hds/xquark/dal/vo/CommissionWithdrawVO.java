@@ -2,9 +2,7 @@ package com.hds.xquark.dal.vo;
 
 import java.math.BigDecimal;
 
-/**
- * Created by wangxinhua. Date: 2018/8/17 Time: 下午6:40
- */
+/** Created by wangxinhua. Date: 2018/8/17 Time: 下午6:40 */
 public class CommissionWithdrawVO {
 
   private Long cpId;
@@ -19,24 +17,16 @@ public class CommissionWithdrawVO {
 
   private BigDecimal amount;
 
-  /**
-   * 手机号
-   */
+  /** 手机号 */
   private String phone;
 
-  /**
-   * 证件号码
-   */
+  /** 证件号码 */
   private String tinCode;
 
-  /**
-   * 备注
-   */
+  /** 备注 */
   private String remark;
 
-  /**
-   * 提现错误信息
-   */
+  /** 提现错误信息 */
   private String errorMsg;
 
   private Integer source;
@@ -139,17 +129,35 @@ public class CommissionWithdrawVO {
 
   @Override
   public String toString() {
-    return "CommissionWithdrawVO{" +
-        "cpId=" + cpId +
-        ", bankAccount='" + bankAccount + '\'' +
-        ", bankNumber='" + bankNumber + '\'' +
-        ", bankName='" + bankName + '\'' +
-        ", name='" + name + '\'' +
-        ", amount=" + amount +
-        ", phone='" + phone + '\'' +
-        ", tinCode='" + tinCode + '\'' +
-        ", remark='" + remark + '\'' +
-        ", errorMsg='" + errorMsg + '\'' +
-        '}';
+    return "CommissionWithdrawVO{"
+        + "cpId="
+        + cpId
+        + ", bankAccount='"
+        + bankAccount
+        + '\''
+        + ", bankNumber='"
+        + bankNumber
+        + '\''
+        + ", bankName='"
+        + bankName
+        + '\''
+        + ", name='"
+        + name
+        + '\''
+        + ", amount="
+        + amount
+        + ", phone='"
+        + phone
+        + '\''
+        + ", tinCode='"
+        + tinCode
+        + '\''
+        + ", remark='"
+        + remark
+        + '\''
+        + ", errorMsg='"
+        + errorMsg
+        + '\''
+        + '}';
   }
 }

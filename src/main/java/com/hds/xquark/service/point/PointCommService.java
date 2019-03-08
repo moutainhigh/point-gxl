@@ -1,31 +1,38 @@
 package com.hds.xquark.service.point;
 
-import com.hds.xquark.dal.model.BasePointCommTotal;
-import com.hds.xquark.dal.model.CommissionRecord;
-import com.hds.xquark.dal.model.CommissionTotal;
-import com.hds.xquark.dal.model.CustomerWithdrawal;
-import com.hds.xquark.dal.model.PointTotal;
+import com.hds.xquark.dal.model.*;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.TotalAuditType;
 import com.hds.xquark.dal.type.Trancd;
 import com.hds.xquark.dal.vo.CommissionWithdrawVO;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author wangxinhua on 2018/5/18. DESC: 积分信息service
- */
+/** @author wangxinhua on 2018/5/18. DESC: 积分信息service */
 public interface PointCommService {
 
-  PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      Integer categoryId, Integer status, PlatformType platform, BigDecimal points, Trancd trancd,
+  PointCommOperationResult modifyPoint(
+      Long cpId,
+      String bizId,
+      Integer categoryId,
+      Integer status,
+      PlatformType platform,
+      BigDecimal points,
+      Trancd trancd,
       TotalAuditType auditType);
 
-  PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      Integer categoryId, Integer status, PlatformType platform, BigDecimal commission,
-      Trancd trancd, TotalAuditType auditType);
+  PointCommOperationResult modifyCommission(
+      Long cpId,
+      String bizId,
+      Integer categoryId,
+      Integer status,
+      PlatformType platform,
+      BigDecimal commission,
+      Trancd trancd,
+      TotalAuditType auditType);
 
   /**
    * 根据积分规则处理积分
@@ -38,9 +45,14 @@ public interface PointCommService {
    * @param auditType
    * @return {@link PointCommOperationResult} 积分处理结果
    */
-  PointCommOperationResult modifyPoint(Long cpId, String bizId,
-      String funcCode, PlatformType platform, BigDecimal points,
-      Trancd trancd, TotalAuditType auditType);
+  PointCommOperationResult modifyPoint(
+      Long cpId,
+      String bizId,
+      String funcCode,
+      PlatformType platform,
+      BigDecimal points,
+      Trancd trancd,
+      TotalAuditType auditType);
 
   /**
    * 根据德分规则处理积分
@@ -53,9 +65,14 @@ public interface PointCommService {
    * @param auditType
    * @return {@link PointCommOperationResult} 积分处理结果
    */
-  PointCommOperationResult modifyCommission(Long cpId, String bizId,
-      String funcCode, PlatformType platform, BigDecimal commission,
-      Trancd trancd, TotalAuditType auditType);
+  PointCommOperationResult modifyCommission(
+      Long cpId,
+      String bizId,
+      String funcCode,
+      PlatformType platform,
+      BigDecimal commission,
+      Trancd trancd,
+      TotalAuditType auditType);
 
   /**
    * 更新或新增用户积分信息
@@ -64,8 +81,7 @@ public interface PointCommService {
    * @param auditType
    * @return true or false
    */
-  boolean saveOrUpdate(BasePointCommTotal info,
-      TotalAuditType auditType);
+  boolean saveOrUpdate(BasePointCommTotal info, TotalAuditType auditType);
 
   PointTotal loadByCpId(Long cpId);
 
@@ -81,17 +97,17 @@ public interface PointCommService {
   @SuppressWarnings("unchecked")
   <T extends BasePointCommTotal> T loadOrBuildInfo(Long cpId, Class<T> clazz);
 
-  <T extends BasePointCommTotal> BigDecimal sumTotal(String gradeCode, Long cpId, Class<T> clazz);
+  <T extends BasePointCommTotal> BigDecimal sumTotal(
+      String gradeCode, Long cpId, Trancd trancd, Class<T> clazz);
 
-  boolean saveTotal(BasePointCommTotal total,
-      TotalAuditType auditType);
+  boolean saveTotal(BasePointCommTotal total, TotalAuditType auditType);
 
-  boolean updateTotal(BasePointCommTotal total,
-      TotalAuditType auditType);
+  boolean updateTotal(BasePointCommTotal total, TotalAuditType auditType);
 
-  Map<String, Object> listPointRecords(Long cpId, Integer code, Integer offset, Integer size);
+  Map<String, Object> listPointRecords(Long cpId, Integer source, Integer offset, Integer size);
 
-  Map<String, Object> listCommissionRecords(Long cpId, Integer code, Integer offset, Integer size);
+  Map<String, Object> listCommissionRecords(
+      Long cpId, Integer source, Integer offset, Integer size);
 
   int releaseCommission(TotalAuditType auditType);
 
@@ -107,14 +123,17 @@ public interface PointCommService {
    */
   void grantPointWithProcedure(Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
 
-  void grantCommissionWithProcedure(Long cpId, PlatformType platform, BigDecimal val,
-      Trancd trancd);
+  void grantCommissionWithProcedure(
+      Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
 
-  List<CommissionRecord> listRecordByTime(Date start, Date end, String grade);
+  void grantCommissionNoWithdrawal(
+          Long cpId, PlatformType platform, BigDecimal val, Trancd trancd);
 
-  int translateCommSuspendingToWithdrawLastMonth(Date from);
+  List<CommissionRecord> listRecordByTime(Date start, Date end, String grade, Integer source);
 
-  int translateCommSuspendingToWithdraw(Date start, Date end);
+  int translateCommSuspendingToWithdraw(Date from, PlatformType platform);
+
+  int translateCommSuspendingToWithdraw(Date start, Date end, PlatformType platform);
 
   List<CommissionWithdrawVO> listWithdrawVO(Integer orderMonth, PlatformType source);
 
@@ -132,5 +151,8 @@ public interface PointCommService {
 
   boolean isOrderMonthProcessed(Integer month);
 
-  List<String> listWithdrawTopMonth(int month);
+  <T extends BasePointCommAsst> List<T> listAsst(
+      String bizId, Long cpId, Trancd trancd, Class<T> clazz);
+
+  List<String> listWithdrawTopDate(int limit, PlatformType platform);
 }

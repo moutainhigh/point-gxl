@@ -47,9 +47,9 @@
   </select>
   <select id="listZHWithdraw" resultMap="BaseWithDrawMap">
     select cwd.cpid                                                             as cp_id,
-           cp.namecn                                                            as name,
+           cb.accountname                                                       as name,
            cp.phoneno1                                                          as phone,
-           cp.tincode                                                           as tincode,
+           cb.tincode                                                           as tincode,
            cwd.source                                                           as source,
            cb.bankaccount                                                       as bank_account,
            cb.bankfullname                                                      as bank_name,
@@ -64,13 +64,13 @@
            inner join customerbank cb on cwd.cpId = cb.cpId
            left join customerprofile cp on cwd.cpId = cp.cpId
     where cb.isdeleted = 0
-    and cb.bankfullname = '中国银行'
+      and cb.bankfullname = '中国银行'
   </select>
   <select id="listNonZHWithdraw" resultMap="BaseWithDrawMap">
     select cwd.cpid                                                             as cp_id,
-           cp.namecn                                                            as name,
+           cb.accountname                                                       as name,
            cp.phoneno1                                                          as phone,
-           cp.tincode                                                           as tincode,
+           cb.tincode                                                           as tincode,
            cwd.source                                                           as source,
            cb.bankaccount                                                       as bank_account,
            cb.bankfullname                                                      as bank_name,
@@ -85,13 +85,13 @@
            inner join customerbank cb on cwd.cpId = cb.cpId
            left join customerprofile cp on cwd.cpId = cp.cpId
     where cb.isdeleted = 0
-    and cb.bankfullname != '中国银行'
+      and cb.bankfullname != '中国银行'
   </select>
   <select id="listWithdraw" resultMap="BaseWithDrawMap">
     select cwd.cpid                                                             as cp_id,
-           cp.namecn                                                            as name,
+           cb.accountname                                                       as name,
            cp.phoneno1                                                          as phone,
-           cp.tincode                                                           as tincode,
+           cb.tincode                                                           as tincode,
            cwd.source                                                           as source,
            cb.bankaccount                                                       as bank_account,
            cb.bankfullname                                                      as bank_name,
@@ -138,9 +138,10 @@
                and source = #{source,jdbcType=INTEGER}
              )
   </select>
-  <select id="listTopMonth" resultType="java.lang.String">
+  <select id="listTopDate" resultType="java.lang.String">
     select distinct processingMonth
     from customerWithdrawal
+    where source = #{source,jdbcType=INTEGER}
     order by processingMonth desc
     limit #{month,jdbcType=INTEGER}
   </select>

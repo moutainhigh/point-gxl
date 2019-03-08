@@ -9,8 +9,9 @@ import com.hds.xquark.service.error.BizException;
 import com.hds.xquark.service.error.GlobalErrorCode;
 import com.hds.xquark.service.point.PointCommCalResult;
 import com.hds.xquark.service.point.helper.PointCommCalHelper;
-import java.math.BigDecimal;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 /**
  * created by
@@ -44,5 +45,4 @@ public class FreezeReleasePointCommOperator extends BasePointCommOperator {
   public CodeNameType currType() {
     return CodeNameType.RELEASE;
   }
-
 }

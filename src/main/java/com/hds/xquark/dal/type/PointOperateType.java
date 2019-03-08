@@ -1,11 +1,6 @@
 package com.hds.xquark.dal.type;
 
-import com.hds.xquark.dal.model.BasePointCommRecord;
-import com.hds.xquark.dal.model.BasePointCommTotal;
-import com.hds.xquark.dal.model.CommissionRecord;
-import com.hds.xquark.dal.model.CommissionTotal;
-import com.hds.xquark.dal.model.PointRecord;
-import com.hds.xquark.dal.model.PointTotal;
+import com.hds.xquark.dal.model.*;
 
 /**
  * created by
@@ -39,5 +34,4 @@ public enum PointOperateType {
   public abstract Class<? extends BasePointCommTotal> getTotalClazz();
 
   public abstract Class<? extends BasePointCommRecord> getRecordClazz();
-
 }

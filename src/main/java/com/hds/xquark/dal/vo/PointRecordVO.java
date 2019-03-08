@@ -1,22 +1,14 @@
 package com.hds.xquark.dal.vo;
 
-import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import java.math.BigDecimal;
-import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC:
- */
+/** @author wangxinhua on 2018/5/21. DESC: */
 public class PointRecordVO extends PointCommRecordVO {
 
-  /**
-   * 本次积分
-   */
+  /** 本次积分 */
   private BigDecimal currentPoint;
 
-  /**
-   * 本次冻结积分
-   */
+  /** 本次冻结积分 */
   private BigDecimal currentFreezedPoint;
 
   public BigDecimal getCurrentPoint() {
@@ -44,5 +36,4 @@ public class PointRecordVO extends PointCommRecordVO {
     }
     return getCurrentPoint();
   }
-
 }

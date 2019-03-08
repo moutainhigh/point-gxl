@@ -1,65 +1,37 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.status.DepositStatus;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * @author wangxinhua
- */
+/** @author wangxinhua */
 public class CustomerWithdrawal implements Serializable {
 
-  /**
-   * id
-   */
+  private static final long serialVersionUID = 1L;
+  /** id */
   private Long id;
-
-  /**
-   * commissionSuspendingId
-   */
+  /** commissionSuspendingId */
   private Long commsuspendingId;
-
-  /**
-   * 分享人ID
-   */
+  /** 分享人ID */
   private Long cpId;
-
-  /**
-   * 提现时间
-   */
+  /** 提现时间 */
   private Date withdrawDate;
-
-  /**
-   * 金额
-   */
+  /** 金额 */
   private BigDecimal amount;
-
-  /**
-   * 来源平台 1 hds, 2 vivilife, 3 ecommerce
-   */
+  /** 来源平台 1 hds, 2 vivilife, 3 ecommerce */
   private Integer source;
-
-  /**
-   * 201809/201810
-   */
+  /** 201809/201810 */
   private Integer processingMonth;
 
   private Date createdDate;
-
-  /**
-   * 0 表示还未发放，1 表示落账成功, 4 表示落账失败
-   */
+  /** 0 表示还未发放，1 表示落账成功, 4 表示落账失败 */
   private Integer depositStatus = DepositStatus.CREATED.getCode();
 
   private Date updatedDate;
-
-  /**
-   * 落账失败原因
-   */
+  /** 落账失败原因 */
   private String remark;
-
-  private static final long serialVersionUID = 1L;
 
   public Long getId() {
     return id;

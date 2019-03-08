@@ -2,6 +2,7 @@ package com.hds.xquark.dal.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.type.Trancd;
+
 import java.util.Date;
 
 /**
@@ -13,42 +14,29 @@ public class PointCommRecordVO {
 
   private String id;
 
-  /**
-   * 用户id
-   */
+  /** 用户id */
   private Long cpId;
 
-  /**
-   * 用户名
-   */
-  @JsonIgnore
-  private String userName;
+  /** 用户名 */
+  @JsonIgnore private String userName;
 
-  /**
-   * 规则id
-   */
-  @JsonIgnore
-  private String gradeId;
+  /** 规则id */
+  @JsonIgnore private String gradeId;
 
-  /**
-   * 功能代码
-   */
+  /** 功能代码 */
   private String codeNumber;
 
-  /**
-   * 业务id
-   */
+  /** 业务id */
   private String businessId;
 
-  /**
-   * 积分来源平台
-   */
+  /** 积分来源平台 */
   private Integer source;
+
+  private Integer belongingTo;
 
   private Boolean rollbacked;
 
-  @JsonIgnore
-  private String gradeDesc;
+  @JsonIgnore private String gradeDesc;
 
   private Trancd recordType;
 
@@ -99,12 +87,12 @@ public class PointCommRecordVO {
     return businessId;
   }
 
-  public String getOrderId() {
-    return businessId;
-  }
-
   public void setBusinessId(String businessId) {
     this.businessId = businessId;
+  }
+
+  public String getOrderId() {
+    return businessId;
   }
 
   public Boolean getRollbacked() {
@@ -141,6 +129,14 @@ public class PointCommRecordVO {
 
   public void setSource(Integer source) {
     this.source = source;
+  }
+
+  public Integer getBelongingTo() {
+    return belongingTo;
+  }
+
+  public void setBelongingTo(Integer belongingTo) {
+    this.belongingTo = belongingTo;
   }
 
   public Date getCreatedAt() {

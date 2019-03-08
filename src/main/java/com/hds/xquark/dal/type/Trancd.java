@@ -6,7 +6,6 @@ package com.hds.xquark.dal.type;
  * @author wangxinhua at 18-6-15 上午10:26
  */
 public enum Trancd {
-
   DF("德分"),
   CPCA("零售提成"),
   CNRA("零售提成(级差)"),
@@ -40,8 +39,19 @@ public enum Trancd {
   DEPOSIT_C("积分发放"),
   MIGRATE_P("德分迁移"),
   MIGRATE_C("积分迁移"),
-  ROLLBACK_C("提现积分退回");
-
+  ROLLBACK_C("提现积分退回"),
+  CNRM1("服务费1"),
+  CNRM2("服务费2"),
+  CBM1("立省值1"),
+  CBM2("立省值2"),
+  ACHA1("VIP首单推荐奖1"),
+  ACHA2("VIP首单推荐奖2"),
+  SOCIAL_P("社区德分"),
+  PACKET_POINT("德分红包"),
+  TRANSFER_C("德分转换"),
+  TRANSFER_P("转为收益"),
+  PACKET_RAIN("红包雨领取"),
+  LOTTERY_EARN("抽奖领取");
   private final String desc;
 
   Trancd(String desc) {

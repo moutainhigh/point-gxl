@@ -1,8 +1,6 @@
 package com.hds.xquark.dal.vo;
 
-import com.hds.xquark.dal.constrant.GradeCodeConstrants;
 import java.math.BigDecimal;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * created by
@@ -11,15 +9,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CommissionRecordVO extends PointCommRecordVO {
 
-
-  /**
-   * 本次积分
-   */
+  /** 本次积分 */
   private BigDecimal currentCommission;
 
-  /**
-   * 本次冻结积分
-   */
+  /** 本次冻结积分 */
   private BigDecimal currentFreezedCommission;
 
   public BigDecimal getCurrentCommission() {

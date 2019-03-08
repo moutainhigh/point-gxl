@@ -1,21 +1,19 @@
 package com.hds.xquark.dal.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 
-/**
- * @author wangxinhua
- */
+import java.math.BigDecimal;
+import java.util.logging.Logger;
+
+/** @author wangxinhua */
 public class PointTotal extends BasePointCommTotal {
 
-  /**
-   * 汉德森可用积分
-   */
+  private static final Logger logger = Logger.getLogger(PointTotal.class.getName());
+
+  /** 汉德森可用积分 */
   private BigDecimal usablePointHds;
 
-  /**
-   * 汉德森冻结积分
-   */
+  /** 汉德森冻结积分 */
   private BigDecimal freezedPointHds;
 
   private BigDecimal usablePointViviLife;
@@ -23,6 +21,8 @@ public class PointTotal extends BasePointCommTotal {
   private BigDecimal freezedPointViviLife;
 
   private BigDecimal usablePointEcomm;
+
+  private BigDecimal usablePointPacket = BigDecimal.ZERO;
 
   private BigDecimal freezedPointEcomm;
 
@@ -141,19 +141,74 @@ public class PointTotal extends BasePointCommTotal {
   }
 
   @Override
+  public BigDecimal getNoWithdrawalHds() {
+    return BigDecimal.ZERO;
+  }
+
+  /**
+   * 由于积分/德分共用一套逻辑，德分不能提现，所以为空实现
+   * @param noWithdrawalHds 不可提现积分
+   */
+  @Override
+  public void setNoWithdrawalHds(BigDecimal noWithdrawalHds) {
+    logger.warning("不支持的德分形式");
+  }
+
+  @Override
+  public BigDecimal getNoWithdrawalViviLife() {
+    return BigDecimal.ZERO;
+  }
+
+  @Override
+  public void setNoWithdrawalViviLife(BigDecimal noWithdrawalViviLife) {
+    logger.warning("不支持的德分形式");
+  }
+
+  @Override
+  public BigDecimal getNoWithdrawalEcomm() {
+    return BigDecimal.ZERO;
+  }
+
+  @Override
+  public void setNoWithdrawalEcomm(BigDecimal noWithdrawalEcomm) {
+    logger.warning("不支持的德分形式");
+  }
+
+  /** 德分+红包 */
+  public BigDecimal getTotalUsableWithPacket() {
+    return getTotalUsable().add(getUsablePointPacket());
+  }
+
+  public BigDecimal getUsablePointPacket() {
+    return usablePointPacket;
+  }
+
+  public void setUsablePointPacket(BigDecimal usablePointPacket) {
+    this.usablePointPacket = usablePointPacket;
+  }
+
+  @Override
   protected BasePointCommTotal getInstance() {
     return new PointTotal();
   }
 
   @Override
   public String toString() {
-    return "PointTotal{" +
-        "usablePointHds=" + usablePointHds +
-        ", freezedPointHds=" + freezedPointHds +
-        ", usablePointViviLife=" + usablePointViviLife +
-        ", freezedPointViviLife=" + freezedPointViviLife +
-        ", usablePointEcomm=" + usablePointEcomm +
-        ", freezedPointEcomm=" + freezedPointEcomm +
-        '}';
+    return "PointTotal{"
+        + "usablePointHds="
+        + usablePointHds
+        + ", freezedPointHds="
+        + freezedPointHds
+        + ", usablePointViviLife="
+        + usablePointViviLife
+        + ", freezedPointViviLife="
+        + freezedPointViviLife
+        + ", usablePointEcomm="
+        + usablePointEcomm
+        + ", usablePointPacket="
+        + usablePointPacket
+        + ", freezedPointEcomm="
+        + freezedPointEcomm
+        + '}';
   }
 }

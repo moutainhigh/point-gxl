@@ -1,26 +1,22 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.type.Trancd;
+
 import java.math.BigDecimal;
 
-/**
- * @author wangxinhua
- */
+/** @author wangxinhua */
 public class PointRecord extends BasePointCommRecord {
 
-  /**
-   * 本次积分
-   */
+  /** 本次积分 */
   private BigDecimal currentPoint;
 
-  /**
-   * 本次冻结积分
-   */
+  /** 本次冻结积分 */
   private BigDecimal currentFreezedPoint;
 
-  /**
-   * 收入类型
-   */
+  /** 本次不可提现积分，由于德分无法提现，此字段仅作为适配当前代码使用 */
+  private BigDecimal currentNoWithdrawalComm = BigDecimal.ZERO;
+
+  /** 收入类型 */
   private Trancd trancd;
 
   public BigDecimal getCurrentPoint() {
@@ -39,6 +35,13 @@ public class PointRecord extends BasePointCommRecord {
     this.currentFreezedPoint = currentFreezedPoint;
   }
 
+  public BigDecimal getCurrentNoWithdrawalComm() {
+    return currentNoWithdrawalComm;
+  }
+
+  public void setCurrentNoWithdrawalComm(BigDecimal currentNoWithdrawalComm) {
+    this.currentNoWithdrawalComm = currentNoWithdrawalComm;
+  }
 
   public Trancd getTrancd() {
     return trancd;
@@ -54,18 +57,28 @@ public class PointRecord extends BasePointCommRecord {
   }
 
   @Override
-  public BigDecimal getCurrentFreezed() {
-    return getCurrentFreezedPoint();
-  }
-
-  @Override
   public void setCurrent(BigDecimal current) {
     setCurrentPoint(current);
   }
 
   @Override
+  public BigDecimal getCurrentFreezed() {
+    return getCurrentFreezedPoint();
+  }
+
+  @Override
   public void setCurrentFreezed(BigDecimal currentFreezed) {
     setCurrentFreezedPoint(currentFreezed);
+  }
+
+  @Override
+  public BigDecimal getCurrentNoWithdrawal() {
+    return getCurrentNoWithdrawalComm();
+  }
+
+  @Override
+  public void setCurrentNoWithdrawal(BigDecimal currentNoWithdrawal) {
+    setCurrentNoWithdrawalComm(currentNoWithdrawal);
   }
 
   @Override
@@ -77,5 +90,4 @@ public class PointRecord extends BasePointCommRecord {
   public void setType(Trancd type) {
     setTrancd(type);
   }
-
 }

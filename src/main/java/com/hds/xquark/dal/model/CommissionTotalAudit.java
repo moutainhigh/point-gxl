@@ -1,6 +1,7 @@
 package com.hds.xquark.dal.model;
 
 import com.hds.xquark.dal.status.PointInfoStatus;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,54 +14,41 @@ import java.util.Date;
 public class CommissionTotalAudit implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  /**
-   * auditId
-   */
+  /** auditId */
   private Long auditId;
+
   private Long id;
-  /**
-   * 用户id
-   */
+  /** 用户id */
   private Long cpId;
-  /**
-   * hds总佣金
-   */
+  /** hds总佣金 */
   private BigDecimal usableCommHds;
-  /**
-   * 已冻结佣金
-   */
+  /** 已冻结佣金 */
   private BigDecimal freezedCommHds;
-  /**
-   * viviLife总佣金
-   */
+  /** 汉德森不可提现积分 */
+  private BigDecimal noWithdrawalCommHds;
+  /** viviLife总佣金 */
   private BigDecimal usableCommViviLife;
-  /**
-   * 已冻结佣金
-   */
+  /** 已冻结佣金 */
   private BigDecimal freezedCommViviLife;
-  /**
-   * 汉薇商城总佣金
-   */
+  /** viviLife不可提现积分 */
+  private BigDecimal noWithdrawalCommViviLife;
+  /** 汉薇商城总佣金 */
   private BigDecimal usableCommEcomm;
-  /**
-   * 已冻结佣金
-   */
+  /** 已冻结佣金 */
   private BigDecimal freezedCommEcomm;
-  /**
-   * 佣金状态
-   */
+  /** 汉薇商城不可提现积分 */
+  private BigDecimal noWithdrawalCommEcomm;
+  /** 佣金状态 */
   private PointInfoStatus status;
+
   private Date createdAt;
   private Date updatedAt;
   private Boolean archive;
-  /**
-   * 1 insert, 2 update, 3 delete
-   */
+  /** 1 insert, 2 update, 3 delete */
   private Integer auditType;
-  /**
-   * H -> HDS, V -> vivilife, E -> ecommerce, S -> system
-   */
+  /** H -> HDS, V -> vivilife, E -> ecommerce, S -> system */
   private String auditUser;
+
   private Date auditDate;
 
   public Long getAuditId() {
@@ -133,6 +121,30 @@ public class CommissionTotalAudit implements Serializable {
 
   public void setFreezedCommEcomm(BigDecimal freezedCommEcomm) {
     this.freezedCommEcomm = freezedCommEcomm;
+  }
+
+  public BigDecimal getNoWithdrawalCommHds() {
+    return noWithdrawalCommHds;
+  }
+
+  public void setNoWithdrawalCommHds(BigDecimal noWithdrawalCommHds) {
+    this.noWithdrawalCommHds = noWithdrawalCommHds;
+  }
+
+  public BigDecimal getNoWithdrawalCommViviLife() {
+    return noWithdrawalCommViviLife;
+  }
+
+  public void setNoWithdrawalCommViviLife(BigDecimal noWithdrawalCommViviLife) {
+    this.noWithdrawalCommViviLife = noWithdrawalCommViviLife;
+  }
+
+  public BigDecimal getNoWithdrawalCommEcomm() {
+    return noWithdrawalCommEcomm;
+  }
+
+  public void setNoWithdrawalCommEcomm(BigDecimal noWithdrawalCommEcomm) {
+    this.noWithdrawalCommEcomm = noWithdrawalCommEcomm;
   }
 
   public PointInfoStatus getStatus() {
