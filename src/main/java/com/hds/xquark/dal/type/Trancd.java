@@ -51,7 +51,9 @@ public enum Trancd {
   TRANSFER_C("德分转换"),
   TRANSFER_P("转为收益"),
   PACKET_RAIN("红包雨领取"),
-  LOTTERY_EARN("抽奖领取");
+  LOTTERY_EARN("抽奖领取"),
+  FRESHMAN("新人升级发放德分"),
+  LOTTERY_F("新人首单抽奖发放德分");
   private final String desc;
 
   Trancd(String desc) {
