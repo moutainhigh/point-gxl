@@ -53,6 +53,7 @@ public enum Trancd {
   PACKET_RAIN("红包雨领取"),
   LOTTERY_EARN("抽奖领取"),
   FRESHMAN("新人升级发放德分"),
+  FRESHMAN_P("新人发放德分扣减"),
   LOTTERY_F("新人首单抽奖发放德分");
   private final String desc;
 
