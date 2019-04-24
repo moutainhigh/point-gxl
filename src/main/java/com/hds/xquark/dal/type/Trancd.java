@@ -60,7 +60,8 @@ public enum Trancd {
   PF("推广费"),
   DP1("首单反德分"),
   DP2("净值拨付"),
-  DP3("奖励德分");
+  DP3("奖励德分"),
+  FRESHMAN_C("新人发放积分扣减");
   private final String desc;
 
   Trancd(String desc) {
