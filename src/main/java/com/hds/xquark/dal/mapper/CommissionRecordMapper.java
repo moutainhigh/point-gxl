@@ -45,7 +45,15 @@ public interface CommissionRecordMapper {
       @Param("offset") Integer offset,
       @Param("size") Integer size);
 
+  List<CommissionRecordVO> filterListVoAsst(
+          @Param("cpId") Long cpId,
+          @Param("source") Integer source,
+          @Param("offset") Integer offset,
+          @Param("size") Integer size);
+
   Long count(@Param("cpId") Long cpId, @Param("source") Integer source);
+
+  Long filterCount(@Param("cpId") Long cpId, @Param("source") Integer source);
 
   List<CommissionRecord> listFreezedRecordAfterDate(@Param("date") Date date);
 

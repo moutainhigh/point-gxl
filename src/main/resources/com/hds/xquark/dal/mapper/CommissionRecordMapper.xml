@@ -153,6 +153,99 @@
       and record.source = #{source,jdbcType=INTEGER}
     </if>
   </select>
+  <select id="filterListVoAsst" resultMap="VOResultMap">
+    select quaComm.id,
+    quaComm.cpId,
+    quaComm.grade_id,
+    quaComm.gradeNumber,
+    quaComm.orderid,
+    quaComm.current_comm,
+    quaComm.current_freezed_comm,
+    quaComm.trancd,
+    quaComm.source,
+    quaComm.rollbacked,
+    quaComm.rollback_id,
+    quaComm.created_at,
+    quaComm.updated_at,
+    cp.namecn as user_name,
+    gc.description as grade_desc
+    from (select id,
+    cpId,
+    grade_id,
+    gradeNumber,
+    orderid,
+    current_comm,
+    current_freezed_comm,
+    trancd,
+    source,
+    rollbacked,
+    rollback_id,
+    created_at,
+    updated_at
+    from commissionsuspending
+    where cpId = #{cpId,jdbcType=BIGINT}
+    <if test="source != null">
+      and source = #{source, jdbcType=INTEGER}
+    </if>
+    and isdeleted = false
+    and trancd not in ('DEDUCT_C', 'TRANSFER_C')
+    union
+    select ca.id,
+    ca.cpId,
+    ca.grade_id,
+    ca.gradeNumber,
+    ca.orderid,
+    ca.current_comm,
+    0 as 'current_freezed_comm',
+    ca.trancd,
+    ca.source,
+    ca.rollbacked,
+    ca.rollback_id,
+    ca.created_at,
+    ca.updated_at
+    from commissionsuspendingAsst ca
+    inner join order_header oh on ca.orderid = oh.orderid
+    where ca.cpId = #{cpId,jdbcType=BIGINT}
+    and ( oh.from_cpId = #{cpId,jdbcType=BIGINT} or oh.cpId = #{cpId,jdbcType=BIGINT})
+    <if test="source != null">
+      and ca.source = #{source, jdbcType=INTEGER}
+    </if>
+    and ca.isdeleted = false
+    and ca.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
+    inner join customerProfile cp on quaComm.cpId = cp.cpId
+    inner join gradeCode gc on quaComm.grade_id = gc.id
+    where cp.isdeleted = false
+    order by quaComm.created_at desc
+    <if test="offset != null and size != null">
+      limit #{offset}, #{size}
+    </if>
+  </select>
+  <select id="filterCount" resultType="java.lang.Long">
+    SELECT COUNT(temp.id) total FROM (
+      select quaComm.id, quaComm.cpId
+      from (select id, cpId
+      from commissionsuspending
+      where cpId = #{cpId,jdbcType=BIGINT}
+      <if test="source != null">
+        and source = #{source, jdbcType=INTEGER}
+      </if>
+      and isdeleted = false
+      and trancd not in ('DEDUCT_C', 'TRANSFER_C')
+      union
+      select ca.id, ca.cpId
+      from commissionsuspendingAsst ca
+      inner join order_header oh on ca.orderid = oh.orderid
+      where ca.cpId = #{cpId,jdbcType=BIGINT}
+      and ( oh.from_cpId = #{cpId,jdbcType=BIGINT} or oh.cpId = #{cpId,jdbcType=BIGINT})
+      <if test="source != null">
+        and ca.source = #{source, jdbcType=INTEGER}
+      </if>
+      and ca.isdeleted = false
+      and ca.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
+      inner join customerProfile cp on quaComm.cpId = cp.cpId
+      where cp.isdeleted = false ) temp
+  </select>
+
   <select id="listUnRollBackedByCpIdWithBizIdAndType"
     resultMap="BaseResultMap">
     select

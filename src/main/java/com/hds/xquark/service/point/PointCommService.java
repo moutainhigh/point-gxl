@@ -109,6 +109,17 @@ public interface PointCommService {
   Map<String, Object> listCommissionRecords(
       Long cpId, Integer source, Integer offset, Integer size);
 
+  /**
+   * 新增获取用户积分记录, 过滤掉 order_header 表 from_cpid 不是当前用户的积分信息
+   * @param cpId 用户cpId
+   * @param source 积分来源
+   * @param offset 当前页
+   * @param size 每页显示条数
+   * @return
+   */
+  Map<String, Object> filterCommissionRecords(
+          Long cpId, Integer source, Integer offset, Integer size);
+
   int releaseCommission(TotalAuditType auditType);
 
   int releasePoints(TotalAuditType auditType);
