@@ -169,26 +169,28 @@
     quaComm.updated_at,
     cp.namecn as user_name,
     gc.description as grade_desc
-    from (select id,
-    cpId,
-    grade_id,
-    gradeNumber,
-    orderid,
-    current_comm,
-    current_freezed_comm,
-    trancd,
-    source,
-    rollbacked,
-    rollback_id,
-    created_at,
-    updated_at
-    from commissionsuspending
-    where cpId = #{cpId,jdbcType=BIGINT}
+    from (select c.id,
+    c.cpId,
+    c.grade_id,
+    c.gradeNumber,
+    c.orderid,
+    c.current_comm,
+    c.current_freezed_comm,
+    c.trancd,
+    c.source,
+    c.rollbacked,
+    c.rollback_id,
+    c.created_at,
+    c.updated_at
+    from commissionsuspending c
+    inner join order_header oh on c.orderid = oh.orderid
+    where c.cpId = #{cpId,jdbcType=BIGINT}
+    and (c.cpId = oh.cpId or c.cpId = oh.from_cpId)
     <if test="source != null">
-      and source = #{source, jdbcType=INTEGER}
+      and c.source = #{source, jdbcType=INTEGER}
     </if>
-    and isdeleted = false
-    and trancd not in ('DEDUCT_C', 'TRANSFER_C')
+    and c.isdeleted = false
+    and c.trancd not in ('DEDUCT_C', 'TRANSFER_C')
     union
     select ca.id,
     ca.cpId,
@@ -206,7 +208,7 @@
     from commissionsuspendingAsst ca
     inner join order_header oh on ca.orderid = oh.orderid
     where ca.cpId = #{cpId,jdbcType=BIGINT}
-    and ( oh.from_cpId = #{cpId,jdbcType=BIGINT} or oh.cpId = #{cpId,jdbcType=BIGINT})
+    and (ca.cpId = oh.cpId or ca.cpId = oh.from_cpId)
     <if test="source != null">
       and ca.source = #{source, jdbcType=INTEGER}
     </if>
@@ -223,20 +225,22 @@
   <select id="filterCount" resultType="java.lang.Long">
     SELECT COUNT(temp.id) total FROM (
       select quaComm.id, quaComm.cpId
-      from (select id, cpId
-      from commissionsuspending
-      where cpId = #{cpId,jdbcType=BIGINT}
+      from (select c.id, c.cpId
+      from commissionsuspending c
+      inner join order_header oh on c.orderid = oh.orderid
+      where c.cpId = #{cpId,jdbcType=BIGINT}
+      and (c.cpId = oh.cpId or c.cpId = oh.from_cpId)
       <if test="source != null">
-        and source = #{source, jdbcType=INTEGER}
+        and c.source = #{source, jdbcType=INTEGER}
       </if>
-      and isdeleted = false
-      and trancd not in ('DEDUCT_C', 'TRANSFER_C')
+      and c.isdeleted = false
+      and c.trancd not in ('DEDUCT_C', 'TRANSFER_C')
       union
       select ca.id, ca.cpId
       from commissionsuspendingAsst ca
       inner join order_header oh on ca.orderid = oh.orderid
       where ca.cpId = #{cpId,jdbcType=BIGINT}
-      and ( oh.from_cpId = #{cpId,jdbcType=BIGINT} or oh.cpId = #{cpId,jdbcType=BIGINT})
+      and (ca.cpId = oh.cpId or ca.cpId = oh.from_cpId)
       <if test="source != null">
         and ca.source = #{source, jdbcType=INTEGER}
       </if>
