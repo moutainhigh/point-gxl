@@ -194,6 +194,11 @@ public class CommissionOperationTest extends BaseOperationTest {
   }
 
   @Test
+  public void testFilterListVO() {
+    Assert.assertNotNull(pointCommService.filterCommissionRecords(cpId, null, null, null));
+  }
+
+  @Test
   public void testPointNew() {
     //    getInitialize().getPointService().loadByCpId(cpId);
     //    PointCommOperationResult<PointTotal, PointRecord> modify =

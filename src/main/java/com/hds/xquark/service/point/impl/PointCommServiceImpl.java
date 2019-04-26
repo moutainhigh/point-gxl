@@ -430,6 +430,14 @@ public class PointCommServiceImpl implements PointCommService {
     return ImmutableMap.of("list", list, "total", total);
   }
 
+  @Override
+  public Map<String, Object> filterCommissionRecords(
+          Long cpId, Integer source, Integer offset, Integer size) {
+    List<CommissionRecordVO> list = commissionRecordMapper.filterListVoAsst(cpId, source, offset, size);
+    Long total = commissionRecordMapper.filterCount(cpId, source);
+    return ImmutableMap.of("list", list, "total", total);
+  }
+
   /** 发放佣金 */
   @Override
   public int releaseCommission(TotalAuditType auditType) {
