@@ -154,6 +154,73 @@
     </if>
   </select>
   <select id="filterListVoAsst" resultMap="VOResultMap">
+    SELECT *
+    FROM (select quaComm.id,
+    quaComm.cpId,
+    quaComm.grade_id,
+    quaComm.gradeNumber,
+    quaComm.orderid,
+    quaComm.current_comm,
+    quaComm.current_freezed_comm,
+    quaComm.trancd,
+    quaComm.source,
+    quaComm.rollbacked,
+    quaComm.rollback_id,
+    quaComm.created_at,
+    quaComm.updated_at,
+    cp.namecn      as user_name,
+    gc.description as grade_desc
+    from (select c1.id,
+    c1.cpId,
+    c1.grade_id,
+    c1.gradeNumber,
+    c1.orderid,
+    c1.current_comm,
+    c1.current_freezed_comm,
+    c1.trancd,
+    c1.source,
+    c1.rollbacked,
+    c1.rollback_id,
+    c1.created_at,
+    c1.updated_at
+    from commissionsuspending c1
+    where c1.cpId = #{cpId,jdbcType=BIGINT}
+    <if test="source != null">
+      and c1.source = #{source, jdbcType=INTEGER}
+    </if>
+    and c1.isdeleted = false
+    and c1.trancd not in ('DEDUCT_C', 'TRANSFER_C')
+    union
+    select c2.id,
+    c2.cpId,
+    c2.grade_id,
+    c2.gradeNumber,
+    c2.orderid,
+    c2.current_comm,
+    0 as 'current_freezed_comm',
+    c2.trancd,
+    c2.source,
+    c2.rollbacked,
+    c2.rollback_id,
+    c2.created_at,
+    c2.updated_at
+    from commissionsuspendingAsst c2
+    where c2.cpId = #{cpId,jdbcType=BIGINT}
+    <if test="source != null">
+      and c2.source = #{source, jdbcType=INTEGER}
+    </if>
+    and c2.isdeleted = false
+    and c2.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
+    inner join customerProfile cp on quaComm.cpId = cp.cpId
+    inner join gradeCode gc on quaComm.grade_id = gc.id
+    where cp.isdeleted = false
+    and NOT (quaComm.orderid regexp '^ESO'
+    OR quaComm.orderid regexp '^01H'
+    OR quaComm.orderid regexp '^01V'
+    )
+
+    union
+
     select quaComm.id,
     quaComm.cpId,
     quaComm.grade_id,
@@ -216,38 +283,65 @@
     and ca.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
     inner join customerProfile cp on quaComm.cpId = cp.cpId
     inner join gradeCode gc on quaComm.grade_id = gc.id
-    where cp.isdeleted = false
-    order by quaComm.created_at desc
+    where cp.isdeleted = false) temp
+    order by temp.created_at desc
     <if test="offset != null and size != null">
       limit #{offset}, #{size}
     </if>
   </select>
   <select id="filterCount" resultType="java.lang.Long">
-    SELECT COUNT(temp.id) total FROM (
-      select quaComm.id, quaComm.cpId
-      from (select c.id, c.cpId
-      from commissionsuspending c
-      inner join order_header oh on c.orderid = oh.orderid
-      where c.cpId = #{cpId,jdbcType=BIGINT}
-      and (c.cpId = oh.cpId or c.cpId = oh.from_cpId)
-      <if test="source != null">
-        and c.source = #{source, jdbcType=INTEGER}
-      </if>
-      and c.isdeleted = false
-      and c.trancd not in ('DEDUCT_C', 'TRANSFER_C')
+    select count(temp.id)
+    from (select quaComm.id, quaComm.cpId, quaComm.orderid
+      from (select c1.id, c1.cpId, c1.orderid
+            from commissionsuspending c1
+            where c1.cpId = #{cpId,jdbcType=BIGINT}
+              <if test="source != null">
+                and c1.source = #{source, jdbcType=INTEGER}
+              </if>
+              and c1.isdeleted = false
+              and c1.trancd not in ('DEDUCT_C', 'TRANSFER_C')
+            union
+            select c2.id, c2.cpId, c2.orderid
+            from commissionsuspendingAsst c2
+            where c2.cpId = #{cpId,jdbcType=BIGINT}
+              <if test="source != null">
+                and c2.source = #{source, jdbcType=INTEGER}
+              </if>
+              and c2.isdeleted = false
+              and c2.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
+             inner join customerProfile cp on quaComm.cpId = cp.cpId
+      where cp.isdeleted = false
+        and NOT (quaComm.orderid regexp '^ESO'
+                   OR quaComm.orderid regexp '^01H'
+                   OR quaComm.orderid regexp '^01V'
+          )
+
       union
-      select ca.id, ca.cpId
-      from commissionsuspendingAsst ca
-      inner join order_header oh on ca.orderid = oh.orderid
-      where ca.cpId = #{cpId,jdbcType=BIGINT}
-      and (ca.cpId = oh.cpId or ca.cpId = oh.from_cpId)
-      <if test="source != null">
-        and ca.source = #{source, jdbcType=INTEGER}
-      </if>
-      and ca.isdeleted = false
-      and ca.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
-      inner join customerProfile cp on quaComm.cpId = cp.cpId
-      where cp.isdeleted = false ) temp
+
+      select quaComm.id, quaComm.cpId, quaComm.orderid
+      from (select c.id, c.cpId, c.orderid
+            from commissionsuspending c
+                   inner join order_header oh on c.orderid = oh.orderid
+            where c.cpId = #{cpId,jdbcType=BIGINT}
+              and (c.cpId = oh.cpId or c.cpId = oh.from_cpId)
+              <if test="source != null">
+                and c.source = #{source, jdbcType=INTEGER}
+              </if>
+              and c.isdeleted = false
+              and c.trancd not in ('DEDUCT_C', 'TRANSFER_C')
+            union
+            select ca.id, ca.cpId, ca.orderid
+            from commissionsuspendingAsst ca
+                   inner join order_header oh on ca.orderid = oh.orderid
+            where ca.cpId = #{cpId,jdbcType=BIGINT}
+              and (ca.cpId = oh.cpId or ca.cpId = oh.from_cpId)
+              <if test="source != null">
+                and ca.source = #{source, jdbcType=INTEGER}
+              </if>
+              and ca.isdeleted = false
+              and ca.trancd in ('DEDUCT_C', 'TRANSFER_C')) quaComm
+             inner join customerProfile cp on quaComm.cpId = cp.cpId
+      where cp.isdeleted = false) temp
   </select>
 
   <select id="listUnRollBackedByCpIdWithBizIdAndType"
