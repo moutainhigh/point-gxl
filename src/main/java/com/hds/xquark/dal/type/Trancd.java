@@ -61,6 +61,9 @@ public enum Trancd {
   DP1("首单反德分"),
   DP2("净值拨付"),
   DP3("奖励德分"),
+  hvnc("新人本人20元"),
+  hvns("上级2元积分"),
+  hvnp("上级100德分"),
   FRESHMAN_C("新人发放积分扣减");
   private final String desc;
 
