@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hds.xquark.dal.mapper.CommissionTotalAuditMapper">
+  <resultMap id="BaseResultMap" type="com.hds.xquark.dal.model.CommissionTotalAudit">
+    <id column="auditId" jdbcType="BIGINT" property="auditId"/>
+    <result column="id" jdbcType="BIGINT" property="id"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="usable_comm_hds" jdbcType="DECIMAL" property="usableCommHds"/>
+    <result column="freezed_comm_hds" jdbcType="DECIMAL" property="freezedCommHds"/>
+    <result column="nowithdrawal_comm_hds" jdbcType="DECIMAL" property="noWithdrawalCommHds"/>
+    <result column="usable_comm_vivilife" jdbcType="DECIMAL" property="usableCommViviLife"/>
+    <result column="freezed_comm_vivilife" jdbcType="DECIMAL" property="freezedCommViviLife"/>
+    <result column="nowithdrawal_comm_vivilife" jdbcType="DECIMAL" property="noWithdrawalCommViviLife"/>
+    <result column="usable_comm_ecomm" jdbcType="DECIMAL" property="usableCommEcomm"/>
+    <result column="freezed_comm_ecomm" jdbcType="DECIMAL" property="freezedCommEcomm"/>
+    <result column="nowithdrawal_comm_ecomm" jdbcType="DECIMAL" property="noWithdrawalCommEcomm"/>
+    <result column="status" jdbcType="VARCHAR" property="status"/>
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+    <result column="archive" jdbcType="TINYINT" property="archive"/>
+    <result column="auditType" jdbcType="TINYINT" property="auditType"/>
+    <result column="auditUser" jdbcType="VARCHAR" property="auditUser"/>
+    <result column="auditDate" jdbcType="TIMESTAMP" property="auditDate"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    auditId, id, cpId, usable_comm_hds, freezed_comm_hds, nowithdrawal_comm_hds,
+    usable_comm_vivilife, freezed_comm_vivilife, nowithdrawal_comm_vivilife,
+    usable_comm_ecomm, freezed_comm_ecomm, nowithdrawal_comm_ecomm,
+    status, created_at, updated_at, archive, auditType, auditUser, auditDate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from commissiontotalaudit
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from commissiontotalaudit
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hds.xquark.dal.model.CommissionTotalAudit">
+    insert into commissiontotalaudit (auditId, id, cpId,
+                                      usable_comm_hds, freezed_comm_hds, nowithdrawal_comm_hds,
+                                      usable_comm_vivilife,  freezed_comm_vivilife, nowithdrawal_comm_vivilife,
+                                      usable_comm_ecomm, freezed_comm_ecomm, nowithdrawal_comm_ecomm,
+                                      status, created_at, updated_at,
+                                      archive, auditType, auditUser,
+                                      auditDate)
+    values (#{auditId,jdbcType=BIGINT}, #{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT},
+                                        #{usableCommHds,jdbcType=DECIMAL},
+                                        #{freezedCommHds,jdbcType=DECIMAL},
+                                        #{noWithdrawalCommHds,jdbcType=DECIMAL},
+                                        #{usableCommViviLife,jdbcType=DECIMAL},
+                                        #{freezedCommViviLife,jdbcType=DECIMAL},
+                                        #{noWithdrawalCommViviLife,jdbcType=DECIMAL},
+                                        #{usableCommEcomm,jdbcType=DECIMAL},
+                                        #{freezedCommEcomm,jdbcType=DECIMAL},
+                                        #{noWithdrawalCommEcomm,jdbcType=DECIMAL},
+                                        #{status,jdbcType=VARCHAR}, NOW(), NOW(),
+            FALSE, #{auditType,jdbcType=TINYINT}, #{auditUser,jdbcType=VARCHAR},
+            NOW())
+  </insert>
+  <update id="updateByPrimaryKeySelective"
+    parameterType="com.hds.xquark.dal.model.CommissionTotalAudit">
+    update commissiontotalaudit
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="usableCommHds != null">
+        usable_comm_hds = #{usableCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommHds != null">
+        freezed_comm_hds = #{freezedCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="noWithdrawalCommHds != null">
+        nowithdrawal_comm_hds = #{noWithdrawalCommHds,jdbcType=DECIMAL},
+      </if>
+      <if test="usableCommViviLife != null">
+        usable_comm_vivilife = #{usableCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommViviLife != null">
+        freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="noWithdrawalCommViviLife != null">
+        nowithdrawal_comm_vivilife = #{noWithdrawalCommViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="usableCommEcomm != null">
+        usable_comm_ecomm = #{usableCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedCommEcomm != null">
+        freezed_comm_ecomm = #{freezedCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="noWithdrawalCommEcomm != null">
+        nowithdrawal_comm_ecomm = #{noWithdrawalCommEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="archive != null">
+        archive = #{archive,jdbcType=TINYINT},
+      </if>
+      <if test="auditType != null">
+        auditType = #{auditType,jdbcType=TINYINT},
+      </if>
+      <if test="auditUser != null">
+        auditUser = #{auditUser,jdbcType=VARCHAR},
+      </if>
+      updated_at = NOW()
+    </set>
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.CommissionTotalAudit">
+    update commissiontotalaudit
+    set id                  = #{id,jdbcType=BIGINT},
+      cpId                  = #{cpId,jdbcType=BIGINT},
+      usable_comm_hds       = #{usableCommHds,jdbcType=DECIMAL},
+      freezed_comm_hds      = #{freezedCommHds,jdbcType=DECIMAL},
+      nowithdrawal_comm_hds = #{noWithdrawalCommHds,jdbcType=DECIMAL},
+      usable_comm_vivilife  = #{usableCommViviLife,jdbcType=DECIMAL},
+      freezed_comm_vivilife = #{freezedCommViviLife,jdbcType=DECIMAL},
+      nowithdrawal_comm_vivilife = #{noWithdrawalCommViviLife,jdbcType=DECIMAL},
+      usable_comm_ecomm     = #{usableCommEcomm,jdbcType=DECIMAL},
+      freezed_comm_ecomm    = #{freezedCommEcomm,jdbcType=DECIMAL},
+      nowithdrawal_comm_ecomm = #{noWithdrawalCommEcomm,jdbcType=DECIMAL},
+      status                = #{status,jdbcType=VARCHAR},
+      created_at            = NOW(),
+      updated_at            = NOW(),
+      archive               = #{archive,jdbcType=TINYINT},
+      auditType             = #{auditType,jdbcType=TINYINT},
+      auditUser             = #{auditUser,jdbcType=VARCHAR},
+      auditDate             = NOW()
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </update>
+</mapper>

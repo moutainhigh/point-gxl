@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hds.xquark.dal.mapper.PointTotalAuditMapper">
+  <resultMap id="BaseResultMap" type="com.hds.xquark.dal.model.PointTotalAudit">
+    <id column="auditId" jdbcType="BIGINT" property="auditId"/>
+    <result column="id" jdbcType="BIGINT" property="id"/>
+    <result column="cpId" jdbcType="BIGINT" property="cpId"/>
+    <result column="usable_point_hds" jdbcType="DECIMAL" property="usablePointHds"/>
+    <result column="freezed_point_hds" jdbcType="DECIMAL" property="freezedPointHds"/>
+    <result column="usable_point_vivilife" jdbcType="DECIMAL" property="usablePointViviLife"/>
+    <result column="freezed_point_vivilife" jdbcType="DECIMAL" property="freezedPointViviLife"/>
+    <result column="usable_point_ecomm" jdbcType="DECIMAL" property="usablePointEcomm"/>
+    <result column="freezed_point_ecomm" jdbcType="DECIMAL" property="freezedPointEcomm"/>
+    <result column="status" jdbcType="VARCHAR" property="status"/>
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+    <result column="archive" jdbcType="TINYINT" property="archive"/>
+    <result column="auditType" jdbcType="TINYINT" property="auditType"/>
+    <result column="auditUser" jdbcType="VARCHAR" property="auditUser"/>
+    <result column="auditDate" jdbcType="TIMESTAMP" property="auditDate"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    auditId, id, cpId, usable_point_hds, freezed_point_hds, usable_point_vivilife, freezed_point_vivilife,
+    usable_point_ecomm, freezed_point_ecomm, status, created_at, updated_at, archive,
+    auditType, auditUser, auditDate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from pointTotalAudit
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from pointTotalAudit
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hds.xquark.dal.model.PointTotalAudit">
+    insert into pointTotalAudit (auditId, id, cpId,
+                                 usable_point_hds, freezed_point_hds, usable_point_vivilife,
+                                 freezed_point_vivilife, usable_point_ecomm, freezed_point_ecomm,
+                                 status, created_at, updated_at,
+                                 archive, auditType, auditUser,
+                                 auditDate)
+    values (#{auditId,jdbcType=BIGINT}, #{id,jdbcType=BIGINT}, #{cpId,jdbcType=BIGINT},
+                                        #{usablePointHds,jdbcType=DECIMAL},
+                                        #{freezedPointHds,jdbcType=DECIMAL},
+                                        #{usablePointViviLife,jdbcType=DECIMAL},
+                                        #{freezedPointViviLife,jdbcType=DECIMAL},
+                                        #{usablePointEcomm,jdbcType=DECIMAL},
+                                        #{freezedPointEcomm,jdbcType=DECIMAL},
+                                        #{status,jdbcType=VARCHAR}, NOW(), NOW(),
+            FALSE, #{auditType,jdbcType=TINYINT}, #{auditUser,jdbcType=VARCHAR},
+            NOW())
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hds.xquark.dal.model.PointTotalAudit">
+    update pointTotalAudit
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cpId != null">
+        cpId = #{cpId,jdbcType=BIGINT},
+      </if>
+      <if test="usablePointHds != null">
+        usable_point_hds = #{usablePointHds,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedPointHds != null">
+        freezed_point_hds = #{freezedPointHds,jdbcType=DECIMAL},
+      </if>
+      <if test="usablePointViviLife != null">
+        usable_point_vivilife = #{usablePointViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedPointViviLife != null">
+        freezed_point_vivilife = #{freezedPointViviLife,jdbcType=DECIMAL},
+      </if>
+      <if test="usablePointEcomm != null">
+        usable_point_ecomm = #{usablePointEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="freezedPointEcomm != null">
+        freezed_point_ecomm = #{freezedPointEcomm,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="archive != null">
+        archive = #{archive,jdbcType=TINYINT},
+      </if>
+      <if test="auditType != null">
+        auditType = #{auditType,jdbcType=TINYINT},
+      </if>
+      <if test="auditUser != null">
+        auditUser = #{auditUser,jdbcType=VARCHAR},
+      </if>
+      auditDate = NOW(),
+      updated_at = NOW()
+    </set>
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hds.xquark.dal.model.PointTotalAudit">
+    update pointTotalAudit
+    set id                   = #{id,jdbcType=BIGINT},
+      cpId                   = #{cpId,jdbcType=BIGINT},
+      usable_point_hds       = #{usablePointHds,jdbcType=DECIMAL},
+      freezed_point_hds      = #{freezedPointHds,jdbcType=DECIMAL},
+      usable_point_vivilife  = #{usablePointViviLife,jdbcType=DECIMAL},
+      freezed_point_vivilife = #{freezedPointViviLife,jdbcType=DECIMAL},
+      usable_point_ecomm     = #{usablePointEcomm,jdbcType=DECIMAL},
+      freezed_point_ecomm    = #{freezedPointEcomm,jdbcType=DECIMAL},
+      status                 = #{status,jdbcType=VARCHAR},
+      created_at             = NOW(),
+      updated_at             = NOW(),
+      archive                = #{archive,jdbcType=TINYINT},
+      auditType              = #{auditType,jdbcType=TINYINT},
+      auditUser              = #{auditUser,jdbcType=VARCHAR},
+      auditDate              = NOW()
+    where auditId = #{auditId,jdbcType=BIGINT}
+  </update>
+</mapper>

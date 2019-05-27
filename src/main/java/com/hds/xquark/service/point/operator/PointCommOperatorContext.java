@@ -1,34 +1,25 @@
 package com.hds.xquark.service.point.operator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.model.GradeCode;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.PointOperateType;
 import com.hds.xquark.dal.type.Trancd;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC:
- */
+/** @author wangxinhua on 2018/5/21. DESC: */
 public class PointCommOperatorContext {
 
-  /**
-   * 当前操作的用户id
-   */
+  /** 当前操作的用户id */
   private final Long cpId;
 
-  /**
-   * 用户积分信息
-   */
+  /** 用户积分信息 */
   private final BasePointCommTotal total;
 
-  /**
-   * 使用的积分规则
-   */
+  /** 使用的积分规则 */
   private final GradeCode gradeCode;
 
-  /**
-   * 业务id
-   */
+  /** 业务id */
   private final String businessId;
 
   private final PlatformType platform;
@@ -39,9 +30,14 @@ public class PointCommOperatorContext {
 
   private Long points;
 
-  PointCommOperatorContext(Long cpId, BasePointCommTotal total,
-      GradeCode gradeCode, String businessId, PlatformType platform,
-      PointOperateType operateType, Trancd trancd) {
+  PointCommOperatorContext(
+      Long cpId,
+      BasePointCommTotal total,
+      GradeCode gradeCode,
+      String businessId,
+      PlatformType platform,
+      PointOperateType operateType,
+      Trancd trancd) {
     this.cpId = cpId;
     this.total = total;
     this.gradeCode = gradeCode;
@@ -63,7 +59,12 @@ public class PointCommOperatorContext {
     return gradeCode;
   }
 
+  @JsonIgnore
   public String getBusinessId() {
+    return businessId;
+  }
+
+  public String getOrderId() {
     return businessId;
   }
 
@@ -86,5 +87,4 @@ public class PointCommOperatorContext {
   public Trancd getTrancd() {
     return trancd;
   }
-
 }

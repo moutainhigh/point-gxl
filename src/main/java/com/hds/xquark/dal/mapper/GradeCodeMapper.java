@@ -1,8 +1,9 @@
 package com.hds.xquark.dal.mapper;
 
 import com.hds.xquark.dal.model.GradeCode;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface GradeCodeMapper {
 
@@ -16,8 +17,8 @@ public interface GradeCodeMapper {
 
   GradeCode selectByFunctionCode(String functionCode);
 
-  GradeCode selectByCategoryIdAndStatus(@Param("categoryId") Integer categoryId,
-      @Param("status") Integer status);
+  GradeCode selectByCategoryIdAndStatus(
+      @Param("categoryId") Integer categoryId, @Param("status") Integer status);
 
   List<GradeCode> list(@Param("offset") Integer offset, @Param("size") Integer size);
 

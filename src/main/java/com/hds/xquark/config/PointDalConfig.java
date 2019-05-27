@@ -1,11 +1,6 @@
 package com.hds.xquark.config;
 
-import com.hds.xquark.dal.mapper.CommissionRecordMapper;
-import com.hds.xquark.dal.mapper.CommissionTotalMapper;
-import com.hds.xquark.dal.mapper.GradeCodeMapper;
-import com.hds.xquark.dal.mapper.PointRecordMapper;
-import com.hds.xquark.dal.mapper.PointTotalMapper;
-import javax.sql.DataSource;
+import com.hds.xquark.dal.mapper.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -16,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.Resource;
 
+import javax.sql.DataSource;
 
 @Configuration
 @ImportResource("classpath:/META-INF/app-context-dal.xml")
@@ -24,8 +20,7 @@ public class PointDalConfig {
   @Value("classpath:config/MapperPointConfig.xml")
   Resource mybatisMapperConfig;
 
-  @Autowired
-  DataSource dataSource;
+  @Autowired DataSource dataSource;
 
   @Bean
   public GradeCodeMapper pointGradeMapper() throws Exception {
@@ -52,9 +47,33 @@ public class PointDalConfig {
     return newMapperFactoryBean(CommissionTotalMapper.class).getObject();
   }
 
+  @Bean
+  public PointTotalAuditMapper pointTotalAuditMapper() throws Exception {
+    return newMapperFactoryBean(PointTotalAuditMapper.class).getObject();
+  }
+
+  @Bean
+  public CommissionTotalAuditMapper commissionTotalAuditMapper() throws Exception {
+    return newMapperFactoryBean(CommissionTotalAuditMapper.class).getObject();
+  }
+
+  @Bean
+  public CustomerWithdrawalMapper customerWithdrawalMapper() throws Exception {
+    return newMapperFactoryBean(CustomerWithdrawalMapper.class).getObject();
+  }
+
+  @Bean
+  public CommissionSuspendingAsstMapper commissionSuspendingAsstMapper() throws Exception {
+    return newMapperFactoryBean(CommissionSuspendingAsstMapper.class).getObject();
+  }
+
+  @Bean
+  public PointSuspendingAsstMapper pointSuspendingAsstMapper() throws Exception {
+    return newMapperFactoryBean(PointSuspendingAsstMapper.class).getObject();
+  }
+
   // @Autowired
   // Environment env;
-
   private <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz) throws Exception {
     final MapperFactoryBean<T> b = new MapperFactoryBean<T>();
     b.setMapperInterface(clazz);
@@ -68,8 +87,8 @@ public class PointDalConfig {
     fb.setConfigLocation(mybatisMapperConfig);
     fb.setDataSource(dataSource);
     // env.acceptsProfiles("prod") ? IdTypeHandler.class : IdTypeNullHandler.class
-//    fb.setTypeAliases(new Class<?>[]{IdTypeHandler.class, ObjectRangeHandler.class,
-//            PromotionActionTypeHandler.class, DomainTypeHandler.class});
+    //    fb.setTypeAliases(new Class<?>[]{IdTypeHandler.class, ObjectRangeHandler.class,
+    //            PromotionActionTypeHandler.class, DomainTypeHandler.class});
     return fb.getObject();
   }
 }

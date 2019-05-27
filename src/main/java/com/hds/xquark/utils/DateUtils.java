@@ -36,17 +36,16 @@ public class DateUtils {
     return calendar.getTime();
   }
 
-  /**
-   * string类型的日期加一天返回
-   */
+  /** string类型的日期加一天返回 */
   public static String addOne(String date) {
     String nextDate = "";
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");/*** 加一天*/
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    /** * 加一天 */
     try {
       Date dd = df.parse(date);
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(dd);
-      calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+      calendar.add(Calendar.DAY_OF_MONTH, 1); // 加一天
       nextDate = df.format(calendar.getTime());
     } catch (Exception e) {
       e.printStackTrace();
@@ -56,6 +55,7 @@ public class DateUtils {
 
   /**
    * 给日期加秒数
+   *
    * @param date 日期
    * @param seconds 秒数时间
    * @return 增加后日期
@@ -96,9 +96,9 @@ public class DateUtils {
     if (cal1 == null || cal2 == null) {
       throw new IllegalArgumentException("The dates must not be null");
     }
-    return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
-        cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+    return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+        && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+        && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
   }
 
   /**
@@ -255,6 +255,7 @@ public class DateUtils {
 
   /**
    * 增加日期
+   *
    * @param from 原日期
    * @param year 年
    * @param month 月

@@ -1,5 +1,7 @@
 package com.hds.xquark.dal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 
 /**
@@ -9,24 +11,28 @@ import java.math.BigDecimal;
  */
 public class CommissionTotal extends BasePointCommTotal {
 
-  /**
-   * 汉德森可用积分
-   */
+  /** 汉德森可用积分 */
   private BigDecimal usableCommHds;
 
-  /**
-   * 汉德森冻结积分
-   */
+  /** 汉德森冻结积分 */
   private BigDecimal freezedCommHds;
+
+  /** 汉德森不可提现积分 */
+  private BigDecimal noWithdrawalCommHds;
 
   private BigDecimal usableCommViviLife;
 
   private BigDecimal freezedCommViviLife;
 
+  private BigDecimal noWithdrawalCommViviLife;
+
   private BigDecimal usableCommEcomm;
 
   private BigDecimal freezedCommEcomm;
 
+  private BigDecimal noWithdrawalCommEcomm;
+
+  @JsonIgnore
   public BigDecimal getUsableCommHds() {
     return usableCommHds;
   }
@@ -35,6 +41,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.usableCommHds = usableCommHds;
   }
 
+  @JsonIgnore
   public BigDecimal getFreezedCommHds() {
     return freezedCommHds;
   }
@@ -43,6 +50,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.freezedCommHds = freezedCommHds;
   }
 
+  @JsonIgnore
   public BigDecimal getUsableCommViviLife() {
     return usableCommViviLife;
   }
@@ -51,6 +59,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.usableCommViviLife = usableCommViviLife;
   }
 
+  @JsonIgnore
   public BigDecimal getFreezedCommViviLife() {
     return freezedCommViviLife;
   }
@@ -59,6 +68,7 @@ public class CommissionTotal extends BasePointCommTotal {
     this.freezedCommViviLife = freezedCommViviLife;
   }
 
+  @JsonIgnore
   public BigDecimal getUsableCommEcomm() {
     return usableCommEcomm;
   }
@@ -67,12 +77,40 @@ public class CommissionTotal extends BasePointCommTotal {
     this.usableCommEcomm = usableCommEcomm;
   }
 
+  @JsonIgnore
   public BigDecimal getFreezedCommEcomm() {
     return freezedCommEcomm;
   }
 
   public void setFreezedCommEcomm(BigDecimal freezedCommEcomm) {
     this.freezedCommEcomm = freezedCommEcomm;
+  }
+
+  @JsonIgnore
+  public BigDecimal getNoWithdrawalCommHds() {
+    return noWithdrawalCommHds;
+  }
+
+  public void setNoWithdrawalCommHds(BigDecimal noWithdrawalCommHds) {
+    this.noWithdrawalCommHds = noWithdrawalCommHds;
+  }
+
+  @JsonIgnore
+  public BigDecimal getNoWithdrawalCommViviLife() {
+    return noWithdrawalCommViviLife;
+  }
+
+  public void setNoWithdrawalCommViviLife(BigDecimal noWithdrawalCommViviLife) {
+    this.noWithdrawalCommViviLife = noWithdrawalCommViviLife;
+  }
+
+  @JsonIgnore
+  public BigDecimal getNoWithdrawalCommEcomm() {
+    return noWithdrawalCommEcomm;
+  }
+
+  public void setNoWithdrawalCommEcomm(BigDecimal noWithdrawalCommEcomm) {
+    this.noWithdrawalCommEcomm = noWithdrawalCommEcomm;
   }
 
   @Override
@@ -136,19 +174,61 @@ public class CommissionTotal extends BasePointCommTotal {
   }
 
   @Override
+  public BigDecimal getNoWithdrawalHds() {
+    return getNoWithdrawalCommHds();
+  }
+
+  @Override
+  public void setNoWithdrawalHds(BigDecimal noWithdrawalHds) {
+    setNoWithdrawalCommHds(noWithdrawalHds);
+  }
+
+  @Override
+  public BigDecimal getNoWithdrawalViviLife() {
+    return getNoWithdrawalCommViviLife();
+  }
+
+  @Override
+  public void setNoWithdrawalViviLife(BigDecimal noWithdrawalViviLife) {
+    setNoWithdrawalCommViviLife(noWithdrawalViviLife);
+  }
+
+  @Override
+  public BigDecimal getNoWithdrawalEcomm() {
+    return getNoWithdrawalCommEcomm();
+  }
+
+  @Override
+  public void setNoWithdrawalEcomm(BigDecimal noWithdrawalEcomm) {
+    setNoWithdrawalCommEcomm(noWithdrawalEcomm);
+  }
+
+  @Override
   protected BasePointCommTotal getInstance() {
     return new CommissionTotal();
   }
 
   @Override
   public String toString() {
-    return "CommissionTotal{" +
-        "usableCommHds=" + usableCommHds +
-        ", freezedCommHds=" + freezedCommHds +
-        ", usableCommViviLife=" + usableCommViviLife +
-        ", freezedCommViviLife=" + freezedCommViviLife +
-        ", usableCommEcomm=" + usableCommEcomm +
-        ", freezedCommEcomm=" + freezedCommEcomm +
-        '}';
+    return "CommissionTotal{"
+        + "usableCommHds="
+        + usableCommHds
+        + ", freezedCommHds="
+        + freezedCommHds
+        + ", noWithdrawalCommHds="
+        + noWithdrawalCommHds
+        + ", usableCommViviLife="
+        + usableCommViviLife
+        + ", freezedCommViviLife="
+        + freezedCommViviLife
+        + ", noWithdrawalCommViviLife="
+        + noWithdrawalCommViviLife
+        + ", usableCommEcomm="
+        + usableCommEcomm
+        + ", freezedCommEcomm="
+        + freezedCommEcomm
+        + ", noWithdrawalCommEcomm="
+        + noWithdrawalCommEcomm
+        + '}';
   }
 }

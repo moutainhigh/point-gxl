@@ -1,5 +1,7 @@
 package com.hds.xquark.dal.vo;
 
+import java.math.BigDecimal;
+
 /**
  * created by
  *
@@ -7,30 +9,35 @@ package com.hds.xquark.dal.vo;
  */
 public class CommissionRecordVO extends PointCommRecordVO {
 
+  /** 本次积分 */
+  private BigDecimal currentCommission;
 
-  /**
-   * 本次积分
-   */
-  private Long currentCommission;
+  /** 本次冻结积分 */
+  private BigDecimal currentFreezedCommission;
 
-  /**
-   * 本次冻结积分
-   */
-  private Long currentFreezedCommission;
-
-  public Long getCurrentCommission() {
+  public BigDecimal getCurrentCommission() {
     return currentCommission;
   }
 
-  public void setCurrentCommission(Long currentCommission) {
+  public void setCurrentCommission(BigDecimal currentCommission) {
     this.currentCommission = currentCommission;
   }
 
-  public Long getCurrentFreezedCommission() {
+  public BigDecimal getCurrentFreezedCommission() {
     return currentFreezedCommission;
   }
 
-  public void setCurrentFreezedCommission(Long currentFreezedCommission) {
+  public void setCurrentFreezedCommission(BigDecimal currentFreezedCommission) {
     this.currentFreezedCommission = currentFreezedCommission;
+  }
+
+  public BigDecimal getCurrentStr() {
+    if (getCurrentCommission().signum() == 0) {
+      return getCurrentFreezedCommission();
+    }
+    if (getCurrentFreezedCommission().signum() == 0) {
+      return getCurrentCommission();
+    }
+    return getCurrentCommission();
   }
 }

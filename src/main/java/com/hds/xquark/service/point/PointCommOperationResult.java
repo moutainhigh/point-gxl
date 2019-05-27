@@ -1,60 +1,46 @@
 package com.hds.xquark.service.point;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hds.xquark.dal.model.BasePointCommRecord;
 import com.hds.xquark.dal.model.BasePointCommTotal;
 import com.hds.xquark.dal.type.CodeNameType;
 import com.hds.xquark.dal.type.PlatformType;
 import com.hds.xquark.dal.type.Trancd;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author wangxinhua on 2018/5/21. DESC: 积分操作计算结果
- */
-public class PointCommOperationResult {
+/** @author wangxinhua on 2018/5/21. DESC: 积分操作计算结果 */
+public class PointCommOperationResult<T extends BasePointCommTotal, R extends BasePointCommRecord> {
 
-  /**
-   * 规则id
-   */
+  /** 规则id */
   private Long gradeId;
 
-  /**
-   * 修改用户id
-   */
+  /** 修改用户id */
   private Long cpId;
 
-  /**
-   * 当此修改积分数量
-   */
-  private BigDecimal currentPoint;
+  /** 当此修改积分数量 */
+  private BigDecimal currentModified;
 
-  /**
-   * 积分修改平台信息
-   */
+  /** 积分修改平台信息 */
   private PlatformType platform;
 
-  /**
-   * 修改后积分积分信息
-   */
-  private BasePointCommTotal infoBefore;
+  /** 修改后积分积分信息 */
+  private T infoBefore;
 
-  /**
-   * 修改后的积分信息
-   */
-  private BasePointCommTotal infoAfter;
+  /** 修改后的积分信息 */
+  private T infoAfter;
 
-  private List<? extends BasePointCommRecord> currRecords;
+  private List<R> currRecords;
 
-  private List<BasePointCommRecord> rollBacked;
+  @JsonIgnore private List<R> rollBacked;
 
-  private Trancd trancd;
+  @JsonIgnore private Trancd trancd;
 
-  private Map<PlatformType, BigDecimal> detailMap;
+  @JsonIgnore private Map<PlatformType, BigDecimal> detailMap;
 
-  /**
-   * 使用的规则类型
-   */
+  /** 使用的规则类型 */
   private CodeNameType usingGradeType;
 
   public Long getGradeId() {
@@ -73,12 +59,12 @@ public class PointCommOperationResult {
     this.cpId = cpId;
   }
 
-  public BigDecimal getCurrentPoint() {
-    return currentPoint;
+  public BigDecimal getCurrentModified() {
+    return currentModified;
   }
 
-  public void setCurrentPoint(BigDecimal currentPoint) {
-    this.currentPoint = currentPoint;
+  public void setCurrentModified(BigDecimal currentModified) {
+    this.currentModified = currentModified;
   }
 
   public PlatformType getPlatform() {
@@ -89,36 +75,36 @@ public class PointCommOperationResult {
     this.platform = platform;
   }
 
-  public BasePointCommTotal getInfoAfter() {
-    return infoAfter;
-  }
-
-  public void setInfoAfter(BasePointCommTotal infoAfter) {
-    this.infoAfter = infoAfter;
-  }
-
-  public BasePointCommTotal getInfoBefore() {
+  public T getInfoBefore() {
     return infoBefore;
   }
 
-  public void setInfoBefore(BasePointCommTotal infoBefore) {
+  public void setInfoBefore(T infoBefore) {
     this.infoBefore = infoBefore;
   }
 
-  public List<BasePointCommRecord> getRollBacked() {
+  public T getInfoAfter() {
+    return infoAfter;
+  }
+
+  public void setInfoAfter(T infoAfter) {
+    this.infoAfter = infoAfter;
+  }
+
+  public List<R> getCurrRecords() {
+    return currRecords;
+  }
+
+  public void setCurrRecords(List<R> currRecords) {
+    this.currRecords = currRecords;
+  }
+
+  public List<R> getRollBacked() {
     return rollBacked;
   }
 
-  public void setRollBacked(List<BasePointCommRecord> rollBacked) {
+  public void setRollBacked(List<R> rollBacked) {
     this.rollBacked = rollBacked;
-  }
-
-  public CodeNameType getUsingGradeType() {
-    return usingGradeType;
-  }
-
-  public void setUsingGradeType(CodeNameType usingGradeType) {
-    this.usingGradeType = usingGradeType;
   }
 
   public Trancd getTrancd() {
@@ -137,11 +123,11 @@ public class PointCommOperationResult {
     this.detailMap = detailMap;
   }
 
-  public List<? extends BasePointCommRecord> getCurrRecords() {
-    return currRecords;
+  public CodeNameType getUsingGradeType() {
+    return usingGradeType;
   }
 
-  public void setCurrRecords(List<? extends BasePointCommRecord> currRecords) {
-    this.currRecords = currRecords;
+  public void setUsingGradeType(CodeNameType usingGradeType) {
+    this.usingGradeType = usingGradeType;
   }
 }
