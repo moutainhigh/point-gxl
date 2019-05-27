@@ -39,7 +39,7 @@ public enum FunctionCodeType {
   /** 新增可用积分（结算中心）*/
   GRANT_AVAILABLE_COMMISSION("2009"),
   /*** 回退收益*/
-  ROLLBACK_COMMISSION("2010");
+  ROLLBACK_COMMISSION("20010");
 
   /** 发放红包 */
   private static Pair<FunctionCodeType, Trancd> packetSend =
