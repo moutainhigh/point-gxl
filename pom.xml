@@ -28,13 +28,13 @@
 
     <distributionManagement>
         <repository>
-            <id>Releases</id>
-            <url>http://47.99.216.55:8081/repository/maven-releases</url>
+            <id>releases</id>
+            <url>http://wxnu3.handeson.com/repository/maven-releases</url>
             <layout>default</layout>
         </repository>
         <snapshotRepository>
-            <id>Snapshots</id>
-            <url>http://47.99.216.55:8081/repository/maven-snapshots</url>
+            <id>snapshots</id>
+            <url>http://wxnu3.handeson.com/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
